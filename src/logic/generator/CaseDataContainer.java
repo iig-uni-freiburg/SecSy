@@ -13,7 +13,7 @@ import logic.simulation.ConfigurationException;
 import misc.valuegeneration.StochasticValueGenerator;
 import misc.valuegeneration.ValueGenerationException;
 import misc.valuegeneration.ValueGenerator;
-import petrinet.snet.GuardDataContainer;
+import petrinet.ifnet.GuardDataContainer;
 import validate.CompatibilityException;
 import validate.ParameterException;
 import validate.ParameterException.ErrorCode;

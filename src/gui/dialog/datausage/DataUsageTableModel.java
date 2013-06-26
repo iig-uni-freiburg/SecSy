@@ -13,8 +13,9 @@ import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
 
+import types.DataUsage;
+
 import logic.generator.Context;
-import accesscontrol.DataUsage;
 
 public class DataUsageTableModel extends AbstractTableModel implements ObjectPermissionItemListener{
 	

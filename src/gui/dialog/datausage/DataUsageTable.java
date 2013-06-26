@@ -17,9 +17,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import logic.generator.Context;
+import types.DataUsage;
 import validate.CompatibilityException;
 import validate.ParameterException;
-import accesscontrol.DataUsage;
 
 public class DataUsageTable extends JTable implements ObjectPermissionItemListener{
 

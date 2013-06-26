@@ -4,7 +4,8 @@ import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import accesscontrol.DataUsage;
+import types.DataUsage;
+
 
 public class ObjectPermissionListenerSupport {
 	

@@ -7,13 +7,13 @@ import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -24,26 +24,33 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import validate.ParameterException;
 
-
-public class SimulationDirectoryDialog extends JDialog {
+public class SimulationDirectoryDialog extends JDialog implements PropertyChangeListener {
 	
 	private static final long serialVersionUID = 2306027725394345926L;
 
 	private final JPanel contentPanel = new JPanel();
 	
 	private JList stringList = null;
+	private JButton btnOK = null;
+	private JButton btnCancel = null;
 	private DefaultListModel stringListModel = new DefaultListModel();
 	
 	private String simulationDirectory = null;
-
+	private NewSimulationDirectoryAction newDirectoryAction = null;
+	private OpenSimulationDirectoryAction openDirectoryAction = null;
+	
 	public SimulationDirectoryDialog(Window owner) {
 		super(owner);
 		setResizable(false);
 		setBounds(100, 100, 411, 365);
 		setModal(true);
 		setLocationRelativeTo(owner);
+		
+		newDirectoryAction = new NewSimulationDirectoryAction(this);
+		newDirectoryAction.addPropertyChangeListener(this);
+		openDirectoryAction = new OpenSimulationDirectoryAction(this);
+		openDirectoryAction.addPropertyChangeListener(this);
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -63,116 +70,60 @@ public class SimulationDirectoryDialog extends JDialog {
 		txtrThereAreNo.setBounds(20, 16, 392, 64);
 		contentPanel.add(txtrThereAreNo);
 		
-		JButton btnExistingDirectory = new JButton("Existing Directory");
-		btnExistingDirectory.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setDialogTitle("Choose existing simulation directory");
-				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				int returnVal = fileChooser.showOpenDialog(null);
-
-		        if (returnVal == JFileChooser.APPROVE_OPTION) {
-		            File file = fileChooser.getSelectedFile();
-		            simulationDirectory = file.getAbsolutePath()+"/";
-		            
-		            try {
-						GeneralProperties.getInstance().addExistingKnownSimulationDirectory(simulationDirectory);
-						GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory);
-						GeneralProperties.getInstance().store();
-					} catch (ParameterException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-		        } else {
-		        	return;
-		        }
-		        dispose();
-			}
-		});
+		JButton btnExistingDirectory = new JButton(openDirectoryAction);
 		btnExistingDirectory.setBounds(88, 264, 157, 29);
 		contentPanel.add(btnExistingDirectory);
 		
-		JButton btnNewButton = new JButton("New Directory");
+		JButton btnNewButton = new JButton(newDirectoryAction);
 		btnNewButton.setBounds(257, 264, 133, 29);
 		contentPanel.add(btnNewButton);
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setDialogTitle("Choose location for new simulation directory");
-				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				int returnVal = fileChooser.showOpenDialog(null);
 
-		        if (returnVal == JFileChooser.APPROVE_OPTION) {
-		            File file = fileChooser.getSelectedFile();
-		            String simulationDirectoryLocation = file.getAbsolutePath();
-		            File dir = new File(simulationDirectoryLocation + "/" + GeneralProperties.defaultSimulationDirectoryName);
-		            if(dir.exists()){
-		            	int count = 1;
-		            	while((dir = new File(simulationDirectoryLocation + "/" + GeneralProperties.defaultSimulationDirectoryName + count)).exists()){
-		            		count++;
-		            	}
-		            } 
-		            dir.mkdir();
-		            simulationDirectory = dir.getAbsolutePath() + "/";
-		            
-		            try {
-						GeneralProperties.getInstance().addNewKnownSimulationDirectory(simulationDirectory);
-						GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory);
-						GeneralProperties.getInstance().store();
-					} catch (ParameterException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-		        } else {
-		        	return;
-		        }
-		        dispose();
-			}
-		});
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton("OK");
-				okButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if(!stringListModel.isEmpty()){
-							if(stringList.getSelectedValue() == null){
-								JOptionPane.showMessageDialog(SimulationDirectoryDialog.this, "Please choose a simulation directory.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-								return;
-							}
-							simulationDirectory = stringList.getSelectedValue().toString();
-							dispose();
-						} else {
-							JOptionPane.showMessageDialog(SimulationDirectoryDialog.this, "No known entries, please create new simulation directory.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+		JPanel buttonPane = new JPanel();
+		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		getContentPane().add(buttonPane, BorderLayout.SOUTH);
+		buttonPane.add(getButtonOK());
+		buttonPane.add(getButtonCancel());
+		
+		
+		setVisible(true);
+	}
+	
+	private JButton getButtonOK(){
+		if(btnOK == null){
+			btnOK = new JButton("OK");
+			btnOK.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(!stringListModel.isEmpty()){
+						if(stringList.getSelectedValue() == null){
+							JOptionPane.showMessageDialog(SimulationDirectoryDialog.this, "Please choose a simulation directory.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-					}
-				});
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						simulationDirectory = null;
+						simulationDirectory = stringList.getSelectedValue().toString();
 						dispose();
+					} else {
+						JOptionPane.showMessageDialog(SimulationDirectoryDialog.this, "No known entries, please create new simulation directory.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+						return;
 					}
-				});
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
+				}
+			});
+			btnOK.setActionCommand("OK");
+			getRootPane().setDefaultButton(btnOK);
 		}
-		setVisible(true);
+		return btnOK;
+	}
+	
+	private JButton getButtonCancel(){
+		if(btnCancel == null){
+			btnCancel = new JButton("Cancel");
+			btnCancel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					simulationDirectory = null;
+					dispose();
+				}
+			});
+			btnCancel.setActionCommand("Cancel");
+		}
+		return btnCancel;
 	}
 	
 	private JList getValueList(){
@@ -206,5 +157,16 @@ public class SimulationDirectoryDialog extends JDialog {
 	public static String showDialog(Window owner){
 		SimulationDirectoryDialog activityDialog = new SimulationDirectoryDialog(owner);
 		return activityDialog.getSimulationDirectory();
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if(evt.getSource() instanceof NewSimulationDirectoryAction || evt.getSource() instanceof OpenSimulationDirectoryAction){
+			if(evt.getPropertyName().equals(AbstractSimulationDirectoryAction.PROPERTY_NAME_SIMULATION_DIRECTORY)){
+				this.simulationDirectory = evt.getNewValue().toString();
+			} else if(evt.getPropertyName().equals(AbstractSimulationDirectoryAction.PROPERTY_NAME_SUCCESS)){
+				dispose();
+			}
+		}
 	}
 }

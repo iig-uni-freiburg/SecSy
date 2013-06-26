@@ -21,7 +21,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import accesscontrol.DataUsage;
+import types.DataUsage;
+
 
 public class ObjectPermissionPanel extends JPanel implements MouseListener, ItemListener {
 	

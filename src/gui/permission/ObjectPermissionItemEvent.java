@@ -3,7 +3,8 @@ package gui.permission;
 import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 
-import accesscontrol.DataUsage;
+import types.DataUsage;
+
 
 public class ObjectPermissionItemEvent extends ItemEvent {
 	

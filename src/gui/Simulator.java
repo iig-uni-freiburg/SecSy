@@ -47,6 +47,7 @@ public class Simulator extends JFrame {
 	private JButton btnRun;
 	private JButton btnTimeFrame;
 	private JButton btnNewSimulation;
+	private JButton btnEditSimulation;
 	private JComboBox comboSimulation;
 	private JTextArea areaSimulation;
 	
@@ -137,73 +138,8 @@ public class Simulator extends JFrame {
 		getContentPane().add(getButtonRun());
 		
 		getContentPane().add(getButtonTimeFrame());
-		
-		JButton btnEdit = new JButton("Edit");
-		btnEdit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(comboSimulation.getSelectedItem() == null){
-					JOptionPane.showMessageDialog(Simulator.this, "No simulation chosen.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				String chosenSimulation = comboSimulation.getSelectedItem().toString();
-				
-				Simulation simulation = null;
-				try {
-					simulation = SimulationComponents.getInstance().getSimulation(chosenSimulation);
-				} catch (ParameterException e2) {
-					// Cannot happen, since "chosenSimulation" is not null.
-					JOptionPane.showMessageDialog(Simulator.this, "Cannot extract simulation: " + chosenSimulation, "Internal Exception", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				if(simulation == null){
-					JOptionPane.showMessageDialog(Simulator.this, "Cannot extract simulation \""+chosenSimulation+"\" from simulation components", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				
-				String oldSimulationName = simulation.getName();
-				Simulation editedSimulation = null;
-				try {
-					editedSimulation = SimulationDialog.showSimulationDialog(Simulator.this, simulation);
-				} catch (ParameterException e2) {
-					JOptionPane.showMessageDialog(Simulator.this, "Cannot launch simulation dialog.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				if(editedSimulation != null){
-					if(!editedSimulation.getName().equals(oldSimulationName)){
-						//Simulation name changed
-						//-> Remove old simulation from simulation components and add it again under the new name.
-						try {
-							SimulationComponents.getInstance().removeSimulation(oldSimulationName);
-						} catch (Exception e1) {
-							JOptionPane.showMessageDialog(Simulator.this, "Cannot change name of simulation.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-							return;
-						}
-					}
-					
-					try {
-						SimulationComponents.getInstance().addSimulation(editedSimulation);
-					} catch (ParameterException e1) {
-						JOptionPane.showMessageDialog(Simulator.this, "Cannot take over adjusted simulation properties.\nReason: "+e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
-						return;
-					} catch (IOException e1) {
-						JOptionPane.showMessageDialog(Simulator.this, "Cannot store edited simulation to disk.\nReason: "+e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
-						return;
-					} catch (PropertyException e1) {
-						JOptionPane.showMessageDialog(Simulator.this, "Cannot set properties for edited simulation.\nReason: "+e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					
-					updateSimulationBox();
-					updateSimulationArea();
-					
-					comboSimulation.setSelectedItem(editedSimulation.getName());
-				} else {
-					//User cancelled the edit-dialog
-				}
-			}
-		});
-		btnEdit.setBounds(452, 15, 68, 29);
-		getContentPane().add(btnEdit);
+
+		getContentPane().add(getButtonEditSimulation());
 		
 		addWindowListener(new WindowListener() {
 			
@@ -247,12 +183,24 @@ public class Simulator extends JFrame {
 		
 		JMenuItem mntmSwitch = new JMenuItem("Switch Simulation Directory");
 		mntmSwitch.setAction(new AbstractAction() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				String simulationDirectory = SimulationDirectoryDialog.showDialog(Simulator.this);
+				if(simulationDirectory == null){
+					return;
+				}
+				try {
+					if(GeneralProperties.getInstance().getSimulationDirectory().equals(simulationDirectory)){
+						return;
+					}
+				} catch (Exception e1) {
+					return;
+				}
+				updateSimulationBox();
+				updateSimulationArea();
 			}
 		});
+		mntmSwitch.setName("Switch Simulation Directory");
 		mntmSwitch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0));
 		mnFile.add(mntmSwitch);
 		
@@ -260,9 +208,6 @@ public class Simulator extends JFrame {
 		mntmClose_1.setAction(closeAction);
 		mntmClose_1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0));
 		mnFile.add(mntmClose_1);
-		
-		JMenuItem mntmSwitchSimulationDirectory = new JMenuItem("Switch Simulation Directory");
-		mnFile.add(mntmSwitchSimulationDirectory);
 		
 		JMenu mnImport = new JMenu("Import");
 		menuBar.add(mnImport);
@@ -291,6 +236,77 @@ public class Simulator extends JFrame {
 		return menuBar;
 	}
 	
+	private JButton getButtonEditSimulation(){
+		if(btnEditSimulation == null){
+			btnEditSimulation = new JButton("Edit");
+			btnEditSimulation.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(comboSimulation.getSelectedItem() == null){
+						JOptionPane.showMessageDialog(Simulator.this, "No simulation chosen.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					String chosenSimulation = comboSimulation.getSelectedItem().toString();
+					
+					Simulation simulation = null;
+					try {
+						simulation = SimulationComponents.getInstance().getSimulation(chosenSimulation);
+					} catch (ParameterException e2) {
+						// Cannot happen, since "chosenSimulation" is not null.
+						JOptionPane.showMessageDialog(Simulator.this, "Cannot extract simulation: " + chosenSimulation, "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					if(simulation == null){
+						JOptionPane.showMessageDialog(Simulator.this, "Cannot extract simulation \""+chosenSimulation+"\" from simulation components", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					
+					String oldSimulationName = simulation.getName();
+					Simulation editedSimulation = null;
+					try {
+						editedSimulation = SimulationDialog.showSimulationDialog(Simulator.this, simulation);
+					} catch (ParameterException e2) {
+						JOptionPane.showMessageDialog(Simulator.this, "Cannot launch simulation dialog.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					if(editedSimulation != null){
+						if(!editedSimulation.getName().equals(oldSimulationName)){
+							//Simulation name changed
+							//-> Remove old simulation from simulation components and add it again under the new name.
+							try {
+								SimulationComponents.getInstance().removeSimulation(oldSimulationName);
+							} catch (Exception e1) {
+								JOptionPane.showMessageDialog(Simulator.this, "Cannot change name of simulation.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+						}
+						
+						try {
+							SimulationComponents.getInstance().addSimulation(editedSimulation);
+						} catch (ParameterException e1) {
+							JOptionPane.showMessageDialog(Simulator.this, "Cannot take over adjusted simulation properties.\nReason: "+e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+							return;
+						} catch (IOException e1) {
+							JOptionPane.showMessageDialog(Simulator.this, "Cannot store edited simulation to disk.\nReason: "+e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+							return;
+						} catch (PropertyException e1) {
+							JOptionPane.showMessageDialog(Simulator.this, "Cannot set properties for edited simulation.\nReason: "+e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						
+						updateSimulationBox();
+						updateSimulationArea();
+						
+						comboSimulation.setSelectedItem(editedSimulation.getName());
+					} else {
+						//User cancelled the edit-dialog
+					}
+				}
+			});
+			btnEditSimulation.setBounds(452, 16, 68, 29);
+		}
+		return btnEditSimulation;
+	}
+	
 	private JButton getButtonNewSimulation(){
 		if(btnNewSimulation == null){
 			btnNewSimulation = new JButton("New");
@@ -317,7 +333,7 @@ public class Simulator extends JFrame {
 					
 				}
 			});
-			btnNewSimulation.setBounds(382, 15, 68, 29);
+			btnNewSimulation.setBounds(382, 16, 70, 29);
 		}
 		return btnNewSimulation;
 	}
@@ -352,7 +368,7 @@ public class Simulator extends JFrame {
 					}
 				}
 			});
-			btnRun.setBounds(403, 460, 117, 29);
+			btnRun.setBounds(405, 460, 115, 29);
 		}
 		return btnRun;
 	}
@@ -374,7 +390,7 @@ public class Simulator extends JFrame {
 	private JButton getButtonTimeFrame(){
 		if(btnTimeFrame == null){
 			btnTimeFrame = new JButton("Time Frame");
-			btnTimeFrame.setBounds(278, 460, 117, 29);
+			btnTimeFrame.setBounds(290, 460, 115, 29);
 			btnTimeFrame.addActionListener(new ActionListener() {
 				
 				@Override

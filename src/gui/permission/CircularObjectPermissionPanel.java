@@ -15,7 +15,8 @@ import java.util.Set;
 
 import javax.swing.JFrame;
 
-import accesscontrol.DataUsage;
+import types.DataUsage;
+
 
 public class CircularObjectPermissionPanel extends ObjectPermissionPanel {
 

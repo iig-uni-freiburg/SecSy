@@ -18,10 +18,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import logic.generator.Context;
+import types.DataUsage;
 import validate.ParameterException;
 import validate.Validate;
 import accesscontrol.ACLModel;
-import accesscontrol.DataUsage;
 
 
 public class AdvancedACLTable extends JTable implements ObjectPermissionItemListener, ItemListener{

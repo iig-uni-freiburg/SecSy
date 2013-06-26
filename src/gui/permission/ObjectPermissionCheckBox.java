@@ -2,7 +2,8 @@ package gui.permission;
 
 import javax.swing.JCheckBox;
 
-import accesscontrol.DataUsage;
+import types.DataUsage;
+
 
 public class ObjectPermissionCheckBox extends JCheckBox {
 	

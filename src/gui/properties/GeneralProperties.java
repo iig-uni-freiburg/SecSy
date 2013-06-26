@@ -95,15 +95,15 @@ public class GeneralProperties extends AbstractProperties{
 	
 	//-- Known SimulationDirectory
 	
-	public void addNewKnownSimulationDirectory(String simulationDirectory) throws ParameterException{
-		addKnownSimulationDirectory(simulationDirectory, true);
-	}
+//	public void addNewKnownSimulationDirectory(String simulationDirectory) throws ParameterException{
+//		addKnownSimulationDirectory(simulationDirectory, true);
+//	}
+//	
+//	public void addExistingKnownSimulationDirectory(String simulationDirectory) throws ParameterException{
+//		addKnownSimulationDirectory(simulationDirectory, false);
+//	}
 	
-	public void addExistingKnownSimulationDirectory(String simulationDirectory) throws ParameterException{
-		addKnownSimulationDirectory(simulationDirectory, false);
-	}
-	
-	private void addKnownSimulationDirectory(String simulationDirectory, boolean createSubdirectories) throws ParameterException{
+	public void addKnownSimulationDirectory(String simulationDirectory, boolean createSubdirectories) throws ParameterException{
 		validateSimulationDirectory(simulationDirectory, createSubdirectories);
 		Set<String> currentDirectories = getKnownSimulationDirectories();
 		currentDirectories.add(simulationDirectory);
