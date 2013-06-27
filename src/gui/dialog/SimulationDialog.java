@@ -687,10 +687,14 @@ public class SimulationDialog extends JDialog {
 							JOptionPane.showMessageDialog(SimulationDialog.this, "Internal exception on creating case time generator.\nReason: " + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
+						
 						try {
 							SimulationComponents.getInstance().addCaseTimeGenerator(newTimeGenerator);
-						} catch (Exception e1) {
-							JOptionPane.showMessageDialog(SimulationDialog.this, "Internal exception on adding case time generator to simulation components.\nReason: " + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						} catch (ParameterException e2) {
+							JOptionPane.showMessageDialog(SimulationDialog.this, "Parameter Exception on creating new time generator.\nReason: " + e2.getMessage(), "Parameter Exception", JOptionPane.ERROR_MESSAGE);
+							return;
+						} catch (Exception e2) {
+							JOptionPane.showMessageDialog(SimulationDialog.this, "Internal exception on adding case time generator to simulation components.\nReason: " + e2.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						updateTimeGeneratorBox();
@@ -737,10 +741,14 @@ public class SimulationDialog extends JDialog {
 					CaseTimeGenerator editedTimeGenerator = null;
 					try {
 						editedTimeGenerator = TimeGeneratorFactory.createCaseTimeGenerator(TimeGeneratorDialog.showTimeGeneratorDialog(SimulationDialog.this, getAllKnownProcessActivities(), timeGenerator.getProperties()));
-					} catch (Exception e1) {
+					} catch (ParameterException e3) {
+						JOptionPane.showMessageDialog(SimulationDialog.this, e3.getMessage(), "Parameter Exception", JOptionPane.ERROR_MESSAGE);
+						return;
+					} catch (PropertyException e3) {
 						JOptionPane.showMessageDialog(SimulationDialog.this, "Cannot extract time generator properties for editing.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
+
 					if(editedTimeGenerator != null){
 						if(!editedTimeGenerator.getName().equals(oldTimeGeneratorName)){
 							//Time generator name changed

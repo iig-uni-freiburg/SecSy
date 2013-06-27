@@ -380,6 +380,7 @@ public class TimeGeneratorDialog extends JDialog {
 			btnOK = new JButton("OK");
 			btnOK.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					
 					//Set generator name
 					String generatorName = txtName.getText();
 					if(generatorName == null || generatorName.isEmpty()){
@@ -505,6 +506,8 @@ public class TimeGeneratorDialog extends JDialog {
 						JOptionPane.showMessageDialog(TimeGeneratorDialog.this, "Error on setting value for: Days to skip\nReason: " + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
+					
+					System.out.println("no error");
 					
 					dispose();
 				}

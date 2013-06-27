@@ -1,5 +1,7 @@
 package logic.generator.time;
 
+import gui.dialog.TimeGeneratorDialog;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import logic.generator.TraceCompletionListener;
 import logic.generator.TraceStartListener;
 import logic.generator.time.properties.TimeProperties;
@@ -23,6 +27,7 @@ import time.Weekday;
 import validate.InconsistencyException;
 import validate.ParameterException;
 import validate.Validate;
+import validate.ParameterException.ErrorCode;
 
 //TODO: Startzeit von Event muss sich an der Endzeit der letzten Aktivität orientieren
 //zu der ein kausaler Zusammenhang beteht.
@@ -173,7 +178,11 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 			e.printStackTrace();
 		}
 		this.startTime = startTime;
-		dayCaseStartingTimes = new ArrayList<Long>(casesPerDay);
+		try {
+			dayCaseStartingTimes = new ArrayList<Long>(casesPerDay);
+		} catch(OutOfMemoryError memoryError){
+			throw new ParameterException(ErrorCode.MEMORY, "Memory Error: Assign more memory to Java VM or adjust cases per day.");
+		}
 		caseStartTime.setTime(new Date(startTime));
 	}
 	
