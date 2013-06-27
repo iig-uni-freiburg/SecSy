@@ -1,6 +1,6 @@
 package logic.generator;
 
-import validate.ParameterException;
+import de.invation.code.toval.validate.ParameterException;
 
 public interface TraceCompletionListener {
 	

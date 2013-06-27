@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.invation.code.toval.misc.SetUtils;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+
 import log.EntryField;
 import log.EntryUtils;
 import log.LogEntry;
@@ -14,9 +18,6 @@ import logic.filtering.AbstractFilterResult;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AbstractFilterProperties;
 import logic.filtering.filter.properties.BoDFilterProperties;
-import misc.SetUtils;
-import properties.PropertyException;
-import validate.ParameterException;
 
 public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 	

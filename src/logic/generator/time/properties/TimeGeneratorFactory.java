@@ -2,14 +2,15 @@ package logic.generator.time.properties;
 
 import java.io.IOException;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.time.TimeScale;
+import de.invation.code.toval.time.TimeValue;
+import de.invation.code.toval.time.Weekday;
+import de.invation.code.toval.validate.ParameterException;
+
 import logic.generator.time.AdjustableCaseTimeGenerator;
 import logic.generator.time.CaseTimeGenerator;
 import logic.generator.time.RandomCaseTimeGenerator;
-import properties.PropertyException;
-import time.TimeScale;
-import time.TimeValue;
-import time.Weekday;
-import validate.ParameterException;
 
 public class TimeGeneratorFactory {
 	

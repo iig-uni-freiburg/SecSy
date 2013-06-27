@@ -1,7 +1,7 @@
 package logic.filtering;
 
-import validate.ParameterException;
-import validate.Validate;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
 import log.LogEntry;
 
 public class EntryFilterEvent {

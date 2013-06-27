@@ -11,16 +11,16 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import logic.generator.Context;
-import misc.ArrayUtils;
-import misc.StringUtils;
-import properties.AbstractProperties;
-import properties.PropertyException;
-import types.DataUsage;
-import validate.ParameterException;
-import validate.Validate;
-import constraint.AbstractConstraint;
-import constraint.NumberConstraint;
-import constraint.StringConstraint;
+import de.invation.code.toval.constraint.AbstractConstraint;
+import de.invation.code.toval.constraint.NumberConstraint;
+import de.invation.code.toval.constraint.StringConstraint;
+import de.invation.code.toval.misc.ArrayUtils;
+import de.invation.code.toval.misc.StringUtils;
+import de.invation.code.toval.properties.AbstractProperties;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.types.DataUsage;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
 
 public class ContextProperties extends AbstractProperties {
 	

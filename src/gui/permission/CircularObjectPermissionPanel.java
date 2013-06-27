@@ -1,8 +1,5 @@
 package gui.permission;
 
-import graphic.CircularPointGroup;
-import graphic.PColor;
-import graphic.Position;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -15,7 +12,11 @@ import java.util.Set;
 
 import javax.swing.JFrame;
 
-import types.DataUsage;
+import de.invation.code.toval.graphic.CircularPointGroup;
+import de.invation.code.toval.graphic.PColor;
+import de.invation.code.toval.graphic.Position;
+import de.invation.code.toval.types.DataUsage;
+
 
 
 public class CircularObjectPermissionPanel extends ObjectPermissionPanel {

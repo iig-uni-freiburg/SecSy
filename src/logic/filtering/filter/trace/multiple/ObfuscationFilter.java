@@ -8,6 +8,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.invation.code.toval.misc.SetUtils;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import log.EntryField;
 import log.LockingException;
 import log.LogEntry;
@@ -18,10 +23,6 @@ import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AbstractFilterProperties;
 import logic.filtering.filter.properties.ObfuscationFilterProperties;
 import logic.generator.LogEntryGenerator;
-import misc.SetUtils;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 public class ObfuscationFilter extends AbstractMultipleTraceFilter {
 	

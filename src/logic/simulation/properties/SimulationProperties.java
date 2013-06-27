@@ -8,15 +8,16 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import de.invation.code.toval.misc.ArrayUtils;
+import de.invation.code.toval.misc.StringUtils;
+import de.invation.code.toval.properties.AbstractProperties;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logformat.LogFormatType;
 import logic.filtering.filter.AbstractFilter;
 import logic.simulation.SimulationRun;
-import misc.ArrayUtils;
-import misc.StringUtils;
-import properties.AbstractProperties;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 public class SimulationProperties extends AbstractProperties{
 	

@@ -1,5 +1,8 @@
 package logic.generator;
 
+import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
 import log.DataAttribute;
 import log.EntryField;
 import log.EventType;
@@ -8,10 +11,7 @@ import log.LogEntry;
 import logic.filtering.EntryFilterManager;
 import logic.simulation.ConfigurationException;
 import logic.simulation.ConfigurationException.ErrorCode;
-import misc.valuegeneration.ValueGenerationException;
 import petrinet.AbstractTransition;
-import validate.ParameterException;
-import validate.Validate;
 
 /**
  * This class is used to generate Log entries from fired transitions.<br>

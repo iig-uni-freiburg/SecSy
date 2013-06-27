@@ -32,11 +32,12 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import de.invation.code.toval.misc.ArrayUtils;
+import de.invation.code.toval.validate.ParameterException;
+
 import logic.generator.Context;
-import misc.ArrayUtils;
 import petrinet.pt.PTNet;
 import util.PNUtils;
-import validate.ParameterException;
 import accesscontrol.ACLModel;
 import accesscontrol.ACModel;
 

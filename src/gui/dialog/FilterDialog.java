@@ -33,6 +33,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.xml.stream.XMLStreamException;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import log.EntryField;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.trace.AbstractTraceFilter;
@@ -45,9 +49,6 @@ import logic.filtering.filter.trace.multiple.IncompleteLoggingFilter;
 import logic.filtering.filter.trace.multiple.ObfuscationFilter;
 import logic.filtering.filter.trace.multiple.SkipActivitiesFilter;
 import logic.filtering.filter.trace.multiple.UnauthorizedExecutionFilter;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 public class FilterDialog extends AbstractSimulationDialog {
 	

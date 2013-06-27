@@ -25,9 +25,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import misc.ArrayUtils;
-import validate.CompatibilityException;
-import validate.ParameterException;
+import de.invation.code.toval.misc.ArrayUtils;
+import de.invation.code.toval.validate.CompatibilityException;
+import de.invation.code.toval.validate.ParameterException;
+
 import accesscontrol.RBACModel;
 
 public class RoleMembershipDialog extends JDialog {

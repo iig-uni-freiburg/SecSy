@@ -3,13 +3,14 @@ package logic.generator;
 import java.io.IOException;
 import java.util.Date;
 
+import de.invation.code.toval.validate.ParameterException;
+
 import log.EventType;
 import log.LockingException;
 import log.LogEntry;
 import log.LogTrace;
 import logformat.LogFormat;
 import logic.generator.time.CaseTimeGenerator.ExecutionTime;
-import validate.ParameterException;
 import writer.PerspectiveException;
 
 /**

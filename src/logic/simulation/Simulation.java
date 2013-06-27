@@ -8,6 +8,10 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logic.generator.CaseDataContainer;
 import logic.generator.Context;
 import logic.generator.DetailedLogEntryGenerator;
@@ -20,10 +24,7 @@ import logic.generator.time.properties.TimeProperties;
 import logic.simulation.ConfigurationException.ErrorCode;
 import logic.simulation.properties.EntryGenerationType;
 import logic.simulation.properties.SimulationProperties;
-import properties.PropertyException;
 import util.PNUtils;
-import validate.ParameterException;
-import validate.Validate;
 
 public class Simulation implements SimulationListener{
 
@@ -187,7 +188,7 @@ public class Simulation implements SimulationListener{
 	
 	public SimulationProperties getProperties() throws ParameterException{
 		if(!isValid()){
-			throw new ParameterException(validate.ParameterException.ErrorCode.INCONSISTENCY, "Cannot extract properties in invalid state.");
+			throw new ParameterException(de.invation.code.toval.validate.ParameterException.ErrorCode.INCONSISTENCY, "Cannot extract properties in invalid state.");
 		}
 		
 		SimulationProperties properties = new SimulationProperties();

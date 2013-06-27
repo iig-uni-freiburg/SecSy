@@ -17,7 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import misc.StringUtils;
+import de.invation.code.toval.misc.StringUtils;
+
 
 public class StringListDefinitionDialog extends JDialog {
 

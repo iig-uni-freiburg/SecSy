@@ -33,10 +33,11 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logic.generator.Context;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 import accesscontrol.ACLModel;
 import accesscontrol.ACModel;
 import accesscontrol.RBACModel;

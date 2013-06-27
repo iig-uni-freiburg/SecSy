@@ -3,6 +3,10 @@ package logic.generator;
 import java.io.IOException;
 import java.util.Date;
 
+import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
+import de.invation.code.toval.validate.InconsistencyException;
+import de.invation.code.toval.validate.ParameterException;
+
 import log.LockingException;
 import log.LogEntry;
 import log.LogTrace;
@@ -13,10 +17,7 @@ import logic.filtering.TraceFilterManager;
 import logic.filtering.filter.AbstractFilter;
 import logic.generator.time.CaseTimeGenerator.ExecutionTime;
 import logic.simulation.SimulationRun;
-import misc.valuegeneration.ValueGenerationException;
 import petrinet.AbstractTransition;
-import validate.InconsistencyException;
-import validate.ParameterException;
 import writer.PerspectiveException;
 import exception.PNException;
 

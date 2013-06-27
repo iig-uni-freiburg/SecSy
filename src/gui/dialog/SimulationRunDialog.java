@@ -33,6 +33,8 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
+import de.invation.code.toval.validate.ParameterException;
+
 import logic.filtering.TraceFilterManager;
 import logic.filtering.filter.trace.AbstractTraceFilter;
 import logic.simulation.SimulationRun;
@@ -42,7 +44,6 @@ import parser.PNMLParser;
 import petrinet.pt.PTNet;
 import petrinet.pt.RandomPTTraverser;
 import util.PNUtils;
-import validate.ParameterException;
 
 
 public class SimulationRunDialog extends AbstractSimulationDialog {

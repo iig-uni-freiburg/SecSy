@@ -17,10 +17,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import de.invation.code.toval.types.DataUsage;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logic.generator.Context;
-import types.DataUsage;
-import validate.ParameterException;
-import validate.Validate;
 import accesscontrol.ACLModel;
 
 

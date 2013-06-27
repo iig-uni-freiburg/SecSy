@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import de.invation.code.toval.misc.RandomUtils;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+
 import log.EntryField;
 import log.LogEntry;
 import log.LogTrace;
@@ -12,9 +16,6 @@ import logic.filtering.TraceFilterResult;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AbstractFilterProperties;
 import logic.filtering.filter.properties.DayDelayFilterProperties;
-import misc.RandomUtils;
-import properties.PropertyException;
-import validate.ParameterException;
 
 public class DayDelayFilter extends AbstractMultipleTraceFilter{
 	

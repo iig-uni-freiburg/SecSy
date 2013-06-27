@@ -30,14 +30,14 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import logic.generator.Context;
-import validate.ParameterException;
-import constraint.AbstractConstraint;
-import constraint.NumberConstraint;
-import constraint.NumberOperator;
-import constraint.Operator;
-import constraint.OperatorFormats;
-import constraint.StringConstraint;
-import constraint.StringOperator;
+import de.invation.code.toval.constraint.AbstractConstraint;
+import de.invation.code.toval.constraint.NumberConstraint;
+import de.invation.code.toval.constraint.NumberOperator;
+import de.invation.code.toval.constraint.Operator;
+import de.invation.code.toval.constraint.OperatorFormats;
+import de.invation.code.toval.constraint.StringConstraint;
+import de.invation.code.toval.constraint.StringOperator;
+import de.invation.code.toval.validate.ParameterException;
 
 
 public class ConstraintDialog extends JDialog {

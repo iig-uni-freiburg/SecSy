@@ -3,11 +3,12 @@ package logic.filtering.filter.properties;
 import java.io.IOException;
 import java.util.Properties;
 
+import de.invation.code.toval.properties.AbstractProperties;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logic.filtering.filter.FilterType;
-import properties.AbstractProperties;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 public class AbstractFilterProperties extends AbstractProperties{
 	

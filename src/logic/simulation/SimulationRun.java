@@ -1,5 +1,7 @@
 package logic.simulation;
 
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
 import logic.filtering.EntryFilterManager;
 import logic.filtering.TraceFilterManager;
 import logic.filtering.filter.entry.AbstractEntryFilter;
@@ -10,8 +12,6 @@ import petrinet.AbstractPetriNet;
 import petrinet.AbstractTransition;
 import traversal.PNTraverser;
 import traversal.RandomPNTraverser;
-import validate.ParameterException;
-import validate.Validate;
 
 /**
  * Simple class for simulation runs.

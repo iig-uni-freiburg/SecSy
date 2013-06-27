@@ -6,6 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import log.EntryField;
 import log.LogEntry;
 import log.LogTrace;
@@ -13,9 +17,6 @@ import logic.filtering.TraceFilterResult;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AbstractFilterProperties;
 import logic.filtering.filter.properties.SkipActivitiesFilterProperties;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 public class SkipActivitiesFilter extends AbstractMultipleTraceFilter {
 	

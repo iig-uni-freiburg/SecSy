@@ -16,10 +16,11 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import de.invation.code.toval.types.DataUsage;
+import de.invation.code.toval.validate.CompatibilityException;
+import de.invation.code.toval.validate.ParameterException;
+
 import logic.generator.Context;
-import types.DataUsage;
-import validate.CompatibilityException;
-import validate.ParameterException;
 
 public class DataUsageTable extends JTable implements ObjectPermissionItemListener{
 

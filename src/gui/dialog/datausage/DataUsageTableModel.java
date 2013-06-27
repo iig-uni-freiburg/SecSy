@@ -13,7 +13,8 @@ import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
 
-import types.DataUsage;
+import de.invation.code.toval.types.DataUsage;
+
 
 import logic.generator.Context;
 

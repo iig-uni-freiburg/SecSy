@@ -6,10 +6,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import de.invation.code.toval.misc.ListUtils;
+import de.invation.code.toval.misc.ListUtils.Partition;
+
 import log.LockingException;
 import log.LogEntry;
-import misc.ListUtils;
-import misc.ListUtils.Partition;
 
 
 public class Test {

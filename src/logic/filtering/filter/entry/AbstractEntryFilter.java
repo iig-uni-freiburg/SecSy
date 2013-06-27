@@ -1,13 +1,13 @@
 package logic.filtering.filter.entry;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
 import logic.filtering.EntryFilterEvent;
 import logic.filtering.EntryFilterResult;
 import logic.filtering.filter.AbstractFilter;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AbstractFilterProperties;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 
 public abstract class AbstractEntryFilter extends AbstractFilter {

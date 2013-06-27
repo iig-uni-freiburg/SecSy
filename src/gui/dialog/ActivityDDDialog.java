@@ -23,11 +23,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import de.invation.code.toval.time.TimeScale;
+import de.invation.code.toval.time.TimeValue;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logic.generator.time.properties.TimeProperties;
-import time.TimeScale;
-import time.TimeValue;
-import validate.ParameterException;
-import validate.Validate;
 
 public class ActivityDDDialog extends JDialog {
 

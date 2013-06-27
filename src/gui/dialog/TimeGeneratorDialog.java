@@ -41,12 +41,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.time.Weekday;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logic.generator.time.properties.TimeProperties;
 import logic.generator.time.properties.TimeProperties.CaseStartPrecision;
-import properties.PropertyException;
-import time.Weekday;
-import validate.ParameterException;
-import validate.Validate;
 
 public class TimeGeneratorDialog extends JDialog {
 

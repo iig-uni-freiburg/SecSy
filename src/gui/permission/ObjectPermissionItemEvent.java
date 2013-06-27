@@ -3,7 +3,8 @@ package gui.permission;
 import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 
-import types.DataUsage;
+import de.invation.code.toval.types.DataUsage;
+
 
 
 public class ObjectPermissionItemEvent extends ItemEvent {

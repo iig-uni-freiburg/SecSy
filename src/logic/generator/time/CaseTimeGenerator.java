@@ -1,7 +1,5 @@
 package logic.generator.time;
 
-import gui.dialog.TimeGeneratorDialog;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,19 +13,17 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import javax.swing.JOptionPane;
-
 import logic.generator.TraceCompletionListener;
 import logic.generator.TraceStartListener;
 import logic.generator.time.properties.TimeProperties;
 import logic.generator.time.properties.TimeProperties.CaseStartPrecision;
-import time.TimeScale;
-import time.TimeValue;
-import time.Weekday;
-import validate.InconsistencyException;
-import validate.ParameterException;
-import validate.Validate;
-import validate.ParameterException.ErrorCode;
+import de.invation.code.toval.time.TimeScale;
+import de.invation.code.toval.time.TimeValue;
+import de.invation.code.toval.time.Weekday;
+import de.invation.code.toval.validate.InconsistencyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.Validate;
 
 //TODO: Startzeit von Event muss sich an der Endzeit der letzten Aktivität orientieren
 //zu der ein kausaler Zusammenhang beteht.

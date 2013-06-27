@@ -6,15 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.invation.code.toval.misc.SetUtils;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+
 import log.EntryUtils;
 import log.LogEntry;
 import logic.filtering.AbstractFilterResult;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AbstractFilterProperties;
 import logic.filtering.filter.properties.SoDFilterProperties;
-import misc.SetUtils;
-import properties.PropertyException;
-import validate.ParameterException;
 
 /**
  * This class defines a filter that is able to ensure or violate an SoD-property on a set of activityGroups in log traces.

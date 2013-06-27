@@ -7,7 +7,8 @@ import java.io.IOException;
 
 import javax.swing.AbstractAction;
 
-import validate.ParameterException;
+import de.invation.code.toval.validate.ParameterException;
+
 
 public abstract class AbstractSimulationDirectoryAction extends AbstractAction {
 

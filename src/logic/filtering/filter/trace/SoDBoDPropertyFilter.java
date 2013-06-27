@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.types.IndexCounter;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import log.EntryField;
 import log.EntryUtils;
 import log.LogEntry;
@@ -15,10 +20,6 @@ import logic.filtering.AbstractFilterResult;
 import logic.filtering.TraceFilterResult;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AGPropertyEnforcementFilterProperties;
-import properties.PropertyException;
-import types.IndexCounter;
-import validate.ParameterException;
-import validate.Validate;
 
 public abstract class SoDBoDPropertyFilter extends ActivityGroupPropertyEnforcementFilter {
 	

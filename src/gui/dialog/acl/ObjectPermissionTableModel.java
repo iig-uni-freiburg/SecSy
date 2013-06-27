@@ -10,8 +10,9 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import validate.CompatibilityException;
-import validate.ParameterException;
+import de.invation.code.toval.validate.CompatibilityException;
+import de.invation.code.toval.validate.ParameterException;
+
 import accesscontrol.ACLModel;
 
 public class ObjectPermissionTableModel extends AbstractTableModel implements ObjectPermissionItemListener {

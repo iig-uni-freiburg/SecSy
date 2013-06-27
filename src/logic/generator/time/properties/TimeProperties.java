@@ -10,16 +10,17 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import de.invation.code.toval.misc.ArrayUtils;
+import de.invation.code.toval.misc.StringUtils;
+import de.invation.code.toval.properties.AbstractProperties;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.time.TimeScale;
+import de.invation.code.toval.time.TimeValue;
+import de.invation.code.toval.time.Weekday;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logic.generator.time.CaseTimeGenerator;
-import misc.ArrayUtils;
-import misc.StringUtils;
-import properties.AbstractProperties;
-import properties.PropertyException;
-import time.TimeScale;
-import time.TimeValue;
-import time.Weekday;
-import validate.ParameterException;
-import validate.Validate;
 
 public class TimeProperties extends AbstractProperties{
 	

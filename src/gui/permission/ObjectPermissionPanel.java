@@ -1,6 +1,5 @@
 package gui.permission;
 
-import graphic.Position;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,7 +20,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import types.DataUsage;
+import de.invation.code.toval.graphic.Position;
+import de.invation.code.toval.types.DataUsage;
+
 
 
 public class ObjectPermissionPanel extends JPanel implements MouseListener, ItemListener {

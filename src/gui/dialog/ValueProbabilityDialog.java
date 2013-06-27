@@ -17,10 +17,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import misc.valuegeneration.StochasticValueGenerator;
-import misc.valuegeneration.ValueGenerator;
-import validate.ParameterException;
-import validate.Validate;
+import de.invation.code.toval.misc.valuegeneration.StochasticValueGenerator;
+import de.invation.code.toval.misc.valuegeneration.ValueGenerator;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 
 public class ValueProbabilityDialog extends JDialog {
 	

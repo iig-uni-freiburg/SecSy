@@ -2,11 +2,12 @@ package logic.generator.time;
 
 import java.util.HashMap;
 
+import de.invation.code.toval.time.TimeScale;
+import de.invation.code.toval.time.TimeValue;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logic.generator.time.properties.TimeProperties;
-import time.TimeScale;
-import time.TimeValue;
-import validate.ParameterException;
-import validate.Validate;
 
 /**
  * Class for executions times of process activities.<br>

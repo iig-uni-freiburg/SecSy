@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import misc.valuegeneration.ValueGenerationException;
-import misc.valuegeneration.ValueGenerator;
-import validate.ParameterException;
-import validate.Validate;
+import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
+import de.invation.code.toval.misc.valuegeneration.ValueGenerator;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 
 /**
  * This class generates values for data attributes.<br>

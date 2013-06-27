@@ -40,6 +40,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import de.invation.code.toval.misc.ArrayUtils;
+import de.invation.code.toval.misc.StringUtils;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+
 import logformat.LogFormat;
 import logformat.LogFormatFactory;
 import logformat.LogFormatType;
@@ -56,11 +61,7 @@ import logic.simulation.ConfigurationException;
 import logic.simulation.Simulation;
 import logic.simulation.SimulationRun;
 import logic.simulation.properties.EntryGenerationType;
-import misc.ArrayUtils;
-import misc.StringUtils;
-import properties.PropertyException;
 import util.PNUtils;
-import validate.ParameterException;
 
 public class SimulationDialog extends JDialog {
 

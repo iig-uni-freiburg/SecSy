@@ -41,10 +41,6 @@ import logic.simulation.properties.SimulationRunProperty;
 import parser.PNMLParser;
 import petrinet.pt.PTNet;
 import petrinet.pt.RandomPTTraverser;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.ParameterException.ErrorCode;
-import validate.Validate;
 import writer.PerspectiveException;
 import accesscontrol.ACLModel;
 import accesscontrol.ACModel;
@@ -53,8 +49,12 @@ import accesscontrol.properties.ACLModelProperties;
 import accesscontrol.properties.ACModelProperties;
 import accesscontrol.properties.ACModelType;
 import accesscontrol.properties.RBACModelProperties;
-import constraint.AbstractConstraint;
-import file.FileUtils;
+import de.invation.code.toval.constraint.AbstractConstraint;
+import de.invation.code.toval.file.FileUtils;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import gui.properties.GeneralProperties;
 
 

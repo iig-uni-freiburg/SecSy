@@ -26,9 +26,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import logic.generator.Context;
-import validate.CompatibilityException;
-import validate.ParameterException;
-import constraint.AbstractConstraint;
+import de.invation.code.toval.constraint.AbstractConstraint;
+import de.invation.code.toval.validate.CompatibilityException;
+import de.invation.code.toval.validate.ParameterException;
 
 public class RoutingConstraintsDialog extends JDialog {
 

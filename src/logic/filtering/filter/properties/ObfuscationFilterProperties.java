@@ -6,12 +6,13 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import de.invation.code.toval.misc.ArrayUtils;
+import de.invation.code.toval.misc.StringUtils;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import log.EntryField;
-import misc.ArrayUtils;
-import misc.StringUtils;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 public class ObfuscationFilterProperties  extends AbstractMultipleTraceFilterProperties {
 	

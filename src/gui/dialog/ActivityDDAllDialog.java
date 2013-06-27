@@ -38,12 +38,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.time.TimeScale;
+import de.invation.code.toval.time.TimeValue;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logic.generator.time.properties.TimeProperties;
-import properties.PropertyException;
-import time.TimeScale;
-import time.TimeValue;
-import validate.ParameterException;
-import validate.Validate;
 
 public class ActivityDDAllDialog extends JDialog {
 	

@@ -5,13 +5,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import de.invation.code.toval.misc.ArrayUtils;
+import de.invation.code.toval.misc.StringUtils;
+import de.invation.code.toval.properties.AbstractProperties;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logformat.LogFormatType;
-import misc.ArrayUtils;
-import misc.StringUtils;
-import properties.AbstractProperties;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 public class SimulationRunProperties extends AbstractProperties{
 	

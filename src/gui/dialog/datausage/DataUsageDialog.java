@@ -26,9 +26,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.invation.code.toval.validate.CompatibilityException;
+import de.invation.code.toval.validate.ParameterException;
+
 import logic.generator.Context;
-import validate.CompatibilityException;
-import validate.ParameterException;
 
 public class DataUsageDialog extends JDialog {
 

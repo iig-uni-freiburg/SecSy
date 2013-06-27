@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import log.EntryField;
 import log.LockingException;
 import log.LogEntry;
@@ -14,9 +18,6 @@ import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AbstractFilterProperties;
 import logic.filtering.filter.properties.UnauthorizedExecutionFilterProperties;
 import logic.generator.Context;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 /**
  * Manipulates a given log trace by inserting an access control violation.

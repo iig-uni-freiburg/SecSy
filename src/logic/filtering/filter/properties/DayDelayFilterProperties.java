@@ -3,9 +3,10 @@ package logic.filtering.filter.properties;
 import java.io.IOException;
 import java.util.Properties;
 
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 
 public class DayDelayFilterProperties extends AbstractMultipleTraceFilterProperties {
 	

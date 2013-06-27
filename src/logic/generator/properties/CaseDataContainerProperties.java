@@ -4,15 +4,16 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import de.invation.code.toval.misc.ArrayUtils;
+import de.invation.code.toval.misc.StringUtils;
+import de.invation.code.toval.misc.valuegeneration.StochasticValueGenerator;
+import de.invation.code.toval.properties.AbstractProperties;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
+
 import logic.generator.AttributeValueGenerator;
-import misc.ArrayUtils;
-import misc.StringUtils;
-import misc.valuegeneration.StochasticValueGenerator;
-import properties.AbstractProperties;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.ParameterException.ErrorCode;
-import validate.Validate;
 
 public class CaseDataContainerProperties extends AbstractProperties {
 	

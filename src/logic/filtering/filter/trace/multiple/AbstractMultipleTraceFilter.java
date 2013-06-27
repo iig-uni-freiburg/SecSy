@@ -6,6 +6,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import log.LogEntry;
 import log.LogTrace;
 import logic.filtering.AbstractFilterResult;
@@ -15,9 +19,6 @@ import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AbstractFilterProperties;
 import logic.filtering.filter.properties.AbstractMultipleTraceFilterProperties;
 import logic.filtering.filter.trace.AbstractTraceFilter;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 /**
  * 

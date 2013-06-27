@@ -11,6 +11,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.invation.code.toval.misc.FormatUtils;
+import de.invation.code.toval.validate.CompatibilityException;
+import de.invation.code.toval.validate.InconsistencyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import log.LogEntry;
 import log.LogTrace;
 import logformat.LogFormat;
@@ -25,12 +31,7 @@ import logic.simulation.ConfigurationException.ErrorCode;
 import logic.simulation.SimulationListener;
 import logic.simulation.SimulationListenerSupport;
 import logic.simulation.SimulationRun;
-import misc.FormatUtils;
 import petrinet.AbstractPetriNet;
-import validate.CompatibilityException;
-import validate.InconsistencyException;
-import validate.ParameterException;
-import validate.Validate;
 import writer.LogWriter;
 import writer.PerspectiveException;
 

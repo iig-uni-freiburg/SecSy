@@ -3,9 +3,10 @@ package logic.filtering;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logic.filtering.filter.AbstractFilter;
-import validate.ParameterException;
-import validate.Validate;
 
 public class FilterListenerSupport {
 	

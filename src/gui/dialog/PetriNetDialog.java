@@ -24,10 +24,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.invation.code.toval.validate.ParameterException;
+
 import parser.PNMLFilter;
 import parser.PNMLParser;
 import petrinet.pt.PTNet;
-import validate.ParameterException;
 
 
 public class PetriNetDialog extends JDialog {

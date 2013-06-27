@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import log.EntryField;
 import log.LogEntry;
 import logic.filtering.filter.entry.AbstractEntryFilter;
 import logic.filtering.filter.exception.MissingRequirementException;
 import logic.generator.DetailedLogEntryGenerator;
 import logic.generator.LogEntryGenerator;
-import validate.ParameterException;
-import validate.Validate;
 
 /**
  * This class manages log filters which operate on log entries.<br>

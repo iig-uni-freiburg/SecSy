@@ -1,13 +1,13 @@
 package logic.filtering.filter.trace;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
 import logic.filtering.TraceFilterEvent;
 import logic.filtering.TraceFilterResult;
 import logic.filtering.filter.AbstractFilter;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AbstractFilterProperties;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 /**
  * abstract class for filters that apply to whole log traces instead of single log entries.

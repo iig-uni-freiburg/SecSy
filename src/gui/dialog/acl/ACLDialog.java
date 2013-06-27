@@ -17,9 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import logic.generator.Context;
-import validate.ParameterException;
-import validate.Validate;
 import accesscontrol.ACLModel;
 import accesscontrol.ACModel;
 import accesscontrol.RBACModel;

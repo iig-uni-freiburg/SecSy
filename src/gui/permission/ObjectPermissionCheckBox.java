@@ -2,7 +2,8 @@ package gui.permission;
 
 import javax.swing.JCheckBox;
 
-import types.DataUsage;
+import de.invation.code.toval.types.DataUsage;
+
 
 
 public class ObjectPermissionCheckBox extends JCheckBox {

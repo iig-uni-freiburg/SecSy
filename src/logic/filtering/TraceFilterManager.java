@@ -6,15 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.invation.code.toval.misc.CollectionUtils;
+import de.invation.code.toval.misc.FormatUtils;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import log.EntryField;
 import log.LogTrace;
 import logic.filtering.filter.exception.MissingRequirementException;
 import logic.filtering.filter.trace.AbstractTraceFilter;
 import logic.generator.LogEntryGenerator;
-import misc.CollectionUtils;
-import misc.FormatUtils;
-import validate.ParameterException;
-import validate.Validate;
 
 public class TraceFilterManager {
 	

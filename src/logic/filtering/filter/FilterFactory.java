@@ -2,6 +2,9 @@ package logic.filtering.filter;
 
 import java.io.IOException;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+
 import logic.filtering.filter.properties.AbstractFilterProperties;
 import logic.filtering.filter.properties.BoDFilterProperties;
 import logic.filtering.filter.properties.DayDelayFilterProperties;
@@ -16,8 +19,6 @@ import logic.filtering.filter.trace.multiple.IncompleteLoggingFilter;
 import logic.filtering.filter.trace.multiple.ObfuscationFilter;
 import logic.filtering.filter.trace.multiple.SkipActivitiesFilter;
 import logic.filtering.filter.trace.multiple.UnauthorizedExecutionFilter;
-import properties.PropertyException;
-import validate.ParameterException;
 
 public class FilterFactory {
 	

@@ -23,13 +23,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import de.invation.code.toval.time.TimeScale;
+import de.invation.code.toval.time.TimeValue;
+import de.invation.code.toval.validate.ParameterException;
+
 import logic.filtering.filter.AbstractFilter;
 import logic.simulation.ConfigurationException;
 import logic.simulation.Simulation;
 import logic.simulation.SimulationRun;
-import time.TimeScale;
-import time.TimeValue;
-import validate.ParameterException;
 
 public class TimeFrameDialog extends JDialog {
 

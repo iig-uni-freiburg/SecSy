@@ -5,6 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
+
 import log.LogEntry;
 import logic.filtering.AbstractFilterResult;
 import logic.filtering.TraceFilterEvent;
@@ -12,10 +17,6 @@ import logic.filtering.TraceFilterResult;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AGPropertyEnforcementFilterProperties;
 import logic.filtering.filter.properties.AbstractFilterProperties;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.ParameterException.ErrorCode;
-import validate.Validate;
 
 /**
  * This class defined abstract behaviour for filters that apply to groups of activities within a trace, e.g. SoD or BoD constraints.

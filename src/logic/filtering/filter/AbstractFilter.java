@@ -6,12 +6,13 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Random;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 import log.EntryField;
 import logic.filtering.AbstractFilterResult;
 import logic.filtering.filter.properties.AbstractFilterProperties;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
 
 public abstract class AbstractFilter {
 	

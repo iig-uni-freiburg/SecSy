@@ -7,15 +7,16 @@ import java.util.List;
 
 import javax.swing.SwingWorker;
 
+import de.invation.code.toval.time.TimeScale;
+import de.invation.code.toval.time.TimeValue;
+import de.invation.code.toval.validate.ParameterException;
+
 import logic.generator.SimulationException;
 import logic.generator.TraceStartListener;
 import logic.simulation.ConfigurationException;
 import logic.simulation.Simulation;
 import logic.simulation.SimulationListener;
 import logic.simulation.SimulationRun;
-import time.TimeScale;
-import time.TimeValue;
-import validate.ParameterException;
 
 public class ExecutionTask extends SwingWorker<Boolean, String> implements TraceStartListener, SimulationListener {
 	

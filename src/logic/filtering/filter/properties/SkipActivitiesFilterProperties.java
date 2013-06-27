@@ -6,11 +6,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import misc.ArrayUtils;
-import misc.StringUtils;
-import properties.PropertyException;
-import validate.ParameterException;
-import validate.Validate;
+import de.invation.code.toval.misc.ArrayUtils;
+import de.invation.code.toval.misc.StringUtils;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 
 public class SkipActivitiesFilterProperties  extends AbstractMultipleTraceFilterProperties {
 

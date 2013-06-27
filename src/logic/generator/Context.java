@@ -12,21 +12,21 @@ import java.util.Map;
 import java.util.Set;
 
 import logic.generator.properties.ContextProperties;
-import misc.SetUtils;
 import petrinet.AbstractTransition;
-import properties.PropertyException;
-import types.DataUsage;
 import util.PNUtils;
-import validate.CompatibilityException;
-import validate.InconsistencyException;
-import validate.ParameterException;
-import validate.ParameterException.ErrorCode;
-import validate.Validate;
 import accesscontrol.ACLModel;
 import accesscontrol.ACModel;
 import accesscontrol.RBACModel;
-import constraint.AbstractConstraint;
-import constraint.NumberConstraint;
+import de.invation.code.toval.constraint.AbstractConstraint;
+import de.invation.code.toval.constraint.NumberConstraint;
+import de.invation.code.toval.misc.SetUtils;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.types.DataUsage;
+import de.invation.code.toval.validate.CompatibilityException;
+import de.invation.code.toval.validate.InconsistencyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
 
 /**
  * This class provides context information for process execution.<br>
