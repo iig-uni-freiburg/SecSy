@@ -12,8 +12,8 @@ import javax.swing.table.AbstractTableModel;
 
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 
-import accesscontrol.ACLModel;
 
 public class ObjectPermissionTableModel extends AbstractTableModel implements ObjectPermissionItemListener {
 	

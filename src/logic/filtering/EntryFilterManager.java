@@ -6,9 +6,9 @@ import java.util.List;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 
-import log.EntryField;
-import log.LogEntry;
 import logic.filtering.filter.entry.AbstractEntryFilter;
 import logic.filtering.filter.exception.MissingRequirementException;
 import logic.generator.DetailedLogEntryGenerator;

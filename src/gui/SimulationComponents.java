@@ -11,8 +11,6 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import logformat.LogFormat;
-import logformat.LogFormatFactory;
 import logic.filtering.TraceFilterManager;
 import logic.filtering.filter.AbstractFilter;
 import logic.filtering.filter.FilterFactory;
@@ -41,20 +39,22 @@ import logic.simulation.properties.SimulationRunProperty;
 import parser.PNMLParser;
 import petrinet.pt.PTNet;
 import petrinet.pt.RandomPTTraverser;
-import writer.PerspectiveException;
-import accesscontrol.ACLModel;
-import accesscontrol.ACModel;
-import accesscontrol.RBACModel;
-import accesscontrol.properties.ACLModelProperties;
-import accesscontrol.properties.ACModelProperties;
-import accesscontrol.properties.ACModelType;
-import accesscontrol.properties.RBACModelProperties;
 import de.invation.code.toval.constraint.AbstractConstraint;
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
+import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatFactory;
+import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.RBACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACLModelProperties;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelProperties;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelType;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.RBACModelProperties;
 import gui.properties.GeneralProperties;
 
 

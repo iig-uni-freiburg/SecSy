@@ -34,12 +34,12 @@ import javax.swing.border.EmptyBorder;
 
 import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 
 import logic.generator.Context;
 import petrinet.pt.PTNet;
 import util.PNUtils;
-import accesscontrol.ACLModel;
-import accesscontrol.ACModel;
 
 
 public class ContextDialog extends JDialog {

@@ -11,8 +11,8 @@ import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 
-import log.EntryField;
 
 public class ObfuscationFilterProperties  extends AbstractMultipleTraceFilterProperties {
 	

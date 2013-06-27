@@ -36,12 +36,12 @@ import javax.swing.border.EmptyBorder;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.RBACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.RoleLattice;
 
 import logic.generator.Context;
-import accesscontrol.ACLModel;
-import accesscontrol.ACModel;
-import accesscontrol.RBACModel;
-import accesscontrol.RoleLattice;
 
 
 public class ACModelDialog extends JDialog {

@@ -20,9 +20,9 @@ import javax.swing.table.TableCellRenderer;
 import de.invation.code.toval.types.DataUsage;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 
 import logic.generator.Context;
-import accesscontrol.ACLModel;
 
 
 public class AdvancedACLTable extends JTable implements ObjectPermissionItemListener, ItemListener{

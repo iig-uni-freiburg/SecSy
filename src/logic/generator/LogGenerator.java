@@ -16,11 +16,13 @@ import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
+import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
+import de.uni.freiburg.iig.telematik.jawl.logformat.LogPerspective;
+import de.uni.freiburg.iig.telematik.jawl.writer.LogWriter;
+import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 
-import log.LogEntry;
-import log.LogTrace;
-import logformat.LogFormat;
-import logformat.LogPerspective;
 import logic.filtering.FilterListener;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.trace.AbstractTraceFilter;
@@ -32,8 +34,6 @@ import logic.simulation.SimulationListener;
 import logic.simulation.SimulationListenerSupport;
 import logic.simulation.SimulationRun;
 import petrinet.AbstractPetriNet;
-import writer.LogWriter;
-import writer.PerspectiveException;
 
 
 public abstract class LogGenerator implements FilterListener{

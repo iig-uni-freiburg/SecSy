@@ -36,8 +36,8 @@ import javax.xml.stream.XMLStreamException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 
-import log.EntryField;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.trace.AbstractTraceFilter;
 import logic.filtering.filter.trace.BoDPropertyFilter;

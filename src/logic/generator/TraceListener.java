@@ -1,6 +1,6 @@
 package logic.generator;
 
-import log.LogTrace;
+import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 
 public interface TraceListener {
 	

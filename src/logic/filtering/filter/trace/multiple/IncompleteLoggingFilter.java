@@ -9,10 +9,10 @@ import java.util.Set;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 
-import log.EntryField;
-import log.LogEntry;
-import log.LogTrace;
 import logic.filtering.TraceFilterResult;
 import logic.filtering.filter.FilterType;
 import logic.filtering.filter.properties.AbstractFilterProperties;

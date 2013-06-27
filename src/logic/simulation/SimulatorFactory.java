@@ -3,8 +3,9 @@ package logic.simulation;
 import java.io.IOException;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
+import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 
-import logformat.LogFormat;
 import logic.generator.AttributeValueGenerator;
 import logic.generator.CaseDataContainer;
 import logic.generator.Context;
@@ -13,7 +14,6 @@ import logic.generator.LogEntryGenerator;
 import logic.generator.TraceLogGenerator;
 import logic.generator.TraceLogGeneratorStartComplete;
 import logic.generator.time.CaseTimeGenerator;
-import writer.PerspectiveException;
 
 public class SimulatorFactory {
 	

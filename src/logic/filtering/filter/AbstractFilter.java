@@ -9,8 +9,8 @@ import java.util.Random;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 
-import log.EntryField;
 import logic.filtering.AbstractFilterResult;
 import logic.filtering.filter.properties.AbstractFilterProperties;
 

@@ -10,9 +10,9 @@ import de.invation.code.toval.misc.CollectionUtils;
 import de.invation.code.toval.misc.FormatUtils;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
+import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 
-import log.EntryField;
-import log.LogTrace;
 import logic.filtering.filter.exception.MissingRequirementException;
 import logic.filtering.filter.trace.AbstractTraceFilter;
 import logic.generator.LogEntryGenerator;

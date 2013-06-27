@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import log.DataAttribute;
 import logic.generator.properties.CaseDataContainerProperties;
 import logic.simulation.ConfigurationException;
 import petrinet.ifnet.GuardDataContainer;
@@ -21,6 +20,7 @@ import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.uni.freiburg.iig.telematik.jawl.log.DataAttribute;
 
 /**
  * This class stores values of data elements (attributes) for each execution case.<br>

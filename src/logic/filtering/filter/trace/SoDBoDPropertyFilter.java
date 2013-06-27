@@ -12,10 +12,10 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.types.IndexCounter;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
+import de.uni.freiburg.iig.telematik.jawl.log.EntryUtils;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 
-import log.EntryField;
-import log.EntryUtils;
-import log.LogEntry;
 import logic.filtering.AbstractFilterResult;
 import logic.filtering.TraceFilterResult;
 import logic.filtering.filter.FilterType;

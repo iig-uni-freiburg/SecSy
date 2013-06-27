@@ -1,6 +1,6 @@
 package logic.generator;
 
-import log.LogEntry;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 
 public interface EntryListener {
 	

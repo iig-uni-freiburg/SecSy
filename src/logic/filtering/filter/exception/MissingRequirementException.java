@@ -1,6 +1,6 @@
 package logic.filtering.filter.exception;
 
-import log.EntryField;
+import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 
 public class MissingRequirementException extends FilterException {
 

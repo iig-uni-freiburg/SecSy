@@ -2,8 +2,8 @@ package logic.generator;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import log.EntryField;
-import log.LogEntry;
+import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import logic.filtering.EntryFilterManager;
 import logic.simulation.ConfigurationException;
 import petrinet.AbstractTransition;

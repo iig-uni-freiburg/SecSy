@@ -6,19 +6,19 @@ import java.util.Date;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
+import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
+import de.uni.freiburg.iig.telematik.jawl.logformat.LogPerspective;
+import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 
-import log.LockingException;
-import log.LogEntry;
-import log.LogTrace;
-import logformat.LogFormat;
-import logformat.LogPerspective;
 import logic.filtering.EntryFilterManager;
 import logic.filtering.TraceFilterManager;
 import logic.filtering.filter.AbstractFilter;
 import logic.generator.time.CaseTimeGenerator.ExecutionTime;
 import logic.simulation.SimulationRun;
 import petrinet.AbstractTransition;
-import writer.PerspectiveException;
 import exception.PNException;
 
 /**

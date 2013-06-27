@@ -8,9 +8,9 @@ import java.util.List;
 
 import de.invation.code.toval.misc.ListUtils;
 import de.invation.code.toval.misc.ListUtils.Partition;
+import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 
-import log.LockingException;
-import log.LogEntry;
 
 
 public class Test {

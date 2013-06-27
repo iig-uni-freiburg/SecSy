@@ -11,8 +11,8 @@ import de.invation.code.toval.properties.AbstractProperties;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatType;
 
-import logformat.LogFormatType;
 
 public class SimulationRunProperties extends AbstractProperties{
 	

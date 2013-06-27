@@ -28,8 +28,8 @@ import javax.swing.event.ListSelectionListener;
 import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.RBACModel;
 
-import accesscontrol.RBACModel;
 
 public class RoleMembershipDialog extends JDialog {
 

@@ -44,10 +44,10 @@ import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
+import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatFactory;
+import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatType;
 
-import logformat.LogFormat;
-import logformat.LogFormatFactory;
-import logformat.LogFormatType;
 import logic.generator.CaseDataContainer;
 import logic.generator.Context;
 import logic.generator.DetailedLogEntryGenerator;

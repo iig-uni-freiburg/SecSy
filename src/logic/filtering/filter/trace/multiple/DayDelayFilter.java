@@ -7,10 +7,10 @@ import java.util.List;
 import de.invation.code.toval.misc.RandomUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 
-import log.EntryField;
-import log.LogEntry;
-import log.LogTrace;
 import logic.filtering.TraceFilterEvent;
 import logic.filtering.TraceFilterResult;
 import logic.filtering.filter.FilterType;

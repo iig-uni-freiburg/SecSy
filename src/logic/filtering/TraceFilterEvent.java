@@ -2,7 +2,7 @@ package logic.filtering;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import log.LogTrace;
+import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 
 /**
  * 
