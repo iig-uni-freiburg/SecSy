@@ -89,16 +89,31 @@ public class SimulationComponents {
 		return instance;
 	}
 	
+	public void reset() throws IOException, ParameterException, PropertyException {
+		acModels.clear();
+		petriNets.clear();
+		contexts.clear();
+		caseDataContainers.clear();
+		filters.clear();
+		caseTimeGenerators.clear();
+		simulations.clear();
+		loadSimulationComponents();
+	}
 	
 	//------- Load simulation components --------------------------------------------------------------------------------------
 	
-	private void loadSimulationComponents() throws Exception{
+	private void loadSimulationComponents() throws ParameterException, PropertyException, IOException {
 		MessageDialog.getInstance().addMessage("Loading simulation components.");
 		
 		//1. Load access control models
 		//   -> Contexts require access control models, thus they have to be loaded first.
 		MessageDialog.getInstance().addMessage("1. Searching for access control models:");
-		List<String> acFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForACModels(), true);
+		List<String> acFiles = null;
+		try {
+			acFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForACModels(), true);
+		} catch (IOException e1) {
+			throw new IOException("Cannot access access control model directory.");
+		}
 		for(String acFile: acFiles){
 			MessageDialog.getInstance().addMessage("Loading access control model: " + acFile + "...   ");
 			try{
@@ -112,7 +127,12 @@ public class SimulationComponents {
 		
 		//2. Load contexts
 		MessageDialog.getInstance().addMessage("2. Searching for contexts:");
-		List<String> contextFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForContexts(), true);
+		List<String> contextFiles = null;
+		try {
+			contextFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForContexts(), true);
+		} catch (IOException e1) {
+			throw new IOException("Cannot access context directory.");
+		}
 		for(String contextFile: contextFiles){
 			MessageDialog.getInstance().addMessage("Loading context: " + contextFile + "...   ");
 			try{
@@ -126,7 +146,12 @@ public class SimulationComponents {
 		
 		//3. Load Petri nets
 		MessageDialog.getInstance().addMessage("3. Searching for Petri nets:");
-		List<String> netFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForPetriNets(), true);
+		List<String> netFiles = null;
+		try {
+			netFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForPetriNets(), true);
+		} catch (IOException e1) {
+			throw new IOException("Cannot access Petri net directory.");
+		}
 		for(String netFile: netFiles){
 			MessageDialog.getInstance().addMessage("Loading Petri net: " + netFile + "...   ");
 			try{
@@ -140,7 +165,12 @@ public class SimulationComponents {
 		
 		//4. Load time generator properties
 		MessageDialog.getInstance().addMessage("4. Searching for time generators:");
-		List<String> timePropertiesFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForTimeGenerators(), true);
+		List<String> timePropertiesFiles = null;
+		try {
+			timePropertiesFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForTimeGenerators(), true);
+		} catch (IOException e1) {
+			throw new IOException("Cannot access time generator directory.");
+		}
 		for(String propertiesFile: timePropertiesFiles){
 			MessageDialog.getInstance().addMessage("Loading time generator: " + propertiesFile + "...   ");
 			try{
@@ -157,7 +187,12 @@ public class SimulationComponents {
 		
 		//5. Load data containers
 		MessageDialog.getInstance().addMessage("5. Searching for data containers:");
-		List<String> containerFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForDataContainers(), true);
+		List<String> containerFiles = null;
+		try {
+			containerFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForDataContainers(), true);
+		} catch (IOException e1) {
+			throw new IOException("Cannot access data container directory.");
+		}
 		for(String containerFile: containerFiles){
 			MessageDialog.getInstance().addMessage("Loading data container: " + containerFile + "...   ");
 			try{
@@ -171,7 +206,12 @@ public class SimulationComponents {
 		
 		//6. Load filters
 		MessageDialog.getInstance().addMessage("6. Searching for filters:");
-		List<String> filterFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForFilters(), true);
+		List<String> filterFiles = null;
+		try {
+			filterFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForFilters(), true);
+		} catch (IOException e1) {
+			throw new IOException("Cannot access filter directory.");
+		}
 		for(String filterFile: filterFiles){
 			MessageDialog.getInstance().addMessage("Loading filter: " + filterFile + "...   ");
 			try{
@@ -185,7 +225,12 @@ public class SimulationComponents {
 		
 		//7. Load Simulations
 		MessageDialog.getInstance().addMessage("7. Searching for simulations:");
-		List<String> simulationFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForSimulations(), true);
+		List<String> simulationFiles= null;
+		try {
+			simulationFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForSimulations(), true);
+		} catch (IOException e1) {
+			throw new IOException("Cannot access simulation directory.");
+		}
 		for(String simulationFile: simulationFiles){
 			MessageDialog.getInstance().addMessage("Loading simulation: " + simulationFile + "...   ");
 			try{
@@ -202,26 +247,34 @@ public class SimulationComponents {
 		
 	}
 	
-	private ACModel loadACModel(String acFile) throws IOException, PropertyException, ParameterException {
+	private ACModel loadACModel(String acFile) throws PropertyException, ParameterException, IOException {
 		ACModelProperties testProperties = new ACModelProperties();
-		testProperties.load(acFile);
-		
-		//Check ACModel type
-		if(testProperties.getType().equals(ACModelType.ACL)){
-			ACLModelProperties aclProperties = new ACLModelProperties();
-			aclProperties.load(acFile);
-			return new ACLModel(aclProperties);
-		} else {
-			RBACModelProperties rbacProperties = new RBACModelProperties();
-			rbacProperties.load(acFile);
-			return new RBACModel(rbacProperties);
+		try {
+			testProperties.load(acFile);
+
+			// Check ACModel type
+			if (testProperties.getType().equals(ACModelType.ACL)) {
+				ACLModelProperties aclProperties = new ACLModelProperties();
+				aclProperties.load(acFile);
+				return new ACLModel(aclProperties);
+			} else {
+				RBACModelProperties rbacProperties = new RBACModelProperties();
+				rbacProperties.load(acFile);
+				return new RBACModel(rbacProperties);
+			}
+		} catch(IOException e){
+			throw new IOException("Cannot load properties file: " + acFile + ".");
 		}
 	}
 	
-	private Context loadContext(String contextFile) throws IOException, ParameterException, PropertyException{
+	private Context loadContext(String contextFile) throws ParameterException, PropertyException, IOException{
 		// Load context properties.
 		ContextProperties properties = new ContextProperties();
-		properties.load(contextFile);
+		try {
+			properties.load(contextFile);
+		} catch(IOException e){
+			throw new IOException("Cannot load properties file: " + contextFile + ".");
+		}
 		Context result = new Context(properties.getName(), properties.getActivities());
 		Set<String> subjects = properties.getSubjects();
 		if(subjects != null && !subjects.isEmpty())
@@ -248,10 +301,14 @@ public class SimulationComponents {
 	}
 	
 	
-	private CaseDataContainer loadDataContainer(String containerFile) throws IOException, ParameterException, PropertyException{
+	private CaseDataContainer loadDataContainer(String containerFile) throws ParameterException, PropertyException, IOException{
 		//Load container properties
 		CaseDataContainerProperties properties = new CaseDataContainerProperties();
-		properties.load(containerFile);
+		try {
+			properties.load(containerFile);
+		} catch(IOException e){
+			throw new IOException("Cannot load properties file: " + containerFile + ".");
+		}
 		
 //		String contextName = properties.getContextName();
 //		Context referencedContext = getContext(contextName);
@@ -268,7 +325,12 @@ public class SimulationComponents {
 	
 	private Simulation loadSimulation(String simulationFile) throws IOException, ParameterException, PropertyException, PerspectiveException, ConfigurationException, MissingRequirementException{
 		//Load simulation properties
-		SimulationProperties properties = new SimulationProperties(simulationFile);
+		SimulationProperties properties;
+		try {
+			properties = new SimulationProperties(simulationFile);
+		} catch(IOException e){
+			throw new IOException("Cannot load properties file: " + simulationFile + ".");
+		}
 		
 		LogFormat logFormat= LogFormatFactory.getFormat(properties.getLogFormatType());
 //		String fileName = new File(properties.getFileName()).getName();

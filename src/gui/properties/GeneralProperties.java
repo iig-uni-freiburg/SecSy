@@ -1,5 +1,7 @@
 package gui.properties;
 
+import gui.SimulationComponents;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -65,14 +67,13 @@ public class GeneralProperties extends AbstractProperties{
 		return props.getProperty(property.toString());
 	}
 	
-	@SuppressWarnings("unused")
 	private void removeProperty(GeneralProperty property){
 		props.remove(property.toString());
 	}
 	
 	//-- Simulation Directory
 	
-	public void setSimulationDirectory(String directory) throws ParameterException{
+	public void setSimulationDirectory(String directory) throws ParameterException, IOException, PropertyException {
 		validateSimulationDirectory(directory, false);
 		setProperty(GeneralProperty.SIMULATION_DIRECTORY, directory);
 		//Check, if the simulation directory is empty
@@ -80,6 +81,7 @@ public class GeneralProperties extends AbstractProperties{
 		if(!dir.exists()){
 			dir.mkdir();
 		}
+		SimulationComponents.getInstance().reset();
 	}
 	
 	public String getSimulationDirectory() throws PropertyException, ParameterException {
@@ -216,8 +218,12 @@ public class GeneralProperties extends AbstractProperties{
 	
 	//--------------------------------------------------------------------------------------
 	
-	public void store() throws IOException{
-		store(propertyFileName);
+	public void store() throws IOException {
+		try {
+			store(propertyFileName);
+		} catch (IOException e) {
+			throw new IOException("Cannot create/store general properties file on disk.");
+		}
 	}
 
 }

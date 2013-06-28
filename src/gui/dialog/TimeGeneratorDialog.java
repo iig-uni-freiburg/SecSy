@@ -46,8 +46,10 @@ import de.invation.code.toval.time.Weekday;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
+import logic.generator.time.properties.TimeGeneratorFactory;
 import logic.generator.time.properties.TimeProperties;
 import logic.generator.time.properties.TimeProperties.CaseStartPrecision;
+import javax.swing.ScrollPaneConstants;
 
 public class TimeGeneratorDialog extends JDialog {
 
@@ -165,17 +167,19 @@ public class TimeGeneratorDialog extends JDialog {
 		contentPanel.add(comboPrecision);
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setBounds(180, 240, 143, 91);
 		contentPanel.add(scrollPane);
 		
-		listOfficeDays = new JList();
+		
 		officeDayListModel = new DefaultListModel();
 		officeDayListModel.addElement("Monday");
 		officeDayListModel.addElement("Tuesday");
 		officeDayListModel.addElement("Wednesday");
 		officeDayListModel.addElement("Thursday");
 		officeDayListModel.addElement("Friday");
-		listOfficeDays.setModel(officeDayListModel);
+		listOfficeDays = new JList(officeDayListModel);
 		listOfficeDays.addKeyListener(new KeyListener() {
 			
 			@Override
@@ -192,14 +196,15 @@ public class TimeGeneratorDialog extends JDialog {
 			@Override
 			public void keyPressed(KeyEvent e) {}
 		});
-		scrollPane.setColumnHeaderView(listOfficeDays);
+		scrollPane.setViewportView(listOfficeDays);
 		
 		JButton btnAdd = new JButton("Add");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				List<String> weekdays = Weekday.stringValues();
-				for(Enumeration<?> elements = officeDayListModel.elements(); elements.hasMoreElements();)
+				for(Enumeration<?> elements = officeDayListModel.elements(); elements.hasMoreElements();){
 					weekdays.remove(elements.nextElement().toString());
+				}
 				if(!weekdays.isEmpty()){
 					List<String> newWeekdays = ValueChooserDialog.showDialog(TimeGeneratorDialog.this, "Add weekdays", weekdays, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 					if(newWeekdays != null && !newWeekdays.isEmpty()){
@@ -508,7 +513,13 @@ public class TimeGeneratorDialog extends JDialog {
 						return;
 					}
 					
-					System.out.println("no error");
+					//Check if it is possible to create a time generator
+					try {
+						TimeGeneratorFactory.createCaseTimeGenerator(TimeGeneratorDialog.this.timeProperties);
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(TimeGeneratorDialog.this, "Exception on creating case time generator.\nReason: " + e1.getMessage(), "Parameter Exception", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 					
 					dispose();
 				}

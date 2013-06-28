@@ -103,10 +103,13 @@ public class Simulator extends JFrame {
 			GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory);
 			return true;
 		} catch (ParameterException e1) {
-			JOptionPane.showMessageDialog(null, "Internal exception: Cannot set simulation directory:\n" + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 			return false;
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(null, "Internal exception: Cannot access general property file:\n" + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e1.getMessage(), "I/O Exception", JOptionPane.ERROR_MESSAGE);
+			return false;
+		} catch (PropertyException e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage(), "Property Exception", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}
@@ -183,7 +186,7 @@ public class Simulator extends JFrame {
 		menuBar.add(mnFile);
 		
 		JMenuItem mntmSwitch = new JMenuItem("Switch Simulation Directory");
-		mntmSwitch.setAction(new AbstractAction() {
+		mntmSwitch.setAction(new AbstractAction("Switch Simulation Directory") {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String simulationDirectory = SimulationDirectoryDialog.showDialog(Simulator.this);
@@ -196,6 +199,19 @@ public class Simulator extends JFrame {
 					}
 				} catch (Exception e1) {
 					return;
+				}
+				
+				try {
+					GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory);
+				} catch (ParameterException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (PropertyException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 				updateSimulationBox();
 				updateSimulationArea();
