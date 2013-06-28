@@ -102,7 +102,7 @@ public class SimulationComponents {
 	
 	//------- Load simulation components --------------------------------------------------------------------------------------
 	
-	private void loadSimulationComponents() throws ParameterException, PropertyException, IOException {
+	private void loadSimulationComponents() throws ParameterException, IOException, PropertyException {
 		MessageDialog.getInstance().addMessage("Loading simulation components.");
 		
 		//1. Load access control models

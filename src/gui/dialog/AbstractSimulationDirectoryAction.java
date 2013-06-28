@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.swing.AbstractAction;
 
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 
 
@@ -24,7 +25,7 @@ public abstract class AbstractSimulationDirectoryAction extends AbstractAction {
 		this.parent = parentWindow;
 	}
 	
-	protected void addKnownSimulationDirectory(String simulationDirectory, boolean createSubfolders){
+	protected void addKnownSimulationDirectory(String simulationDirectory, boolean createSubfolders) throws PropertyException{
 		try {
 			GeneralProperties.getInstance().addKnownSimulationDirectory(simulationDirectory, createSubfolders);
 			GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory);

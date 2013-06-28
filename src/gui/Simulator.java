@@ -186,7 +186,8 @@ public class Simulator extends JFrame {
 		menuBar.add(mnFile);
 		
 		JMenuItem mntmSwitch = new JMenuItem("Switch Simulation Directory");
-		mntmSwitch.setAction(new AbstractAction("Switch Simulation Directory") {
+		mntmSwitch.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String simulationDirectory = SimulationDirectoryDialog.showDialog(Simulator.this);
@@ -194,25 +195,13 @@ public class Simulator extends JFrame {
 					return;
 				}
 				try {
-					if(GeneralProperties.getInstance().getSimulationDirectory().equals(simulationDirectory)){
-						return;
+					if(!GeneralProperties.getInstance().getSimulationDirectory().equals(simulationDirectory)){
+						GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory);
 					}
 				} catch (Exception e1) {
 					return;
 				}
 				
-				try {
-					GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory);
-				} catch (ParameterException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (PropertyException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				updateSimulationBox();
 				updateSimulationArea();
 			}

@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+import de.invation.code.toval.properties.PropertyException;
 
 public class OpenSimulationDirectoryAction extends AbstractSimulationDirectoryAction {
 
@@ -16,7 +19,6 @@ public class OpenSimulationDirectoryAction extends AbstractSimulationDirectoryAc
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("sdsdsd");
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Choose existing simulation directory");
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -26,7 +28,11 @@ public class OpenSimulationDirectoryAction extends AbstractSimulationDirectoryAc
             File file = fileChooser.getSelectedFile();
             String simulationDirectory = file.getAbsolutePath()+"/";
             
-            addKnownSimulationDirectory(simulationDirectory, false);
+            try {
+				addKnownSimulationDirectory(simulationDirectory, false);
+			} catch (PropertyException e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage(), "Property Exception", JOptionPane.ERROR_MESSAGE);
+			}
         }
 	}
 

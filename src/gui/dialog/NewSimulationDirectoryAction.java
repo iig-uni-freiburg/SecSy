@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+import de.invation.code.toval.properties.PropertyException;
 
 public class NewSimulationDirectoryAction extends AbstractSimulationDirectoryAction {
 
@@ -36,7 +39,11 @@ public class NewSimulationDirectoryAction extends AbstractSimulationDirectoryAct
             dir.mkdir();
             String simulationDirectory = dir.getAbsolutePath() + "/";
  
-            addKnownSimulationDirectory(simulationDirectory, true);
+            try {
+				addKnownSimulationDirectory(simulationDirectory, true);
+			} catch (PropertyException e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage(), "Property Exception", JOptionPane.ERROR_MESSAGE);
+			}
         }
 	}
 
