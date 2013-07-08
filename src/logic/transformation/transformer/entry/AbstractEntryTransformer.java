@@ -7,22 +7,20 @@ import logic.transformation.EntryTransformerEvent;
 import logic.transformation.EntryTransformerResult;
 import logic.transformation.transformer.AbstractTransformer;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.properties.AbstractFilterProperties;
+import logic.transformation.transformer.properties.AbstractTransformerProperties;
 
 
-public abstract class AbstractEntryFilter extends AbstractTransformer {
+public abstract class AbstractEntryTransformer extends AbstractTransformer {
 	
-	
-	
-	public AbstractEntryFilter(AbstractFilterProperties properties) throws ParameterException, PropertyException {
+	public AbstractEntryTransformer(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 	}
 
-	public AbstractEntryFilter(TransformerType filterType, double activationProbability) throws ParameterException{
-		super(filterType, activationProbability);
+	public AbstractEntryTransformer(TransformerType transformerType, double activationProbability) throws ParameterException{
+		super(transformerType, activationProbability);
 	}
 	
-	public EntryTransformerResult filterLogEntry(EntryTransformerEvent event) throws ParameterException{
+	public EntryTransformerResult transformLogEntry(EntryTransformerEvent event) throws ParameterException{
 		Validate.notNull(event);
 		if(activationProbability==1.0 || rand.nextDouble()<=activationProbability){
 			return applyTransformation(event);
@@ -30,7 +28,7 @@ public abstract class AbstractEntryFilter extends AbstractTransformer {
 		try {
 			return new EntryTransformerResult(event.logEntry, event.caseNumber, false);
 		} catch (ParameterException e) {
-			// Cannot happen, since EntryFilterManager enforces non-null values for 
+			// Cannot happen, since EntryTransformerManager enforces non-null values for 
 			// log entries and case numbers.
 			e.printStackTrace();
 		}

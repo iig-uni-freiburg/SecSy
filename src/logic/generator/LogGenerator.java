@@ -31,8 +31,8 @@ import logic.simulation.SimulationListenerSupport;
 import logic.simulation.SimulationRun;
 import logic.transformation.TransformerListener;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.trace.AbstractTraceFilter;
-import logic.transformation.transformer.trace.multiple.UnauthorizedExecutionFilter;
+import logic.transformation.transformer.trace.AbstractTraceTransformer;
+import logic.transformation.transformer.trace.multiple.UnauthorizedExecutionTransformer;
 import petrinet.AbstractPetriNet;
 
 
@@ -349,11 +349,11 @@ public abstract class LogGenerator implements TransformerListener{
 	}
 	
 	private void checkFilterRequirements(SimulationRun run) throws ConfigurationException{
-		for(AbstractTraceFilter traceFilter: run.getTraceFilterManager().getTraceTransformers()){
-			if(traceFilter.getFilterType().equals(TransformerType.UNAUTHORIZED_EXECUTION_FILTER)){
+		for(AbstractTraceTransformer traceFilter: run.getTraceFilterManager().getTraceTransformers()){
+			if(traceFilter.getType().equals(TransformerType.UNAUTHORIZED_EXECUTION)){
 				if(getLogEntryGenerator() instanceof DetailedLogEntryGenerator){
 					try {
-						((UnauthorizedExecutionFilter) traceFilter).setContext(((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext());
+						((UnauthorizedExecutionTransformer) traceFilter).setContext(((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext());
 					} catch (ParameterException e) {
 						throw new ConfigurationException(ErrorCode.CONTEXT_INCONSISTENCY, "Missing context reference in UnauthorizedExecution-filter");
 					}

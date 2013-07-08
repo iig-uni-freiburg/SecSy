@@ -14,10 +14,10 @@ import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import logic.transformation.TraceTransformerEvent;
 import logic.transformation.TraceTransformerResult;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.properties.AbstractFilterProperties;
-import logic.transformation.transformer.properties.DayDelayFilterProperties;
+import logic.transformation.transformer.properties.AbstractTransformerProperties;
+import logic.transformation.transformer.properties.DayDelayTransformerProperties;
 
-public class DayDelayFilter extends AbstractMultipleTraceFilter{
+public class DayDelayTransformer extends AbstractMultipleTraceTransformer{
 	
 	private final String CUSTOM_SUCCESS_FORMAT = "entry %s: added delay of %s days";
 	
@@ -26,19 +26,19 @@ public class DayDelayFilter extends AbstractMultipleTraceFilter{
 	
 	private long delayInMilliseconds = 0;
 
-	public DayDelayFilter(DayDelayFilterProperties properties) throws ParameterException, PropertyException {
+	public DayDelayTransformer(DayDelayTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 		setDayBounds(properties.getMinDays(), properties.getMaxDays());
 	}
 	
-	public DayDelayFilter(double activationProbability, int maxAppliances, int minDays, int maxDays) throws ParameterException {
-		super(TransformerType.DAY_DELAY_FILTER, activationProbability, maxAppliances);
+	public DayDelayTransformer(double activationProbability, int maxAppliances, int minDays, int maxDays) throws ParameterException {
+		super(TransformerType.DAY_DELAY, activationProbability, maxAppliances);
 		setDayBounds(minDays, maxDays);
 	}
 
 
 	public void setDayBounds(int minDays, int maxDays) throws ParameterException{
-		DayDelayFilterProperties.validateDayBounds(minDays, maxDays);
+		DayDelayTransformerProperties.validateDayBounds(minDays, maxDays);
 		this.minDays = minDays;
 		this.maxDays = maxDays;
 	}
@@ -58,17 +58,17 @@ public class DayDelayFilter extends AbstractMultipleTraceFilter{
 	}
 
 	@Override
-	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult filterResult) throws ParameterException {
-		super.applyEntryTransformation(entry, filterResult);
+	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+		super.applyEntryTransformation(entry, transformerResult);
 		
 		// Check, if timestamps can be altered for the entry itself and all its successors within the trace
 		if(entry.isFieldLocked(EntryField.TIME)){
-			addMessageToResult(super.getErrorMessage("entry " + entry.getActivity() + ": Cannot add delay due to locked time-field"), filterResult);
+			addMessageToResult(super.getErrorMessage("entry " + entry.getActivity() + ": Cannot add delay due to locked time-field"), transformerResult);
 			return false;
 		}
-		for(LogEntry affectedEntry: filterResult.getLogTrace().getSucceedingEntries(entry)){
+		for(LogEntry affectedEntry: transformerResult.getLogTrace().getSucceedingEntries(entry)){
 			if(affectedEntry.isFieldLocked(EntryField.TIME)){
-				addMessageToResult(super.getErrorMessage("entry " + entry.getActivity() + ": Cannot add delay due to locked time-field in sucessing entry ("+affectedEntry.getActivity()+")"), filterResult);
+				addMessageToResult(super.getErrorMessage("entry " + entry.getActivity() + ": Cannot add delay due to locked time-field in sucessing entry ("+affectedEntry.getActivity()+")"), transformerResult);
 				return false;
 			}
 		}
@@ -76,11 +76,11 @@ public class DayDelayFilter extends AbstractMultipleTraceFilter{
 		int extraDays = RandomUtils.randomIntBetween(minDays, maxDays+1);
 		delayInMilliseconds = 86400000 * extraDays;
 		if(addTimeToEntry(entry, delayInMilliseconds)){
-			addMessageToResult(getSuccessMessage(entry.getActivity(), extraDays), filterResult);
+			addMessageToResult(getSuccessMessage(entry.getActivity(), extraDays), transformerResult);
 			return true;
 		} else {
 			// Should not happen, locking property is checked before
-			addMessageToResult(super.getErrorMessage("entry " + entry.getActivity() + ": Cannot add delay due t olocked time-field"), filterResult);
+			addMessageToResult(super.getErrorMessage("entry " + entry.getActivity() + ": Cannot add delay due t olocked time-field"), transformerResult);
 			return false;
 		}
 	}
@@ -104,23 +104,23 @@ public class DayDelayFilter extends AbstractMultipleTraceFilter{
 	}
 	
 	@Override
-	protected void fillProperties(AbstractFilterProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
 		super.fillProperties(properties);
-		((DayDelayFilterProperties) properties).setDayBounds(getMinDays(), getMaxDays());
+		((DayDelayTransformerProperties) properties).setDayBounds(getMinDays(), getMaxDays());
 	}
 
 	@Override
-	public AbstractFilterProperties getProperties() throws ParameterException, PropertyException {
-		DayDelayFilterProperties properties = new DayDelayFilterProperties();
+	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+		DayDelayTransformerProperties properties = new DayDelayTransformerProperties();
 		fillProperties(properties);
 		return properties;
 	}
 
 	@Override
-	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryFilterSuccess) throws ParameterException {
+	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryTransformerSuccess) throws ParameterException {
 		// This method is called when the start time of an entry is postponed by a day-delay
 		// -> Adjust the start times of all following entries.
-		if(entryFilterSuccess){
+		if(entryTransformerSuccess){
 			// Start time for entry has been postponed.
 			// Since locking properties are checked before in applyEntryTransformation, there should not occur any errors
 			for(LogEntry succeedingEntry: logTrace.getSucceedingEntries(logEntry)){
@@ -130,7 +130,7 @@ public class DayDelayFilter extends AbstractMultipleTraceFilter{
 	}
 	
 	public static void main(String[] args) throws Exception{
-		DayDelayFilter f = new DayDelayFilter(1, 1, 10, 20);
+		DayDelayTransformer f = new DayDelayTransformer(1, 1, 10, 20);
 		LogEntry e1 = new LogEntry("a1");
 		e1.setTimestamp(new Date(System.currentTimeMillis()));
 		LogEntry e2 = new LogEntry("a2");

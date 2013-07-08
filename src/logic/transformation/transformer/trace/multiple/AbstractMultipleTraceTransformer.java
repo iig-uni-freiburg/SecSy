@@ -16,16 +16,16 @@ import logic.transformation.AbstractTransformerResult;
 import logic.transformation.TraceTransformerEvent;
 import logic.transformation.TraceTransformerResult;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.properties.AbstractFilterProperties;
-import logic.transformation.transformer.properties.AbstractMultipleTraceFilterProperties;
-import logic.transformation.transformer.trace.AbstractTraceFilter;
+import logic.transformation.transformer.properties.AbstractTransformerProperties;
+import logic.transformation.transformer.properties.AbstractMultipleTraceTransformerProperties;
+import logic.transformation.transformer.trace.AbstractTraceTransformer;
 
 /**
  * 
  * 
  * @author Thomas Stocker
  */
-public abstract class AbstractMultipleTraceFilter extends AbstractTraceFilter {
+public abstract class AbstractMultipleTraceTransformer extends AbstractTraceTransformer {
 
 	protected final String TARGET_APPLIANCES_FORMAT = "target appliances: %s";
 	protected final String UNSUCCESSFUL_APPLIANCES_FORMAT = "unsuccessful appliances: %s";
@@ -33,20 +33,20 @@ public abstract class AbstractMultipleTraceFilter extends AbstractTraceFilter {
 	/**
 	 * General maximum number of appliances on a given trace.
 	 */
-	protected int maxAppliances = AbstractMultipleTraceFilterProperties.defaultMaxAppliances;
+	protected int maxAppliances = AbstractMultipleTraceTransformerProperties.defaultMaxAppliances;
 	
 	/**
-	 * target filter appliances for the actual trace.
+	 * target transformer appliances for the actual trace.
 	 */
 	protected int targetAppliances;
 	
-	public AbstractMultipleTraceFilter(AbstractMultipleTraceFilterProperties properties) throws ParameterException, PropertyException {
+	public AbstractMultipleTraceTransformer(AbstractMultipleTraceTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 		maxAppliances = properties.getMaxAppliances();
 	}
 
-	public AbstractMultipleTraceFilter(TransformerType filterType, double activationProbability, int maxAppliances) throws ParameterException {
-		super(filterType, activationProbability);
+	public AbstractMultipleTraceTransformer(TransformerType transformerType, double activationProbability, int maxAppliances) throws ParameterException {
+		super(transformerType, activationProbability);
 		setMaxAppliances(maxAppliances);
 	}
 	
@@ -89,7 +89,7 @@ public abstract class AbstractMultipleTraceFilter extends AbstractTraceFilter {
 		return result;
 	}
 	
-	protected abstract void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryFilterSuccess) throws ParameterException;
+	protected abstract void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryTransformerSuccess) throws ParameterException;
 	
 	protected void determineAppliances(int logEntries, AbstractTransformerResult result) throws ParameterException{
 		Validate.notNull(logEntries);
@@ -97,16 +97,16 @@ public abstract class AbstractMultipleTraceFilter extends AbstractTraceFilter {
 		addMessageToResult(getNoticeMessage(String.format(TARGET_APPLIANCES_FORMAT, targetAppliances)), result);
 	}
 	
-	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult filterResult) throws ParameterException {
+	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
 		Validate.notNull(entry);
-		Validate.notNull(filterResult);
+		Validate.notNull(transformerResult);
 		return true;
 	}
 
 	@Override
-	protected void fillProperties(AbstractFilterProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
 		super.fillProperties(properties);
-		((AbstractMultipleTraceFilterProperties) properties).setMaxAppliances(maxAppliances);
+		((AbstractMultipleTraceTransformerProperties) properties).setMaxAppliances(maxAppliances);
 	}
 	
 	

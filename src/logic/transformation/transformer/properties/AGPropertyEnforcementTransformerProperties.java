@@ -15,22 +15,22 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
 
-import logic.transformation.transformer.trace.ActivityGroupPropertyEnforcementFilter.FilterAction;
+import logic.transformation.transformer.trace.ActivityGroupPropertyEnforcementTransformer.TransformerAction;
 
-public abstract class AGPropertyEnforcementFilterProperties extends AbstractFilterProperties {
+public abstract class AGPropertyEnforcementTransformerProperties extends AbstractTransformerProperties {
 	
 	private final String ACTIVITY_GROUP_FORMAT = AGPEProperty.ACTIVITY_GROUP + "_%s";
 	
 	public static final Double defaultViolationProbability = 0.0;
 	public static final Integer defaultNumberOfGroups = 0;
-	public static final FilterAction defaultFilterAction = FilterAction.ENSURE;
+	public static final TransformerAction defaultTransformerAction = TransformerAction.ENSURE;
 	
 
-	public AGPropertyEnforcementFilterProperties() {
+	public AGPropertyEnforcementTransformerProperties() {
 		super();
 	}
 
-	public AGPropertyEnforcementFilterProperties(String fileName) throws IOException {
+	public AGPropertyEnforcementTransformerProperties(String fileName) throws IOException {
 		super(fileName);
 	}
 	

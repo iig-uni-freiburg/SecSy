@@ -16,29 +16,29 @@ import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 
 import logic.transformation.AbstractTransformerResult;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.properties.AbstractFilterProperties;
-import logic.transformation.transformer.properties.BoDFilterProperties;
+import logic.transformation.transformer.properties.AbstractTransformerProperties;
+import logic.transformation.transformer.properties.BoDTransformerProperties;
 
-public class BoDPropertyFilter extends SoDBoDPropertyFilter {
+public class BoDPropertyTransformer extends SoDBoDPropertyTransformer {
 	
 	protected final String ERRORF_NO_SHARED_ORIGINATORS = "no shared originator candidates for group %s.";
 	protected final String ERRORF_FIXED_DIFFERENT_ORIGINATORS = "originators are different and not alterable for group %s.";
 	
-	public BoDPropertyFilter(BoDFilterProperties properties) throws ParameterException, PropertyException{
+	public BoDPropertyTransformer(BoDTransformerProperties properties) throws ParameterException, PropertyException{
 		super(properties);
 	}
 	
-	public BoDPropertyFilter(Set<String>... bindings) throws ParameterException {
+	public BoDPropertyTransformer(Set<String>... bindings) throws ParameterException {
 		this(0.0, bindings);
 	}
 	
-	public BoDPropertyFilter(double violationProbability, Set<String>... bindings) throws ParameterException {
-		super(TransformerType.BOD_FILTER, violationProbability, bindings);
+	public BoDPropertyTransformer(double violationProbability, Set<String>... bindings) throws ParameterException {
+		super(TransformerType.BOD, violationProbability, bindings);
 	}
 
 	@Override
-	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult filterResult) throws ParameterException {
-		EnforcementResult trivialResult = super.ensureProperty(activityGroup, entries, filterResult);
+	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
+		EnforcementResult trivialResult = super.ensureProperty(activityGroup, entries, transformerResult);
 		if(trivialResult.equals(EnforcementResult.SUCCESSFUL) || trivialResult.equals(EnforcementResult.NOTNECESSARY))
 			return trivialResult;
 		
@@ -66,7 +66,7 @@ public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 				if(distinctFixedOriginatorsForActivity.size() + missingOriginators.size() > allDistinctFixedOriginators.size()){
 					//There are not enough entries with alternative originators that potentially could ensure the property
 					//-> Property cannot be ensured
-					addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKED_ORIGINATORS, activityGroup)), filterResult);
+					addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKED_ORIGINATORS, activityGroup)), transformerResult);
 					return EnforcementResult.UNSUCCESSFUL;
 				}
 			}
@@ -93,13 +93,13 @@ public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 		}
 		
 		//Try to find a valid combination of originators
-		return findValidOriginatorCombination(activityGroup, entries, candidateList, filterResult, FilterAction.ENSURE);
+		return findValidOriginatorCombination(activityGroup, entries, candidateList, transformerResult, TransformerAction.ENSURE);
 	}
 	
 	@Override
-	protected boolean filterEnforcedOnOriginatorSets(Map<String, Set<String>> originatorSets, FilterAction filterAction){
+	protected boolean transformerEnforcedOnOriginatorSets(Map<String, Set<String>> originatorSets, TransformerAction transformerAction){
 		//Check if any two sets intersect
-		switch(filterAction){
+		switch(transformerAction){
 			case ENSURE: return SetUtils.containSameElements(originatorSets.values());
 			case VIOLATE:return !SetUtils.containSameElements(originatorSets.values());
 			default: return false;
@@ -107,11 +107,11 @@ public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 	}
 	
 	@Override
-	protected boolean checkTrivialCase(List<LogEntry> entries, FilterAction action) throws ParameterException{
+	protected boolean checkTrivialCase(List<LogEntry> entries, TransformerAction action) throws ParameterException{
 		if(super.checkTrivialCase(entries, action))
 			return true;
 		//SoD is enforced if all pairwise intersections of the sets of executors of activities is empty.
-		return filterEnforcedOnOriginatorSets(EntryUtils.clusterOriginatorsAccordingToActivity(entries), action);
+		return transformerEnforcedOnOriginatorSets(EntryUtils.clusterOriginatorsAccordingToActivity(entries), action);
 	}
 	
 //				
@@ -124,7 +124,7 @@ public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 //			if(entriesWithLockedOriginator.size() == entries.size()){
 //				//The field ORIGINATOR is locked in all entries 
 //				//-> No enforcement possible since the property is not enforced trivially
-//				addMessageToResult(getErrorMessage(String.format(ERRORF_FIXED_DIFFERENT_ORIGINATORS, activityGroup)), filterResult);
+//				addMessageToResult(getErrorMessage(String.format(ERRORF_FIXED_DIFFERENT_ORIGINATORS, activityGroup)), transformerResult);
 //				return EnforcementResult.UNSUCCESSFUL;
 //			}
 //			//Check the values of the locked originators
@@ -132,7 +132,7 @@ public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 //			if(lockedOriginators.size()>1){
 //				//The values of the locked originator fields differ
 //				//-> No enforcement possible
-//				addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKING, activityGroup)), filterResult);
+//				addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKING, activityGroup)), transformerResult);
 //				return EnforcementResult.UNSUCCESSFUL;
 //			}else{
 //				//All fixed originator fields have the same value
@@ -145,15 +145,15 @@ public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 //					if(!entry.getOriginatorCandidates().contains(fixedOriginator)){
 //						//The fixed originator is not an originator candidate for the current entry
 //						//-> No enforcement is possible
-//						addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKING, activityGroup)), filterResult);
+//						addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKING, activityGroup)), transformerResult);
 //						return EnforcementResult.UNSUCCESSFUL;
 //					}
 //				}
 //				//The fixed originator is an originator candidate for all rest-entries
 //				//-> adjust the value of the originator field for all rest-entries
 //				setOriginatorForEntries(fixedOriginator, entriesWithoutLockedOriginator);
-//				addMessageToResult(getErrorMessage(String.format(CUSTOM_SUCCESSFUL_ENFORCEMENT_FORMAT, fixedOriginator, activityGroup)), filterResult);
-//				lockFieldForEntries(EntryField.ORIGINATOR, "Filter Enforcement: BoD", entries);
+//				addMessageToResult(getErrorMessage(String.format(CUSTOM_SUCCESSFUL_ENFORCEMENT_FORMAT, fixedOriginator, activityGroup)), transformerResult);
+//				lockFieldForEntries(EntryField.ORIGINATOR, "Transformer Enforcement: BoD", entries);
 //				return EnforcementResult.SUCCESSFUL;
 //			}
 //		} else { //There are no entries with locked originator fields
@@ -163,7 +163,7 @@ public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 //			if(commonOriginatorCandidates.isEmpty()){
 //				//The entries do not have a single originator candidate in common
 //				//-> Property cannot be enforced
-//				addMessageToResult(getErrorMessage(String.format(ERRORF_NO_SHARED_ORIGINATORS, activityGroup)), filterResult);
+//				addMessageToResult(getErrorMessage(String.format(ERRORF_NO_SHARED_ORIGINATORS, activityGroup)), transformerResult);
 //				return EnforcementResult.UNSUCCESSFUL;
 //			}
 //			
@@ -171,15 +171,15 @@ public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 //			//-> Randomly choose one of them and adjust all entries accordingly
 //			String commonOriginatorCandidate = commonOriginatorCandidates.get(rand.nextInt(commonOriginatorCandidates.size()));
 //			setOriginatorForEntries(commonOriginatorCandidate, entries);
-//			addMessageToResult(getSuccessMessage(String.format(CUSTOM_SUCCESSFUL_ENFORCEMENT_FORMAT, commonOriginatorCandidate, activityGroup)), filterResult);
-//			lockFieldForEntries(EntryField.ORIGINATOR, "Filter Enforcement: BoD", entries);
+//			addMessageToResult(getSuccessMessage(String.format(CUSTOM_SUCCESSFUL_ENFORCEMENT_FORMAT, commonOriginatorCandidate, activityGroup)), transformerResult);
+//			lockFieldForEntries(EntryField.ORIGINATOR, "Transformer Enforcement: BoD", entries);
 //			return EnforcementResult.SUCCESSFUL;
 //		}
 //	}
 
 	@Override
-	protected EnforcementResult violateProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult filterResult) throws ParameterException {
-		EnforcementResult trivialResult = super.violateProperty(activityGroup, entries, filterResult);
+	protected EnforcementResult violateProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
+		EnforcementResult trivialResult = super.violateProperty(activityGroup, entries, transformerResult);
 		if(trivialResult.equals(EnforcementResult.SUCCESSFUL) || trivialResult.equals(EnforcementResult.NOTNECESSARY))
 			return trivialResult;
 		//All originator sets for the different activities contain the same elements
@@ -198,7 +198,7 @@ public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 			}
 		}
 		if(allEntriesInAllSetsLocked){
-			addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKED_ORIGINATORS, activityGroup)), filterResult);
+			addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKED_ORIGINATORS, activityGroup)), transformerResult);
 			return EnforcementResult.UNSUCCESSFUL;
 		}
 		
@@ -210,7 +210,7 @@ public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 				for(String originatorCandidate: groupEntry.getOriginatorCandidates()){
 					if(!distinctOriginators.contains(originatorCandidate)){
 						//Violation possible with this candidate
-						addMessageToResult(getNoticeMessage(String.format(CUSTOM_SINGLE_SUCCESSFUL_ENFORCEMENT_FORMAT, originatorCandidate, groupEntry)), filterResult);
+						addMessageToResult(getNoticeMessage(String.format(CUSTOM_SINGLE_SUCCESSFUL_ENFORCEMENT_FORMAT, originatorCandidate, groupEntry)), transformerResult);
 						try {
 							groupEntry.setOriginator(originatorCandidate);
 						} catch (Exception e) {
@@ -225,13 +225,13 @@ public class BoDPropertyFilter extends SoDBoDPropertyFilter {
 		}
 		
 		//There is no possibility to alter the originator of any entry to violate the property
-		addMessageToResult(getErrorMessage(String.format(ERRORF_ORIGINATOR_COMBINATION, activityGroup)), filterResult);
+		addMessageToResult(getErrorMessage(String.format(ERRORF_ORIGINATOR_COMBINATION, activityGroup)), transformerResult);
 		return EnforcementResult.UNSUCCESSFUL;
 	}
 
 	@Override
-	public AbstractFilterProperties getProperties() throws ParameterException, PropertyException {
-		BoDFilterProperties properties = new BoDFilterProperties();
+	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+		BoDTransformerProperties properties = new BoDTransformerProperties();
 		fillProperties(properties);
 		return properties;
 	}

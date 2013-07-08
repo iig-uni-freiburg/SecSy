@@ -13,31 +13,31 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
-public class SkipActivitiesFilterProperties  extends AbstractMultipleTraceFilterProperties {
+public class IncompleteLoggingTransformerProperties  extends AbstractMultipleTraceTransformerProperties {
 
-	public SkipActivitiesFilterProperties() {
+	public IncompleteLoggingTransformerProperties() {
 		super();
 	}
 
-	public SkipActivitiesFilterProperties(String fileName) throws IOException {
+	public IncompleteLoggingTransformerProperties(String fileName) throws IOException {
 		super(fileName);
 	}
 	
 	public void setSkipActivities(String... activities) throws ParameterException {
 		validateSkipActivities(activities);
-		props.setProperty(SkipActivityFilterProperty.SKIP_ACTIVITIES.toString(), ArrayUtils.toString(activities));
+		props.setProperty(IncompleteLoggingTransformerProperty.SKIP_ACTIVITIES.toString(), ArrayUtils.toString(activities));
 	}
 	
 	public void setSkipActivities(Set<String> activities) throws ParameterException {
 		validateSkipActivities(activities);
-		props.setProperty(SkipActivityFilterProperty.SKIP_ACTIVITIES.toString(), ArrayUtils.toString(activities.toArray()));
+		props.setProperty(IncompleteLoggingTransformerProperty.SKIP_ACTIVITIES.toString(), ArrayUtils.toString(activities.toArray()));
 	}
 	
 	public Set<String> getSkipActivities() throws PropertyException{
 		Set<String> result = new HashSet<String>();
-		String propertyValue = props.getProperty(SkipActivityFilterProperty.SKIP_ACTIVITIES.toString());
+		String propertyValue = props.getProperty(IncompleteLoggingTransformerProperty.SKIP_ACTIVITIES.toString());
 		if(propertyValue == null)
-			throw new PropertyException(SkipActivityFilterProperty.SKIP_ACTIVITIES, propertyValue, "Cannot find skip activities");
+			throw new PropertyException(IncompleteLoggingTransformerProperty.SKIP_ACTIVITIES, propertyValue, "Cannot find skip activities");
 		StringTokenizer activityTokens = StringUtils.splitArrayString(propertyValue, " ");
 		while(activityTokens.hasMoreTokens())
 			result.add(activityTokens.nextToken());
@@ -56,7 +56,7 @@ public class SkipActivitiesFilterProperties  extends AbstractMultipleTraceFilter
 		Validate.noNullElements(activities);
 	}
 
-	private enum SkipActivityFilterProperty {
+	private enum IncompleteLoggingTransformerProperty {
 		SKIP_ACTIVITIES;
 	}
 	

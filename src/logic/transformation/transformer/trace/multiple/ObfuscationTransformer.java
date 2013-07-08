@@ -21,30 +21,30 @@ import logic.generator.LogEntryGenerator;
 import logic.transformation.TraceTransformerEvent;
 import logic.transformation.TraceTransformerResult;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.properties.AbstractFilterProperties;
-import logic.transformation.transformer.properties.ObfuscationFilterProperties;
+import logic.transformation.transformer.properties.AbstractTransformerProperties;
+import logic.transformation.transformer.properties.ObfuscationTransformerProperties;
 
-public class ObfuscationFilter extends AbstractMultipleTraceFilter {
+public class ObfuscationTransformer extends AbstractMultipleTraceTransformer {
 	
 	private final String CUSTOM_SUCCESS_FORMAT = "entry %s, field %s: %s -> %s";
 	LogEntryGenerator entryGenerator = null;
 	Set<EntryField> excludedFields = new HashSet<EntryField>();
 	
-	public ObfuscationFilter(ObfuscationFilterProperties properties) throws ParameterException, PropertyException {
+	public ObfuscationTransformer(ObfuscationTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 		excludedFields = properties.getExcludedFields();
 	}
 
-	public ObfuscationFilter(double activationProbability, int maxAppliance) throws ParameterException {
-		super(TransformerType.OBFUSCATION_FILTER, activationProbability, maxAppliance);
-		excludedFields.addAll(Arrays.asList(ObfuscationFilterProperties.defaultExcludedFields));
+	public ObfuscationTransformer(double activationProbability, int maxAppliance) throws ParameterException {
+		super(TransformerType.OBFUSCATION, activationProbability, maxAppliance);
+		excludedFields.addAll(Arrays.asList(ObfuscationTransformerProperties.defaultExcludedFields));
 	}
 	
-	public ObfuscationFilter(double activationProbability, int maxAppliance, EntryField... excludedFields) throws ParameterException {
+	public ObfuscationTransformer(double activationProbability, int maxAppliance, EntryField... excludedFields) throws ParameterException {
 		this(activationProbability, maxAppliance, new HashSet<EntryField>(Arrays.asList(excludedFields)));
 	}
 	
-	public ObfuscationFilter(double activationProbability, int maxAppliance, Set<EntryField> excludedFields) throws ParameterException {
+	public ObfuscationTransformer(double activationProbability, int maxAppliance, Set<EntryField> excludedFields) throws ParameterException {
 		this(activationProbability, maxAppliance);
 		setExcludedFields(excludedFields);
 	}
@@ -68,8 +68,8 @@ public class ObfuscationFilter extends AbstractMultipleTraceFilter {
 	}
 
 	@Override
-	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult filterResult) throws ParameterException {
-		super.applyEntryTransformation(entry, filterResult);
+	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+		super.applyEntryTransformation(entry, transformerResult);
 		//Find all fields that can be obfuscated
 		List<EntryField> possibleFields = new ArrayList<EntryField>();
 		possibleFields.remove(EntryField.ORIGINATOR_CANDIDATES);
@@ -88,8 +88,8 @@ public class ObfuscationFilter extends AbstractMultipleTraceFilter {
 		for(EntryField field: possibleFields){
 			obfuscation = applyObfuscation(field, entry);
 			if(obfuscation.isSuccess()){
-				addMessageToResult(getSuccessMessage(activityName, field, obfuscation.getOldValue(), obfuscation.getNewValue()), filterResult);
-				entry.lockField(field, "Filter-Enforcement: Obfuscation");
+				addMessageToResult(getSuccessMessage(activityName, field, obfuscation.getOldValue(), obfuscation.getNewValue()), transformerResult);
+				entry.lockField(field, "Transformer-Enforcement: Obfuscation");
 				return true;
 			}
 		}
@@ -207,19 +207,19 @@ public class ObfuscationFilter extends AbstractMultipleTraceFilter {
 	}
 
 	@Override
-	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryFilterSuccess) throws ParameterException {
+	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryTransformerSuccess) throws ParameterException {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	protected void fillProperties(AbstractFilterProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
 		super.fillProperties(properties);
-		((ObfuscationFilterProperties) properties).setExcludedFields(excludedFields);
+		((ObfuscationTransformerProperties) properties).setExcludedFields(excludedFields);
 	}
 
 	@Override
-	public AbstractFilterProperties getProperties() throws ParameterException, PropertyException {
-		ObfuscationFilterProperties properties = new ObfuscationFilterProperties();
+	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+		ObfuscationTransformerProperties properties = new ObfuscationTransformerProperties();
 		fillProperties(properties);
 		return properties;
 	}

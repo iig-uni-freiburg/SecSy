@@ -39,16 +39,16 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.trace.AbstractTraceFilter;
-import logic.transformation.transformer.trace.BoDPropertyFilter;
-import logic.transformation.transformer.trace.SoDBoDPropertyFilter;
-import logic.transformation.transformer.trace.SoDPropertyFilter;
-import logic.transformation.transformer.trace.multiple.AbstractMultipleTraceFilter;
-import logic.transformation.transformer.trace.multiple.DayDelayFilter;
-import logic.transformation.transformer.trace.multiple.IncompleteLoggingFilter;
-import logic.transformation.transformer.trace.multiple.ObfuscationFilter;
-import logic.transformation.transformer.trace.multiple.SkipActivitiesFilter;
-import logic.transformation.transformer.trace.multiple.UnauthorizedExecutionFilter;
+import logic.transformation.transformer.trace.AbstractTraceTransformer;
+import logic.transformation.transformer.trace.BoDPropertyTransformer;
+import logic.transformation.transformer.trace.SoDBoDPropertyTransformer;
+import logic.transformation.transformer.trace.SoDPropertyTransformer;
+import logic.transformation.transformer.trace.multiple.AbstractMultipleTraceTransformer;
+import logic.transformation.transformer.trace.multiple.DayDelayTransformer;
+import logic.transformation.transformer.trace.multiple.IncompleteLoggingTransformer;
+import logic.transformation.transformer.trace.multiple.ObfuscationTransformer;
+import logic.transformation.transformer.trace.multiple.SkipActivitiesTransformer;
+import logic.transformation.transformer.trace.multiple.UnauthorizedExecutionTransformer;
 
 public class TransformerDialog extends AbstractSimulationDialog {
 	
@@ -104,7 +104,7 @@ public class TransformerDialog extends AbstractSimulationDialog {
 		super(owner, new Object[]{activities});
 	}
 	
-	public TransformerDialog(Window owner, Set<String> activities, AbstractTraceFilter filter) {
+	public TransformerDialog(Window owner, Set<String> activities, AbstractTraceTransformer filter) {
 		super(owner, true, new Object[]{activities, filter});
 	}
 
@@ -173,12 +173,12 @@ public class TransformerDialog extends AbstractSimulationDialog {
 				public void itemStateChanged(ItemEvent e) {
 					if(e.getStateChange() == ItemEvent.SELECTED){
 						TransformerType filterType = (TransformerType) comboTransformerType.getSelectedItem();
-						boolean bodsodTransformer = filterType == TransformerType.SOD_FILTER || filterType == TransformerType.BOD_FILTER;
+						boolean bodsodTransformer = filterType == TransformerType.SOD || filterType == TransformerType.BOD;
 						txtMaxAppliances.setEnabled(!bodsodTransformer);
 						lblMaxAppliances.setEnabled(!bodsodTransformer);
 						lblMax.setEnabled(!bodsodTransformer);
 						lblTransformerActivation.setText(bodsodTransformer ? "Violation:" : "Activation");
-						separator.setVisible(filterType != TransformerType.UNAUTHORIZED_EXECUTION_FILTER);
+						separator.setVisible(filterType != TransformerType.UNAUTHORIZED_EXECUTION);
 						comboTransformerType.setToolTipText(getHint(filterType));
 						lblHint.setText(getHint(filterType));
 						updateConfigurationPanel(filterType);
@@ -214,13 +214,13 @@ public class TransformerDialog extends AbstractSimulationDialog {
 	
 	private String getHint(TransformerType filterType){
 		switch(filterType){
-		case OBFUSCATION_FILTER: return Hints.hintObfuscationFilter;
-		case DAY_DELAY_FILTER: return Hints.hintDayDelayFilter;
-		case SKIP_ACTIVITIES_FILTER: return Hints.hintSkipActivitiesFilter;
-		case INCOMPLETE_LOGGING_FILTER: return Hints.hintIncompleteLoggingFilter;
-		case UNAUTHORIZED_EXECUTION_FILTER: return Hints.hintUnauthorizedExecutionFilter;
-		case BOD_FILTER: return Hints.hintBoDFilter;
-		case SOD_FILTER: return Hints.hintSoDFilter;
+		case OBFUSCATION: return Hints.hintObfuscationFilter;
+		case DAY_DELAY: return Hints.hintDayDelayFilter;
+		case SKIP_ACTIVITIES: return Hints.hintSkipActivitiesFilter;
+		case INCOMPLETE_LOGGING: return Hints.hintIncompleteLoggingFilter;
+		case UNAUTHORIZED_EXECUTION: return Hints.hintUnauthorizedExecutionFilter;
+		case BOD: return Hints.hintBoDFilter;
+		case SOD: return Hints.hintSoDFilter;
 		}
 		return "";
 	}
@@ -242,15 +242,15 @@ public class TransformerDialog extends AbstractSimulationDialog {
 	
 	private JPanel getConfigPanel(TransformerType filterType){
 		switch (filterType) {
-		case DAY_DELAY_FILTER:
+		case DAY_DELAY:
 			return getConfigDayDelay();
-		case SOD_FILTER:
-		case BOD_FILTER:
+		case SOD:
+		case BOD:
 			return getConfigBoDSoD();
-		case OBFUSCATION_FILTER:
+		case OBFUSCATION:
 			return getConfigObfuscation();
-		case SKIP_ACTIVITIES_FILTER:
-		case INCOMPLETE_LOGGING_FILTER:
+		case SKIP_ACTIVITIES:
+		case INCOMPLETE_LOGGING:
 			return getConfigSkipActivities();
 		default: return null;
 		}
@@ -564,7 +564,7 @@ public class TransformerDialog extends AbstractSimulationDialog {
 		
 		this.activities = (Set<String>) parameters[0];
 		if(editMode){
-			setDialogObject((AbstractTraceFilter) parameters[1]); 
+			setDialogObject((AbstractTraceTransformer) parameters[1]); 
 		}
 	}
 	
@@ -581,30 +581,30 @@ public class TransformerDialog extends AbstractSimulationDialog {
 			try {
 				getDialogObject().setName(TransformerName);
 				
-				if(getDialogObject() instanceof AbstractMultipleTraceFilter){
+				if(getDialogObject() instanceof AbstractMultipleTraceTransformer){
 					getDialogObject().setActivationProbability(activationProbability);
 					
-					((AbstractMultipleTraceFilter) getDialogObject()).setMaxAppliances(maxAppliances);
+					((AbstractMultipleTraceTransformer) getDialogObject()).setMaxAppliances(maxAppliances);
 					
-					if(getDialogObject() instanceof DayDelayFilter){
-						((DayDelayFilter) getDialogObject()).setDayBounds(minDays, maxDays);
-					} else if(getDialogObject() instanceof SkipActivitiesFilter){
-						((SkipActivitiesFilter) getDialogObject()).setSkipActivities(skipActivities);
-					} else if(getDialogObject() instanceof IncompleteLoggingFilter){
-						((IncompleteLoggingFilter) getDialogObject()).setSkipActivities(skipActivities);
-					} else if(getDialogObject() instanceof ObfuscationFilter){
-						((ObfuscationFilter) getDialogObject()).setExcludedFields(excludedFields);
-					} else if(getDialogObject() instanceof UnauthorizedExecutionFilter){
+					if(getDialogObject() instanceof DayDelayTransformer){
+						((DayDelayTransformer) getDialogObject()).setDayBounds(minDays, maxDays);
+					} else if(getDialogObject() instanceof SkipActivitiesTransformer){
+						((SkipActivitiesTransformer) getDialogObject()).setSkipActivities(skipActivities);
+					} else if(getDialogObject() instanceof IncompleteLoggingTransformer){
+						((IncompleteLoggingTransformer) getDialogObject()).setSkipActivities(skipActivities);
+					} else if(getDialogObject() instanceof ObfuscationTransformer){
+						((ObfuscationTransformer) getDialogObject()).setExcludedFields(excludedFields);
+					} else if(getDialogObject() instanceof UnauthorizedExecutionTransformer){
 						
 					} 
-				} else if (getDialogObject() instanceof SoDBoDPropertyFilter){
+				} else if (getDialogObject() instanceof SoDBoDPropertyTransformer){
 					getDialogObject().setActivationProbability(1.0);
-					((SoDBoDPropertyFilter) getDialogObject()).setViolationProbability(activationProbability);
+					((SoDBoDPropertyTransformer) getDialogObject()).setViolationProbability(activationProbability);
 					
-					if(getDialogObject() instanceof SoDPropertyFilter){
-						((SoDPropertyFilter) getDialogObject()).setActivityGroups(bindingActivities);
-					} else if(getDialogObject() instanceof BoDPropertyFilter){
-						((BoDPropertyFilter) getDialogObject()).setActivityGroups(bindingActivities);
+					if(getDialogObject() instanceof SoDPropertyTransformer){
+						((SoDPropertyTransformer) getDialogObject()).setActivityGroups(bindingActivities);
+					} else if(getDialogObject() instanceof BoDPropertyTransformer){
+						((BoDPropertyTransformer) getDialogObject()).setActivityGroups(bindingActivities);
 					}
 				}
 			} catch(ParameterException e){
@@ -612,35 +612,35 @@ public class TransformerDialog extends AbstractSimulationDialog {
 				return;
 			}
 		} else {
-			AbstractTraceFilter filter = null;
+			AbstractTraceTransformer filter = null;
 			try {
 				switch(getTransformerType()){
 				
-					case UNAUTHORIZED_EXECUTION_FILTER:
-						filter = new UnauthorizedExecutionFilter(activationProbability, maxAppliances);
+					case UNAUTHORIZED_EXECUTION:
+						filter = new UnauthorizedExecutionTransformer(activationProbability, maxAppliances);
 						break;
 						
-					case DAY_DELAY_FILTER: 
-						filter = new DayDelayFilter(activationProbability, maxAppliances, minDays, maxDays);
+					case DAY_DELAY: 
+						filter = new DayDelayTransformer(activationProbability, maxAppliances, minDays, maxDays);
 						break;
 						
-					case SKIP_ACTIVITIES_FILTER:
-						filter = new SkipActivitiesFilter(activationProbability, maxAppliances, skipActivities);
+					case SKIP_ACTIVITIES:
+						filter = new SkipActivitiesTransformer(activationProbability, maxAppliances, skipActivities);
 						break;
 						
-					case INCOMPLETE_LOGGING_FILTER:
-						filter = new IncompleteLoggingFilter(activationProbability, maxAppliances, skipActivities);
+					case INCOMPLETE_LOGGING:
+						filter = new IncompleteLoggingTransformer(activationProbability, maxAppliances, skipActivities);
 						break;
 						
-					case OBFUSCATION_FILTER:
-						filter = new ObfuscationFilter(activationProbability, maxAppliances, excludedFields);
+					case OBFUSCATION:
+						filter = new ObfuscationTransformer(activationProbability, maxAppliances, excludedFields);
 						break;
 						
-					case BOD_FILTER:
-						filter = new BoDPropertyFilter(activationProbability, bindingActivities);
+					case BOD:
+						filter = new BoDPropertyTransformer(activationProbability, bindingActivities);
 						break;
-					case SOD_FILTER:
-						filter = new SoDPropertyFilter(activationProbability, bindingActivities);
+					case SOD:
+						filter = new SoDPropertyTransformer(activationProbability, bindingActivities);
 						break;
 				}
 				if(filter == null) {
@@ -696,7 +696,7 @@ public class TransformerDialog extends AbstractSimulationDialog {
 		TransformerType filterType = getTransformerType();
 		//Check max appliances
 		maxAppliances = null;
-		if(filterType != TransformerType.BOD_FILTER && filterType != TransformerType.SOD_FILTER){
+		if(filterType != TransformerType.BOD && filterType != TransformerType.SOD){
 			try {
 				maxAppliances = Validate.positiveInteger(txtMaxAppliances.getText());
 			} catch (ParameterException e1) {
@@ -707,10 +707,10 @@ public class TransformerDialog extends AbstractSimulationDialog {
 				
 		switch(filterType){
 		
-		case UNAUTHORIZED_EXECUTION_FILTER:
+		case UNAUTHORIZED_EXECUTION:
 			return true;
 			
-		case DAY_DELAY_FILTER: 
+		case DAY_DELAY: 
 			//Check min days
 			minDays = null;
 			try {
@@ -730,24 +730,24 @@ public class TransformerDialog extends AbstractSimulationDialog {
 			}
 			return true;
 			
-		case SKIP_ACTIVITIES_FILTER:
+		case SKIP_ACTIVITIES:
 			if(skipActivities.isEmpty()){
 				JOptionPane.showMessageDialog(TransformerDialog.this, "No activities for which skipping is permitted.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 			return true;
 			
-		case INCOMPLETE_LOGGING_FILTER:
+		case INCOMPLETE_LOGGING:
 			if(skipActivities.isEmpty()){
 				JOptionPane.showMessageDialog(TransformerDialog.this, "No activities for which skipping is permitted.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 			return true;
 			
-		case OBFUSCATION_FILTER:
+		case OBFUSCATION:
 			return true;
 			
-		case BOD_FILTER:
+		case BOD:
 			if(bindingActivities.isEmpty()){
 				JOptionPane.showMessageDialog(TransformerDialog.this, "No binding activities chosen.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 				return false;
@@ -758,7 +758,7 @@ public class TransformerDialog extends AbstractSimulationDialog {
 			}
 			return true;
 			
-		case SOD_FILTER:
+		case SOD:
 			if(bindingActivities.isEmpty()){
 				JOptionPane.showMessageDialog(TransformerDialog.this, "No binding activities chosen.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 				return false;
@@ -774,47 +774,47 @@ public class TransformerDialog extends AbstractSimulationDialog {
 
 	@Override
 	protected void prepareEditing() {
-		comboTransformerType.setSelectedItem(getDialogObject().getFilterType());
+		comboTransformerType.setSelectedItem(getDialogObject().getType());
 		comboTransformerType.setEnabled(false);
 		txtTransformerName.setText(getDialogObject().getName());
 		txtTransformerActivation.setText(new Double((getDialogObject().getActivationProbability()*100.0)).toString());
 		
-		if(getDialogObject() instanceof SoDBoDPropertyFilter){
-			txtTransformerActivation.setText(new Double(((SoDBoDPropertyFilter) getDialogObject()).getViolationProbability()*100.0).toString());
+		if(getDialogObject() instanceof SoDBoDPropertyTransformer){
+			txtTransformerActivation.setText(new Double(((SoDBoDPropertyTransformer) getDialogObject()).getViolationProbability()*100.0).toString());
 			
-			bindingActivities.addAll(((SoDBoDPropertyFilter) getDialogObject()).getActivityGroups().get(0));
+			bindingActivities.addAll(((SoDBoDPropertyTransformer) getDialogObject()).getActivityGroups().get(0));
 			updateBindingActivitiesList();
 			
-		} else if(getDialogObject() instanceof AbstractMultipleTraceFilter){
-			txtMaxAppliances.setText(((AbstractMultipleTraceFilter) getDialogObject()).getMaxAppliances().toString());
+		} else if(getDialogObject() instanceof AbstractMultipleTraceTransformer){
+			txtMaxAppliances.setText(((AbstractMultipleTraceTransformer) getDialogObject()).getMaxAppliances().toString());
 			
-			if(getDialogObject() instanceof DayDelayFilter){
-				txtMinDays.setText(((DayDelayFilter) getDialogObject()).getMinDays().toString());
-				txtMaxDays.setText(((DayDelayFilter) getDialogObject()).getMaxDays().toString());
-			} else if(getDialogObject() instanceof SkipActivitiesFilter){
-				skipActivities.addAll(((SkipActivitiesFilter) getDialogObject()).getSkipActivities());
+			if(getDialogObject() instanceof DayDelayTransformer){
+				txtMinDays.setText(((DayDelayTransformer) getDialogObject()).getMinDays().toString());
+				txtMaxDays.setText(((DayDelayTransformer) getDialogObject()).getMaxDays().toString());
+			} else if(getDialogObject() instanceof SkipActivitiesTransformer){
+				skipActivities.addAll(((SkipActivitiesTransformer) getDialogObject()).getSkipActivities());
 				updateSkipActivityList();
-			} else if(getDialogObject() instanceof IncompleteLoggingFilter){
-				skipActivities.addAll(((IncompleteLoggingFilter) getDialogObject()).getSkipActivities());
+			} else if(getDialogObject() instanceof IncompleteLoggingTransformer){
+				skipActivities.addAll(((IncompleteLoggingTransformer) getDialogObject()).getSkipActivities());
 				updateSkipActivityList();
-			} else if(getDialogObject() instanceof ObfuscationFilter){
-				excludedFields.addAll(((ObfuscationFilter) getDialogObject()).getExcludedFields());
+			} else if(getDialogObject() instanceof ObfuscationTransformer){
+				excludedFields.addAll(((ObfuscationTransformer) getDialogObject()).getExcludedFields());
 				updateObfuscationFieldsList();
 			}
 		}
 	}
 
 	@Override
-	protected AbstractTraceFilter getDialogObject() {
-		return (AbstractTraceFilter) super.getDialogObject();
+	protected AbstractTraceTransformer getDialogObject() {
+		return (AbstractTraceTransformer) super.getDialogObject();
 	}
 	
-	public static AbstractTraceFilter showDialog(Window owner,  Set<String> activities){
+	public static AbstractTraceTransformer showDialog(Window owner,  Set<String> activities){
 		TransformerDialog dialog = new TransformerDialog(owner, activities);
 		return dialog.getDialogObject();
 	}
 	
-	public static AbstractTraceFilter showDialog(Window owner,  Set<String> activities, AbstractTraceFilter traceFilter){
+	public static AbstractTraceTransformer showDialog(Window owner,  Set<String> activities, AbstractTraceTransformer traceFilter){
 		TransformerDialog dialog = new TransformerDialog(owner, activities, traceFilter);
 		return dialog.getDialogObject();
 	}
@@ -822,29 +822,29 @@ public class TransformerDialog extends AbstractSimulationDialog {
 	public static void main(String[] args) throws ParameterException, XMLStreamException, PropertyException {
 		Set<String> activities = new HashSet<String>(Arrays.asList("act 1", "act 2", "act 3", "act 4"));
 		
-		UnauthorizedExecutionFilter unFilter = new UnauthorizedExecutionFilter(0.5, 10);
+		UnauthorizedExecutionTransformer unFilter = new UnauthorizedExecutionTransformer(0.5, 10);
 		unFilter.setName("un Filter");
 		
-		DayDelayFilter dayFilter = new DayDelayFilter(0.2, 12, 2, 3);
+		DayDelayTransformer dayFilter = new DayDelayTransformer(0.2, 12, 2, 3);
 		dayFilter.setName("day Filter");
 		
 		Set<String> skipActivities = new HashSet<String>(Arrays.asList("act 1", "act 2"));
-		SkipActivitiesFilter skipFilter = new SkipActivitiesFilter(0.4, 3, skipActivities);
+		SkipActivitiesTransformer skipFilter = new SkipActivitiesTransformer(0.4, 3, skipActivities);
 		skipFilter.setName("skip Filter");
 		
-		IncompleteLoggingFilter inFilter = new IncompleteLoggingFilter(0.4, 3, skipActivities);
+		IncompleteLoggingTransformer inFilter = new IncompleteLoggingTransformer(0.4, 3, skipActivities);
 		inFilter.setName("in Filter");
 		
-		ObfuscationFilter obFilter = new ObfuscationFilter(0.6, 5, EntryField.ACTIVITY);
+		ObfuscationTransformer obFilter = new ObfuscationTransformer(0.6, 5, EntryField.ACTIVITY);
 		obFilter.setName("ob Filter");
 		
-		SoDPropertyFilter sodFilter = new SoDPropertyFilter(0.1, skipActivities);
+		SoDPropertyTransformer sodFilter = new SoDPropertyTransformer(0.1, skipActivities);
 		sodFilter.setName("sod");
 		
-		BoDPropertyFilter bodFilter = new BoDPropertyFilter(0.1, skipActivities);
+		BoDPropertyTransformer bodFilter = new BoDPropertyTransformer(0.1, skipActivities);
 		bodFilter.setName("bod");
 		
-		AbstractTraceFilter filter = TransformerDialog.showDialog(null, activities, bodFilter);
+		AbstractTraceTransformer filter = TransformerDialog.showDialog(null, activities, bodFilter);
 	}
 
 }

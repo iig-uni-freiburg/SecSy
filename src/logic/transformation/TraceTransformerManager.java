@@ -15,7 +15,7 @@ import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 
 import logic.generator.LogEntryGenerator;
 import logic.transformation.transformer.exception.MissingRequirementException;
-import logic.transformation.transformer.trace.AbstractTraceFilter;
+import logic.transformation.transformer.trace.AbstractTraceTransformer;
 
 public class TraceTransformerManager {
 	
@@ -24,9 +24,9 @@ public class TraceTransformerManager {
 													  "  successful: %s:\n%s\n" +
 													  "unsuccessful: %s:\n%s\n";
 	
-	protected List<AbstractTraceFilter> traceTransformers = new ArrayList<AbstractTraceFilter>();
-	protected Map<AbstractTraceFilter, List<Integer>> succesfulAppliances = new HashMap<AbstractTraceFilter, List<Integer>>();
-	protected Map<AbstractTraceFilter, List<Integer>> unsuccesfulAppliances = new HashMap<AbstractTraceFilter, List<Integer>>();
+	protected List<AbstractTraceTransformer> traceTransformers = new ArrayList<AbstractTraceTransformer>();
+	protected Map<AbstractTraceTransformer, List<Integer>> succesfulAppliances = new HashMap<AbstractTraceTransformer, List<Integer>>();
+	protected Map<AbstractTraceTransformer, List<Integer>> unsuccesfulAppliances = new HashMap<AbstractTraceTransformer, List<Integer>>();
 	
 	protected LogEntryGenerator source;
 	private Integer traces = 0;
@@ -44,7 +44,7 @@ public class TraceTransformerManager {
 	public void setSource(LogEntryGenerator source) throws MissingRequirementException, ParameterException {
 		Validate.notNull(source);
 		try{
-			for (AbstractTraceFilter transformer : traceTransformers) {
+			for (AbstractTraceTransformer transformer : traceTransformers) {
 				for (EntryField contextType : transformer.requiredContextInformation()) {
 					if (!source.providesLogInformation(contextType))
 						throw new MissingRequirementException(contextType);
@@ -58,7 +58,7 @@ public class TraceTransformerManager {
 		this.source = source;
 	}
 	
-	public List<AbstractTraceFilter> getTraceTransformers(){
+	public List<AbstractTraceTransformer> getTraceTransformers(){
 		return Collections.unmodifiableList(traceTransformers);
 	}
 	
@@ -72,7 +72,7 @@ public class TraceTransformerManager {
 	 * @throws MissingRequirementException 
 	 * @throws ParameterException 
 	 */
-	public void addFilter(AbstractTraceFilter traceTransformer) throws MissingRequirementException, ParameterException{
+	public void addFilter(AbstractTraceTransformer traceTransformer) throws MissingRequirementException, ParameterException{
 		Validate.notNull(traceTransformer);
 		try{
 			if(source!=null)
@@ -90,8 +90,8 @@ public class TraceTransformerManager {
 	public void applyTransformers(LogTrace logTrace) throws ParameterException{
 		if(!traceTransformers.isEmpty()){
 			TraceTransformerEvent event = new TraceTransformerEvent(logTrace, source);
-			for(AbstractTraceFilter traceTransformer: traceTransformers){
-				AbstractTransformerResult transformerResult = traceTransformer.filterLogTrace(event);
+			for(AbstractTraceTransformer traceTransformer: traceTransformers){
+				AbstractTransformerResult transformerResult = traceTransformer.transformLogTrace(event);
 				if(transformerResult.wasTransformerApplied()){
 					if(transformerResult.containsMessages()){
 						transformerListenerSupport.fireTransformerMessage(transformerResult.getTransformerMessages()+"\n\n");
@@ -112,49 +112,49 @@ public class TraceTransformerManager {
 		traces++;
 	}
 	
-	private void incSuccessfulAppliances(AbstractTraceFilter transformer, Integer caseID){
+	private void incSuccessfulAppliances(AbstractTraceTransformer transformer, Integer caseID){
 		if(!succesfulAppliances.containsKey(transformer)){
 			succesfulAppliances.put(transformer, new ArrayList<Integer>());
 		}
 		succesfulAppliances.get(transformer).add(caseID);
 	}
 	
-	private void incUnsuccessfulAppliances(AbstractTraceFilter transformer, Integer caseID){
+	private void incUnsuccessfulAppliances(AbstractTraceTransformer transformer, Integer caseID){
 		if(!unsuccesfulAppliances.containsKey(transformer)){
 			unsuccesfulAppliances.put(transformer, new ArrayList<Integer>());
 		}
 		unsuccesfulAppliances.get(transformer).add(caseID);
 	}
 	
-	private Integer getSuccessfulAppliances(AbstractTraceFilter transformer){
+	private Integer getSuccessfulAppliances(AbstractTraceTransformer transformer){
 		if(!succesfulAppliances.containsKey(transformer)){
 			return 0;
 		}
 		return  succesfulAppliances.get(transformer).size();
 	}
 	
-	private Integer getUnsuccessfulAppliances(AbstractTraceFilter transformer){
+	private Integer getUnsuccessfulAppliances(AbstractTraceTransformer transformer){
 		if(!unsuccesfulAppliances.containsKey(transformer)){
 			return 0;
 		}
 		return  unsuccesfulAppliances.get(transformer).size();
 	}
 	
-	private Integer getAppliances(AbstractTraceFilter transformer){
+	private Integer getAppliances(AbstractTraceTransformer transformer){
 		return getSuccessfulAppliances(transformer) + getUnsuccessfulAppliances(transformer);
 	}
 	
 	public String getTransformerSummary(){
 		StringBuilder builder = new StringBuilder();
 		builder.append("Filter Summary:\n\n");
-		for(AbstractTraceFilter transformer: getTraceTransformers()){
+		for(AbstractTraceTransformer transformer: getTraceTransformers()){
 			builder.append(getTransformerSummary(transformer));
 			builder.append("\n");
 		}
 		return builder.toString();
 	}
 	
-	private String getTransformerSummary(AbstractTraceFilter transformer){
+	private String getTransformerSummary(AbstractTraceTransformer transformer){
 		return String.format(transformerSummaryFormat, transformer.getName(),
 												  getAppliances(transformer), FormatUtils.format((getAppliances(transformer)/traces.doubleValue())*100.0, 2),
 												  getSuccessfulAppliances(transformer), succesfulAppliances.containsKey(transformer) ? CollectionUtils.toString(succesfulAppliances.get(transformer)) : "[]",

@@ -5,43 +5,43 @@ import java.io.IOException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 
-import logic.transformation.transformer.properties.AbstractFilterProperties;
-import logic.transformation.transformer.properties.BoDFilterProperties;
-import logic.transformation.transformer.properties.DayDelayFilterProperties;
-import logic.transformation.transformer.properties.ObfuscationFilterProperties;
-import logic.transformation.transformer.properties.SkipActivitiesFilterProperties;
-import logic.transformation.transformer.properties.SoDFilterProperties;
-import logic.transformation.transformer.properties.UnauthorizedExecutionFilterProperties;
-import logic.transformation.transformer.trace.BoDPropertyFilter;
-import logic.transformation.transformer.trace.SoDPropertyFilter;
-import logic.transformation.transformer.trace.multiple.DayDelayFilter;
-import logic.transformation.transformer.trace.multiple.IncompleteLoggingFilter;
-import logic.transformation.transformer.trace.multiple.ObfuscationFilter;
-import logic.transformation.transformer.trace.multiple.SkipActivitiesFilter;
-import logic.transformation.transformer.trace.multiple.UnauthorizedExecutionFilter;
+import logic.transformation.transformer.properties.AbstractTransformerProperties;
+import logic.transformation.transformer.properties.BoDTransformerProperties;
+import logic.transformation.transformer.properties.DayDelayTransformerProperties;
+import logic.transformation.transformer.properties.ObfuscationTransformerProperties;
+import logic.transformation.transformer.properties.SkipActivitiesTransformerProperties;
+import logic.transformation.transformer.properties.SoDTransformerProperties;
+import logic.transformation.transformer.properties.UnauthorizedExecutionTransformerProperties;
+import logic.transformation.transformer.trace.BoDPropertyTransformer;
+import logic.transformation.transformer.trace.SoDPropertyTransformer;
+import logic.transformation.transformer.trace.multiple.DayDelayTransformer;
+import logic.transformation.transformer.trace.multiple.IncompleteLoggingTransformer;
+import logic.transformation.transformer.trace.multiple.ObfuscationTransformer;
+import logic.transformation.transformer.trace.multiple.SkipActivitiesTransformer;
+import logic.transformation.transformer.trace.multiple.UnauthorizedExecutionTransformer;
 
 public class TransformerFactory {
 	
-	public static AbstractTransformer loadFilter(String file) throws IOException, ParameterException, PropertyException{
+	public static AbstractTransformer loadTransformer(String file) throws IOException, ParameterException, PropertyException{
 		
-		AbstractFilterProperties properties = new AbstractFilterProperties();
+		AbstractTransformerProperties properties = new AbstractTransformerProperties();
 		properties.load(file);
 		
-		switch(properties.getFilterType()){
-			case DAY_DELAY_FILTER: 	
-				return new DayDelayFilter(new DayDelayFilterProperties(file));
-			case BOD_FILTER:		
-				return new BoDPropertyFilter(new BoDFilterProperties(file));
-			case SOD_FILTER:		
-				return new SoDPropertyFilter(new SoDFilterProperties(file));
-			case OBFUSCATION_FILTER: 
-				return new ObfuscationFilter(new ObfuscationFilterProperties(file));
-			case SKIP_ACTIVITIES_FILTER: 
-				return new SkipActivitiesFilter(new SkipActivitiesFilterProperties(file));
-			case INCOMPLETE_LOGGING_FILTER: 
-				return new IncompleteLoggingFilter(new SkipActivitiesFilterProperties(file));
-			case UNAUTHORIZED_EXECUTION_FILTER: 
-				return new UnauthorizedExecutionFilter(new UnauthorizedExecutionFilterProperties(file));
+		switch(properties.getType()){
+			case DAY_DELAY: 	
+				return new DayDelayTransformer(new DayDelayTransformerProperties(file));
+			case BOD:		
+				return new BoDPropertyTransformer(new BoDTransformerProperties(file));
+			case SOD:		
+				return new SoDPropertyTransformer(new SoDTransformerProperties(file));
+			case OBFUSCATION: 
+				return new ObfuscationTransformer(new ObfuscationTransformerProperties(file));
+			case SKIP_ACTIVITIES: 
+				return new SkipActivitiesTransformer(new SkipActivitiesTransformerProperties(file));
+			case INCOMPLETE_LOGGING: 
+				return new IncompleteLoggingTransformer(new SkipActivitiesTransformerProperties(file));
+			case UNAUTHORIZED_EXECUTION: 
+				return new UnauthorizedExecutionTransformer(new UnauthorizedExecutionTransformerProperties(file));
 		}
 		return null;
 	}

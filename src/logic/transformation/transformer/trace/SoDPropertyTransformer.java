@@ -14,11 +14,11 @@ import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 
 import logic.transformation.AbstractTransformerResult;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.properties.AbstractFilterProperties;
-import logic.transformation.transformer.properties.SoDFilterProperties;
+import logic.transformation.transformer.properties.AbstractTransformerProperties;
+import logic.transformation.transformer.properties.SoDTransformerProperties;
 
 /**
- * This class defines a filter that is able to ensure or violate an SoD-property on a set of activityGroups in log traces.
+ * This class defines a transformer that is able to ensure or violate an SoD-property on a set of activityGroups in log traces.
  * The SoD property is considered violated on a given set of activities if the corresponding set of originators intersect.<br>
  * A1: {o1, o2, o3}<br>
  * A2: {o4, o5, o6}<br>
@@ -28,23 +28,23 @@ import logic.transformation.transformer.properties.SoDFilterProperties;
  * 
  * @author Thomas Stocker
  */
-public class SoDPropertyFilter extends SoDBoDPropertyFilter {
+public class SoDPropertyTransformer extends SoDBoDPropertyTransformer {
 	
-	public SoDPropertyFilter(SoDFilterProperties properties) throws ParameterException, PropertyException {
+	public SoDPropertyTransformer(SoDTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 	}
 
-	public SoDPropertyFilter(Set<String>... bindings) throws ParameterException {
+	public SoDPropertyTransformer(Set<String>... bindings) throws ParameterException {
 		this(0.0, bindings);
 	}
 	
-	public SoDPropertyFilter(double violationProbability, Set<String>... bindings) throws ParameterException {
-		super(TransformerType.SOD_FILTER, violationProbability, bindings);
+	public SoDPropertyTransformer(double violationProbability, Set<String>... bindings) throws ParameterException {
+		super(TransformerType.SOD, violationProbability, bindings);
 	}
 
 	@Override
-	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult filterResult) throws ParameterException {
-		EnforcementResult trivialResult = super.ensureProperty(activityGroup, entries, filterResult);
+	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
+		EnforcementResult trivialResult = super.ensureProperty(activityGroup, entries, transformerResult);
 		if(trivialResult.equals(EnforcementResult.SUCCESSFUL) || trivialResult.equals(EnforcementResult.NOTNECESSARY))
 			return trivialResult;
 		
@@ -66,7 +66,7 @@ public class SoDPropertyFilter extends SoDBoDPropertyFilter {
 			if(SetUtils.existPairwiseIntersections(fixedOriginatorSets.values())){
 				//There are common originators amongst at least two sets
 				//-> As originators are not alterable, the property is not enforceable
-				addMessageToResult(getErrorMessage(String.format(ERRORF_FIXED_EQUAL_ORIGINATORS, activityGroup)), filterResult);
+				addMessageToResult(getErrorMessage(String.format(ERRORF_FIXED_EQUAL_ORIGINATORS, activityGroup)), transformerResult);
 				return EnforcementResult.UNSUCCESSFUL;
 			}
 		}
@@ -93,7 +93,7 @@ public class SoDPropertyFilter extends SoDBoDPropertyFilter {
 						if(originatorCandidates.isEmpty()){
 							//No valid combination possible because there is no originator left that can be chosen for this entry
 							//-> Property not enforceable
-							addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKED_ORIGINATORS, activityGroup)), filterResult);
+							addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKED_ORIGINATORS, activityGroup)), transformerResult);
 							return EnforcementResult.UNSUCCESSFUL;
 						}
 						Collections.shuffle(originatorCandidates);
@@ -104,12 +104,12 @@ public class SoDPropertyFilter extends SoDBoDPropertyFilter {
 		}
 		
 		//Try to find a valid combination of originators
-		return findValidOriginatorCombination(activityGroup, entries, candidateList, filterResult, FilterAction.ENSURE);
+		return findValidOriginatorCombination(activityGroup, entries, candidateList, transformerResult, TransformerAction.ENSURE);
 	}
 	
 	@Override
-	protected EnforcementResult violateProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult filterResult) throws ParameterException {
-		EnforcementResult trivialResult = super.violateProperty(activityGroup, entries, filterResult);
+	protected EnforcementResult violateProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
+		EnforcementResult trivialResult = super.violateProperty(activityGroup, entries, transformerResult);
 		if(trivialResult.equals(EnforcementResult.SUCCESSFUL) || trivialResult.equals(EnforcementResult.NOTNECESSARY))
 			return trivialResult;
 		
@@ -120,7 +120,7 @@ public class SoDPropertyFilter extends SoDBoDPropertyFilter {
 		if(entriesWithAlternativeOriginator.isEmpty()){
 			//No valid combination possible because for no entry the originator can be altered.
 			//-> Violation not enforceable
-			addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKED_ORIGINATORS, activityGroup)), filterResult);
+			addMessageToResult(getErrorMessage(String.format(ERRORF_LOCKED_ORIGINATORS, activityGroup)), transformerResult);
 			return EnforcementResult.UNSUCCESSFUL;
 		}
 		//There are log entries that have alternative originators.
@@ -142,13 +142,13 @@ public class SoDPropertyFilter extends SoDBoDPropertyFilter {
 		}
 		
 		//Try to find a valid combination of originators
-		return findValidOriginatorCombination(activityGroup, entries, candidateList, filterResult, FilterAction.VIOLATE);
+		return findValidOriginatorCombination(activityGroup, entries, candidateList, transformerResult, TransformerAction.VIOLATE);
 	}
 
 	@Override
-	protected boolean filterEnforcedOnOriginatorSets(Map<String, Set<String>> originatorSets, FilterAction filterAction){
+	protected boolean transformerEnforcedOnOriginatorSets(Map<String, Set<String>> originatorSets, TransformerAction transformerAction){
 		//Check if any two sets intersect
-		switch(filterAction){
+		switch(transformerAction){
 			case ENSURE: return !SetUtils.existPairwiseIntersections(originatorSets.values());
 			case VIOLATE:return SetUtils.existPairwiseIntersections(originatorSets.values());
 			default: return false;
@@ -156,8 +156,8 @@ public class SoDPropertyFilter extends SoDBoDPropertyFilter {
 	}
 
 	@Override
-	public AbstractFilterProperties getProperties() throws ParameterException, PropertyException {
-		SoDFilterProperties properties = new SoDFilterProperties();
+	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+		SoDTransformerProperties properties = new SoDTransformerProperties();
 		fillProperties(properties);
 		return properties;
 	}

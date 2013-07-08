@@ -35,7 +35,7 @@ import logic.transformation.TraceTransformerManager;
 import logic.transformation.transformer.AbstractTransformer;
 import logic.transformation.transformer.TransformerFactory;
 import logic.transformation.transformer.exception.MissingRequirementException;
-import logic.transformation.transformer.trace.AbstractTraceFilter;
+import logic.transformation.transformer.trace.AbstractTraceTransformer;
 import parser.PNMLParser;
 import petrinet.pt.PTNet;
 import petrinet.pt.RandomPTTraverser;
@@ -66,7 +66,7 @@ public class SimulationComponents {
 	private Map<String, PTNet> petriNets = new HashMap<String, PTNet>();
 	private Map<String, Context> contexts = new HashMap<String, Context>();
 	private Map<String, CaseDataContainer> caseDataContainers = new HashMap<String, CaseDataContainer>();
-	private Map<String, AbstractTraceFilter> filters = new HashMap<String, AbstractTraceFilter>();
+	private Map<String, AbstractTraceTransformer> filters = new HashMap<String, AbstractTraceTransformer>();
 	private Map<String, CaseTimeGenerator> caseTimeGenerators = new HashMap<String, CaseTimeGenerator>();
 	private Map<String, Simulation> simulations = new HashMap<String, Simulation>();
 	
@@ -215,7 +215,7 @@ public class SimulationComponents {
 		for(String filterFile: filterFiles){
 			MessageDialog.getInstance().addMessage("Loading filter: " + filterFile + "...   ");
 			try{
-				addFilter((AbstractTraceFilter) TransformerFactory.loadFilter(filterFile), false);
+				addFilter((AbstractTraceTransformer) TransformerFactory.loadTransformer(filterFile), false);
 				MessageDialog.getInstance().addMessage("Done.");
 			} catch(Exception e){
 				MessageDialog.getInstance().addMessage("Error: "+e.getMessage());
@@ -368,7 +368,7 @@ public class SimulationComponents {
 				throw new PropertyException(SimulationRunProperty.NET_NAME, ptNetName, "Unknown Petri net.");
 			TraceTransformerManager filterManager = new TraceTransformerManager();
 			for(String filterName: runProperties.getFilterNames()){
-				AbstractTraceFilter filter = getFilter(filterName);
+				AbstractTraceTransformer filter = getFilter(filterName);
 				if(filter == null)
 					throw new PropertyException(SimulationRunProperty.FILTERS, filterName, "Unknown filter.");
 				filterManager.addFilter(filter);
@@ -1062,7 +1062,7 @@ public class SimulationComponents {
 	 * @throws PropertyException if the procedure of property extraction fails.
 	 * @throws IOException if the property-representation of the new filter cannot be stored.
 	 */
-	public void addFilter(AbstractTraceFilter filter) throws ParameterException, IOException, PropertyException{
+	public void addFilter(AbstractTraceTransformer filter) throws ParameterException, IOException, PropertyException{
 		addFilter(filter, true);
 	}
 	
@@ -1075,7 +1075,7 @@ public class SimulationComponents {
 	 * @throws PropertyException if the filter cannot be stored due to an error during property extraction.
 	 * @throws IOException if the cannot be stored due to an I/O Error.
 	 */
-	public void addFilter(AbstractTraceFilter filter, boolean storeToFile) throws ParameterException, IOException, PropertyException{
+	public void addFilter(AbstractTraceTransformer filter, boolean storeToFile) throws ParameterException, IOException, PropertyException{
 		Validate.notNull(filter);
 		Validate.notNull(storeToFile);
 		filters.put(filter.getName(), filter);
@@ -1119,7 +1119,7 @@ public class SimulationComponents {
 	 * Returns all filters, i.e. filters stored in the simulation directory.
 	 * @return A set containing all filters.
 	 */
-	public Collection<AbstractTraceFilter> getFilters(){
+	public Collection<AbstractTraceTransformer> getFilters(){
 		return Collections.unmodifiableCollection(filters.values());
 	}
 	
@@ -1137,7 +1137,7 @@ public class SimulationComponents {
 	 * @return The filter with the given name, or <code>null</code> if there is no such filter.
 	 * @throws ParameterException if the given name is <code>null</code>.
 	 */
-	public AbstractTraceFilter getFilter(String name) throws ParameterException{
+	public AbstractTraceTransformer getFilter(String name) throws ParameterException{
 		Validate.notNull(name);
 		return filters.get(name);
 	}

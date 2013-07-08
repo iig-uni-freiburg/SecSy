@@ -8,30 +8,30 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
-public abstract class AbstractMultipleTraceFilterProperties extends AbstractFilterProperties{
+public abstract class AbstractMultipleTraceTransformerProperties extends AbstractTransformerProperties{
 	
 	public static final Integer defaultMaxAppliances = 1;
 
-	public AbstractMultipleTraceFilterProperties() {
+	public AbstractMultipleTraceTransformerProperties() {
 		super();
 	}
 
-	public AbstractMultipleTraceFilterProperties(String fileName) throws IOException {
+	public AbstractMultipleTraceTransformerProperties(String fileName) throws IOException {
 		super(fileName);
 	}
 	
 	public void setMaxAppliances(Integer maxAppliances) throws ParameterException{
 		validateAppliances(maxAppliances);
-		props.setProperty(MultipleTraceFilterProperty.MAX_APPLIANCES.toString(), maxAppliances.toString());
+		props.setProperty(MultipleTraceTransformerProperty.MAX_APPLIANCES.toString(), maxAppliances.toString());
 	}
 	
 	public Integer getMaxAppliances() throws ParameterException, PropertyException{
-		String propertyValue = props.getProperty(MultipleTraceFilterProperty.MAX_APPLIANCES.toString());
+		String propertyValue = props.getProperty(MultipleTraceTransformerProperty.MAX_APPLIANCES.toString());
 		Integer result = null;
 		try{
 			result = Integer.valueOf(propertyValue);
 		}catch(Exception e){
-			throw new PropertyException(MultipleTraceFilterProperty.MAX_APPLIANCES, propertyValue);
+			throw new PropertyException(MultipleTraceTransformerProperty.MAX_APPLIANCES, propertyValue);
 		}
 		validateAppliances(result);
 		return result;
@@ -46,11 +46,11 @@ public abstract class AbstractMultipleTraceFilterProperties extends AbstractFilt
 	@Override
 	protected Properties getDefaultProperties(){
 		Properties defaultProperties = super.getDefaultProperties();
-		defaultProperties.setProperty(MultipleTraceFilterProperty.MAX_APPLIANCES.toString(), defaultMaxAppliances.toString());
+		defaultProperties.setProperty(MultipleTraceTransformerProperty.MAX_APPLIANCES.toString(), defaultMaxAppliances.toString());
 		return defaultProperties;
 	}
 	
-	private enum MultipleTraceFilterProperty {
+	private enum MultipleTraceTransformerProperty {
 		MAX_APPLIANCES;
 	}
 	

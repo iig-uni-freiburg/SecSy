@@ -15,21 +15,21 @@ import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 
 import logic.transformation.TraceTransformerResult;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.properties.AbstractFilterProperties;
-import logic.transformation.transformer.properties.SkipActivitiesFilterProperties;
+import logic.transformation.transformer.properties.AbstractTransformerProperties;
+import logic.transformation.transformer.properties.SkipActivitiesTransformerProperties;
 
-public class SkipActivitiesFilter extends AbstractMultipleTraceFilter {
+public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer {
 	
 	private final String CUSTOM_SUCCESS_FORMAT = "entry \"%s\" skipped";
 	private Set<String> skipActivities = new HashSet<String>();
 	
-	public SkipActivitiesFilter(SkipActivitiesFilterProperties properties) throws ParameterException, PropertyException {
+	public SkipActivitiesTransformer(SkipActivitiesTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 		skipActivities = properties.getSkipActivities();
 	}
 
-	public SkipActivitiesFilter(double activationProbability, int maxAppliances, Set<String> skipActivities) throws ParameterException {
-		super(TransformerType.SKIP_ACTIVITIES_FILTER, activationProbability, maxAppliances);
+	public SkipActivitiesTransformer(double activationProbability, int maxAppliances, Set<String> skipActivities) throws ParameterException {
+		super(TransformerType.SKIP_ACTIVITIES, activationProbability, maxAppliances);
 		setSkipActivities(skipActivities);
 	}
 	
@@ -38,16 +38,16 @@ public class SkipActivitiesFilter extends AbstractMultipleTraceFilter {
 	}
 	
 	public void setSkipActivities(Set<String> skipActivities) throws ParameterException{
-		SkipActivitiesFilterProperties.validateSkipActivities(skipActivities);
+		SkipActivitiesTransformerProperties.validateSkipActivities(skipActivities);
 		this.skipActivities.clear();
 		this.skipActivities = skipActivities;
 	}
 	
 	@Override
-	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult filterResult) throws ParameterException {
-		super.applyEntryTransformation(entry, filterResult);
+	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+		super.applyEntryTransformation(entry, transformerResult);
 		if(skipAllowed(entry.getActivity())){
-			addMessageToResult(getCustomSuccessMessage(entry.getActivity()), filterResult);
+			addMessageToResult(getCustomSuccessMessage(entry.getActivity()), transformerResult);
 			return true;
 		}
 		return false;
@@ -59,10 +59,10 @@ public class SkipActivitiesFilter extends AbstractMultipleTraceFilter {
 	}
 	
 	@Override
-	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryFilterSuccess) throws ParameterException{
+	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryTransformerSuccess) throws ParameterException{
 		Validate.notNull(logTrace);
 		Validate.notNull(logEntry);
-		if(entryFilterSuccess){
+		if(entryTransformerSuccess){
 			logTrace.removeAllEntries(logTrace.getEntriesForGroup(logEntry.getGroup()), true);
 		}
 	}
@@ -78,14 +78,14 @@ public class SkipActivitiesFilter extends AbstractMultipleTraceFilter {
 	}
 
 	@Override
-	protected void fillProperties(AbstractFilterProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
 		super.fillProperties(properties);
-		((SkipActivitiesFilterProperties) properties).setSkipActivities(skipActivities);
+		((SkipActivitiesTransformerProperties) properties).setSkipActivities(skipActivities);
 	}
 
 	@Override
-	public AbstractFilterProperties getProperties() throws ParameterException, PropertyException {
-		SkipActivitiesFilterProperties properties = new SkipActivitiesFilterProperties();
+	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+		SkipActivitiesTransformerProperties properties = new SkipActivitiesTransformerProperties();
 		fillProperties(properties);
 		return properties;
 	}

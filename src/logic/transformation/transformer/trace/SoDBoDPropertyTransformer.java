@@ -19,9 +19,9 @@ import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import logic.transformation.AbstractTransformerResult;
 import logic.transformation.TraceTransformerResult;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.properties.AGPropertyEnforcementFilterProperties;
+import logic.transformation.transformer.properties.AGPropertyEnforcementTransformerProperties;
 
-public abstract class SoDBoDPropertyFilter extends ActivityGroupPropertyEnforcementFilter {
+public abstract class SoDBoDPropertyTransformer extends ActivityGroupPropertyEnforcementTransformer {
 	
 	protected final String NOTICEF_NO_ORIGINATOR = "trace does not contain originator information %s";
 	protected final String ERRORF_FIXED_EQUAL_ORIGINATORS = "originators are equal and not alterable for group %s.";
@@ -33,15 +33,15 @@ public abstract class SoDBoDPropertyFilter extends ActivityGroupPropertyEnforcem
 	
 	protected Map<String, List<LogEntry>> entriesForActivity;
 	
-	public SoDBoDPropertyFilter(AGPropertyEnforcementFilterProperties properties) throws ParameterException, PropertyException {
+	public SoDBoDPropertyTransformer(AGPropertyEnforcementTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 	}
 
-	public SoDBoDPropertyFilter(TransformerType propertyType, Set<String>... bindings) throws ParameterException {
+	public SoDBoDPropertyTransformer(TransformerType propertyType, Set<String>... bindings) throws ParameterException {
 		this(propertyType, 0.0, bindings);
 	}
 	
-	public SoDBoDPropertyFilter(TransformerType propertyType, double violationProbability, Set<String>... bindings) throws ParameterException {
+	public SoDBoDPropertyTransformer(TransformerType propertyType, double violationProbability, Set<String>... bindings) throws ParameterException {
 		super(propertyType, violationProbability, bindings);
 	}
 	
@@ -79,11 +79,11 @@ public abstract class SoDBoDPropertyFilter extends ActivityGroupPropertyEnforcem
 	 * <code>false</code> otherwise.
 	 * @throws ParameterException 
 	 */
-	protected boolean checkTrivialCase(List<LogEntry> entries, FilterAction action) throws ParameterException{
+	protected boolean checkTrivialCase(List<LogEntry> entries, TransformerAction action) throws ParameterException{
 		entriesForActivity = EntryUtils.clusterEntriesAccordingToActivities(entries);
 		if(entriesForActivity.keySet().size()<2)
 			return true;
-		return filterEnforcedOnOriginatorSets(EntryUtils.clusterOriginatorsAccordingToActivity(entries), action);
+		return transformerEnforcedOnOriginatorSets(EntryUtils.clusterOriginatorsAccordingToActivity(entries), action);
 	}
 	
 	/**
@@ -94,12 +94,12 @@ public abstract class SoDBoDPropertyFilter extends ActivityGroupPropertyEnforcem
 	 * @return A valid index combination in case a valid one could be found;<br> <code>null</code> otherwise.
 	 * @throws ParameterException 
 	 */
-	protected Map<LogEntry, Integer> findValidIndexCombination(Map<LogEntry, List<String>> candidateList, FilterAction filterAction) throws ParameterException{
+	protected Map<LogEntry, Integer> findValidIndexCombination(Map<LogEntry, List<String>> candidateList, TransformerAction transformerAction) throws ParameterException{
 		Validate.notNull(candidateList);
 		Validate.notNull(candidateList.keySet());
 		Validate.noNullElements(candidateList.keySet());
 		Validate.noNullElements(candidateList.values());
-		Validate.notNull(filterAction);
+		Validate.notNull(transformerAction);
 		IndexCounter<LogEntry> counter = new IndexCounter<LogEntry>();
 		for(LogEntry entry: candidateList.keySet()){
 			counter.addNewIndex(entry, candidateList.get(entry).size() - 1);
@@ -121,7 +121,7 @@ public abstract class SoDBoDPropertyFilter extends ActivityGroupPropertyEnforcem
 				originatorSets.get(entry.getActivity()).add(candidateList.get(entry).get(indexConfig.get(entry)));
 			}
 
-			if(filterEnforcedOnOriginatorSets(originatorSets, filterAction)){
+			if(transformerEnforcedOnOriginatorSets(originatorSets, transformerAction)){
 				if(includeMessages)
 					System.out.println();
 				return indexConfig;
@@ -136,20 +136,20 @@ public abstract class SoDBoDPropertyFilter extends ActivityGroupPropertyEnforcem
 	protected EnforcementResult findValidOriginatorCombination(Set<String> activityGroup,
 															   List<LogEntry> allEntries,
 			 												   Map<LogEntry, List<String>> candidateList, 
-			 												   AbstractTransformerResult filterResult, 
-			 												   FilterAction filterAction) throws ParameterException{
-		Map<LogEntry, Integer> validIndexCombination = findValidIndexCombination(candidateList, filterAction);
+			 												   AbstractTransformerResult transformerResult, 
+			 												   TransformerAction transformerAction) throws ParameterException{
+		Map<LogEntry, Integer> validIndexCombination = findValidIndexCombination(candidateList, transformerAction);
 		if(validIndexCombination == null){
 			//No valid index combination could be found
 			//-> Violation is not possible
-			addMessageToResult(getErrorMessage(String.format(ERRORF_ORIGINATOR_COMBINATION, activityGroup)), filterResult);
+			addMessageToResult(getErrorMessage(String.format(ERRORF_ORIGINATOR_COMBINATION, activityGroup)), transformerResult);
 			return EnforcementResult.UNSUCCESSFUL;
 		}
 		//A valid index combination could be found
 		//Assign originators to entries according to the valid index combination
 		//and lock the originator field for those entries
 		for(LogEntry entry: candidateList.keySet()){
-			addMessageToResult(getNoticeMessage(String.format(CUSTOM_SINGLE_SUCCESSFUL_ENFORCEMENT_FORMAT, candidateList.get(entry).get(validIndexCombination.get(entry)), entry)), filterResult);
+			addMessageToResult(getNoticeMessage(String.format(CUSTOM_SINGLE_SUCCESSFUL_ENFORCEMENT_FORMAT, candidateList.get(entry).get(validIndexCombination.get(entry)), entry)), transformerResult);
 			try {
 				entry.setOriginator(candidateList.get(entry).get(validIndexCombination .get(entry)));
 			} catch (Exception e) {
@@ -158,51 +158,51 @@ public abstract class SoDBoDPropertyFilter extends ActivityGroupPropertyEnforcem
 			} 
 		}
 		//Lock the originator field for all entries where it is not already locked.
-		EntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Filter Enforcement: "+filterType.toString(), allEntries);
+		EntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Transformer Enforcement: "+transformerType.toString(), allEntries);
 
 		return EnforcementResult.SUCCESSFUL;
 }
 	
-	protected abstract boolean filterEnforcedOnOriginatorSets(Map<String, Set<String>> originatorSets, FilterAction filterAction);
+	protected abstract boolean transformerEnforcedOnOriginatorSets(Map<String, Set<String>> originatorSets, TransformerAction transformerAction);
 
 	@Override
-	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult filterResult) throws ParameterException{
-		if(checkTrivialCase(entries, FilterAction.ENSURE)){
+	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
+		if(checkTrivialCase(entries, TransformerAction.ENSURE)){
 			//property already enforced by the current setting of task executors
 			//-> no need for enforcement 
 			try{
 				if(entriesForActivity.keySet().size()<2){
-					addMessageToResult(getNoticeMessage(String.format(NONEEDF_TRIVIAL, activityGroup)), filterResult);
+					addMessageToResult(getNoticeMessage(String.format(NONEEDF_TRIVIAL, activityGroup)), transformerResult);
 				} else {
-					addMessageToResult(getNoticeMessage(String.format(NONEEDF_ENFORCEMENT, activityGroup)), filterResult);
+					addMessageToResult(getNoticeMessage(String.format(NONEEDF_ENFORCEMENT, activityGroup)), transformerResult);
 				}
 			}catch(ParameterException e){
 				// Cannot happen, since getNotiveMessage() is not called with null-values.
 				e.printStackTrace();
 			}
-			EntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Filter Enforcement: "+filterType.toString(), entries);
+			EntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Transformer Enforcement: "+transformerType.toString(), entries);
 			return EnforcementResult.NOTNECESSARY;
 		}
 		return EnforcementResult.UNSUCCESSFUL;
 	}
 
 	@Override
-	protected EnforcementResult violateProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult filterResult) throws ParameterException{
-		super.violateProperty(activityGroup, entries, filterResult);
-		if(checkTrivialCase(entries, FilterAction.VIOLATE)){
+	protected EnforcementResult violateProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
+		super.violateProperty(activityGroup, entries, transformerResult);
+		if(checkTrivialCase(entries, TransformerAction.VIOLATE)){
 			//property already enforced by the current setting of task executors
 			//-> no need for enforcement 
 			try{
 				if(entriesForActivity.keySet().size()<2){
-					addMessageToResult(getNoticeMessage(String.format(NONEEDF_TRIVIAL, activityGroup)), filterResult);
+					addMessageToResult(getNoticeMessage(String.format(NONEEDF_TRIVIAL, activityGroup)), transformerResult);
 				} else {
-					addMessageToResult(getNoticeMessage(String.format(NONEEDF_VIOLATION, activityGroup)), filterResult);
+					addMessageToResult(getNoticeMessage(String.format(NONEEDF_VIOLATION, activityGroup)), transformerResult);
 				}
 			}catch(ParameterException e){
 				// Cannot happen, since getNotiveMessage() is not called with null-values.
 				e.printStackTrace();
 			}
-			EntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Filter Enforcement: "+filterType.toString(), entries);
+			EntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Transformer Enforcement: "+transformerType.toString(), entries);
 			return EnforcementResult.NOTNECESSARY;
 		}
 		return EnforcementResult.UNSUCCESSFUL;

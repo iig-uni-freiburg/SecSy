@@ -38,7 +38,7 @@ import de.invation.code.toval.validate.ParameterException;
 import logic.simulation.SimulationRun;
 import logic.simulation.properties.SimulationRunProperties;
 import logic.transformation.TraceTransformerManager;
-import logic.transformation.transformer.trace.AbstractTraceFilter;
+import logic.transformation.transformer.trace.AbstractTraceTransformer;
 import parser.PNMLFilter;
 import parser.PNMLParser;
 import petrinet.pt.PTNet;
@@ -67,7 +67,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 	
 	//---------------------------------------------------
 	
-	private List<AbstractTraceFilter> filters = null;
+	private List<AbstractTraceTransformer> filters = null;
 	
 	/**
 	 * @wbp.parser.constructor
@@ -83,7 +83,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 	@Override
 	protected void initialize(Object... parameters) {
 		listFiltersModel = new DefaultListModel();
-		filters = new ArrayList<AbstractTraceFilter>();
+		filters = new ArrayList<AbstractTraceTransformer>();
 		if(editMode){
 			setDialogObject((SimulationRun) parameters[0]);
 		}
@@ -111,7 +111,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		txtName.setText(getDialogObject().getName());
 		comboNet.setSelectedItem(getDialogObject().getPetriNet().getName());
 		spinPasses.setValue(getDialogObject().getPasses());
-		for(AbstractTraceFilter filter: getDialogObject().getTraceFilterManager().getTraceTransformers()){
+		for(AbstractTraceTransformer filter: getDialogObject().getTraceFilterManager().getTraceTransformers()){
 			filters.add(filter);
 		}
 		updateListFilters();
@@ -233,7 +233,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 	
 	private void updateListFilters(){
 		listFiltersModel.clear();
-		for(AbstractTraceFilter filter: filters){
+		for(AbstractTraceTransformer filter: filters){
 			listFiltersModel.addElement(filter);
 		}
 	}
@@ -243,20 +243,20 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 			return;
 		}
 		for(Object selectedFilter: listFilters.getSelectedValues()){
-			filters.remove((AbstractTraceFilter) selectedFilter);
+			filters.remove((AbstractTraceTransformer) selectedFilter);
 		}
 	}
 	
 	private Set<String> getFilterNames(){
 		Set<String> filterNames = new HashSet<String>();
-		for(AbstractTraceFilter filter: filters){
+		for(AbstractTraceTransformer filter: filters){
 			filterNames.add(filter.getName());
 		}
 		return filterNames;
 	}
 	
-	private AbstractTraceFilter getFilter(String filterName){
-		for(AbstractTraceFilter filter: filters){
+	private AbstractTraceTransformer getFilter(String filterName){
+		for(AbstractTraceTransformer filter: filters){
 			if(filter.getName().equals(filterName)){
 				return filter;
 			}
@@ -310,7 +310,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 						return;
 					}
 					
-					AbstractTraceFilter newFilter = TransformerDialog.showDialog(SimulationRunDialog.this, activities);
+					AbstractTraceTransformer newFilter = TransformerDialog.showDialog(SimulationRunDialog.this, activities);
 					if(newFilter == null){
 						//User cancelled filter dialog.
 						return;
@@ -362,7 +362,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 					if(listFilters.getSelectedValue() == null){
 						return;
 					}
-					AbstractTraceFilter selectedFilter = (AbstractTraceFilter) listFilters.getSelectedValue();
+					AbstractTraceTransformer selectedFilter = (AbstractTraceTransformer) listFilters.getSelectedValue();
 					
 					Set<String> activities = getActivities();
 					if(activities == null){
@@ -370,7 +370,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 					}
 					
 					String oldFilterName = selectedFilter.getName();
-					AbstractTraceFilter adjustedFilter = TransformerDialog.showDialog(SimulationRunDialog.this, activities, selectedFilter);
+					AbstractTraceTransformer adjustedFilter = TransformerDialog.showDialog(SimulationRunDialog.this, activities, selectedFilter);
 					if(adjustedFilter == null){
 						//User cancelled the filter dialog
 						return;
@@ -533,7 +533,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		// Get filters
 		TraceTransformerManager filterManager = new TraceTransformerManager();
 		//Add filters to filter manager.
-		for(AbstractTraceFilter filter: filters){
+		for(AbstractTraceTransformer filter: filters){
 			try{
 				filterManager.addFilter(filter);
 			} catch(Exception ex){

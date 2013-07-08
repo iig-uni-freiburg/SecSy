@@ -6,8 +6,8 @@ import logic.generator.TraceCompletionListener;
 import logic.simulation.properties.SimulationRunProperties;
 import logic.transformation.EntryTransformerManager;
 import logic.transformation.TraceTransformerManager;
-import logic.transformation.transformer.entry.AbstractEntryFilter;
-import logic.transformation.transformer.trace.AbstractTraceFilter;
+import logic.transformation.transformer.entry.AbstractEntryTransformer;
+import logic.transformation.transformer.trace.AbstractTraceTransformer;
 import petrinet.AbstractPetriNet;
 import petrinet.AbstractTransition;
 import traversal.PNTraverser;
@@ -204,11 +204,11 @@ public class SimulationRun implements TraceCompletionListener{
 		setPetriNet(other.getPetriNet());
 		setPNTraverser(other.getPNTraverser());
 		entryFilterManager.clear();
-		for(AbstractEntryFilter entryFilter: other.getEntryFilterManager().getEntryTransformers()){
+		for(AbstractEntryTransformer entryFilter: other.getEntryFilterManager().getEntryTransformers()){
 			entryFilterManager.addTransformer(entryFilter);
 		}
 		traceFilterManager.clear();
-		for(AbstractTraceFilter traceFilter: other.getTraceFilterManager().getTraceTransformers()){
+		for(AbstractTraceTransformer traceFilter: other.getTraceFilterManager().getTraceTransformers()){
 			traceFilterManager.addFilter(traceFilter);
 		}
 	}
@@ -219,12 +219,12 @@ public class SimulationRun implements TraceCompletionListener{
 		
 		try {
 			EntryTransformerManager entryFilterManager = new EntryTransformerManager();
-			for(AbstractEntryFilter entryFilter: getEntryFilterManager().getEntryTransformers()){
+			for(AbstractEntryTransformer entryFilter: getEntryFilterManager().getEntryTransformers()){
 				entryFilterManager.addTransformer(entryFilter);
 			}
 			
 			TraceTransformerManager traceFilterManager = new TraceTransformerManager();
-			for(AbstractTraceFilter traceFilter: getTraceFilterManager().getTraceTransformers()){
+			for(AbstractTraceTransformer traceFilter: getTraceFilterManager().getTraceTransformers()){
 				traceFilterManager.addFilter(traceFilter);
 			}
 			
@@ -252,7 +252,7 @@ public class SimulationRun implements TraceCompletionListener{
 		}
 		StringBuilder builder = new StringBuilder();
 		builder.append('\n');
-		for(AbstractTraceFilter filter: getTraceFilterManager().getTraceTransformers()){
+		for(AbstractTraceTransformer filter: getTraceFilterManager().getTraceTransformers()){
 			builder.append(String.format(filterformat, filter.toString()));
 		}
 		return builder.toString();

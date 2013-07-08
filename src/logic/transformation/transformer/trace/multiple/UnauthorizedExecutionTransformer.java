@@ -16,35 +16,35 @@ import de.uni.freiburg.iig.telematik.jawl.log.ModificationException;
 import logic.generator.Context;
 import logic.transformation.TraceTransformerResult;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.properties.AbstractFilterProperties;
-import logic.transformation.transformer.properties.UnauthorizedExecutionFilterProperties;
+import logic.transformation.transformer.properties.AbstractTransformerProperties;
+import logic.transformation.transformer.properties.UnauthorizedExecutionTransformerProperties;
 
 /**
  * Manipulates a given log trace by inserting an access control violation.
  * 
  * @author Thomas Stocker
  */
-public class UnauthorizedExecutionFilter extends AbstractMultipleTraceFilter {
+public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTransformer {
 	
 	private final String CUSTOM_SUCCESS_FORMAT = "entry %s: %s -> %s";
 	private Context context = null;
 	
-	public UnauthorizedExecutionFilter(UnauthorizedExecutionFilterProperties properties) throws ParameterException, PropertyException{
+	public UnauthorizedExecutionTransformer(UnauthorizedExecutionTransformerProperties properties) throws ParameterException, PropertyException{
 		super(properties);
 	}
 	
-	public UnauthorizedExecutionFilter(Context context, UnauthorizedExecutionFilterProperties properties) throws ParameterException, PropertyException {
+	public UnauthorizedExecutionTransformer(Context context, UnauthorizedExecutionTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 		setContext(context);
 	}
 
-	public UnauthorizedExecutionFilter(double activationProbability, Context context, int maxAppliance) throws ParameterException {
+	public UnauthorizedExecutionTransformer(double activationProbability, Context context, int maxAppliance) throws ParameterException {
 		this(activationProbability, maxAppliance);
 		setContext(context);
 	}
 	
-	public UnauthorizedExecutionFilter(double activationProbability, int maxAppliance) throws ParameterException {
-		super(TransformerType.UNAUTHORIZED_EXECUTION_FILTER, activationProbability, maxAppliance);
+	public UnauthorizedExecutionTransformer(double activationProbability, int maxAppliance) throws ParameterException {
+		super(TransformerType.UNAUTHORIZED_EXECUTION, activationProbability, maxAppliance);
 	}
 	
 	public void setContext(Context context) throws ParameterException{
@@ -57,11 +57,11 @@ public class UnauthorizedExecutionFilter extends AbstractMultipleTraceFilter {
 	}
 
 	@Override
-	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult filterResult) throws ParameterException {
-		super.applyEntryTransformation(entry, filterResult);
+	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+		super.applyEntryTransformation(entry, transformerResult);
 		
 		if(!isValid()){
-			addMessageToResult(getErrorMessage("Cannot apply filter in invalid state: No context reference."), filterResult);
+			addMessageToResult(getErrorMessage("Cannot apply transformer in invalid state: No context reference."), transformerResult);
 			return false;
 		}
 		
@@ -78,7 +78,7 @@ public class UnauthorizedExecutionFilter extends AbstractMultipleTraceFilter {
 			// Check if the actual originator of the log entry already is unauthorized
 			if(unauthorizedOriginators.contains(entry.getOriginator())){
 				// Lock the originator field and exit
-				entry.lockField(EntryField.ORIGINATOR, "Filter-Enforcement: UnauthorizedExecution");
+				entry.lockField(EntryField.ORIGINATOR, "Transformer-Enforcement: UnauthorizedExecution");
 				return true;
 			} else {
 				//If the field ORIGINATOR is locked, there is no chance to set an unauthorized originator.
@@ -88,8 +88,8 @@ public class UnauthorizedExecutionFilter extends AbstractMultipleTraceFilter {
 			// Try to directly set the unauthorized originators as originator candidates of the log entry
 			try {
 				entry.setOriginatorCandidates(unauthorizedOriginators);
-				entry.lockField(EntryField.ORIGINATOR_CANDIDATES, "Filter-Enforcement: UnauthorizedExecution");
-				addMessageToResult(getSuccessMessage(entry.getActivity(), originatorCandidates.toString(), entry.getOriginatorCandidates().toString()), filterResult);
+				entry.lockField(EntryField.ORIGINATOR_CANDIDATES, "Transformer-Enforcement: UnauthorizedExecution");
+				addMessageToResult(getSuccessMessage(entry.getActivity(), originatorCandidates.toString(), entry.getOriginatorCandidates().toString()), transformerResult);
 				return true;
 			} catch (NullPointerException e) {
 				// Cannot happen since unauthorizedOriginators contains elements
@@ -106,8 +106,8 @@ public class UnauthorizedExecutionFilter extends AbstractMultipleTraceFilter {
 					// -> Randomly choose one of them as originator.
 					try {
 						entry.setOriginator(unauthorizeCandidates.get(rand.nextInt(unauthorizeCandidates.size())));
-						entry.lockField(EntryField.ORIGINATOR, "Filter-Enforcement: UnauthorizedExecution");
-						addMessageToResult(getSuccessMessage(entry.getActivity(), originatorCandidates.toString(), entry.getOriginatorCandidates().toString()), filterResult);
+						entry.lockField(EntryField.ORIGINATOR, "Transformer-Enforcement: UnauthorizedExecution");
+						addMessageToResult(getSuccessMessage(entry.getActivity(), originatorCandidates.toString(), entry.getOriginatorCandidates().toString()), transformerResult);
 						return true;
 					} catch (NullPointerException e1) {
 						// Cannot happen since unauthorizedCandidates contains elements
@@ -136,13 +136,13 @@ public class UnauthorizedExecutionFilter extends AbstractMultipleTraceFilter {
 	}
 
 	@Override
-	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryFilterSuccess) throws ParameterException {
+	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryTransformerSuccess) throws ParameterException {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public AbstractFilterProperties getProperties() throws ParameterException, PropertyException {
-		UnauthorizedExecutionFilterProperties properties = new UnauthorizedExecutionFilterProperties();
+	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+		UnauthorizedExecutionTransformerProperties properties = new UnauthorizedExecutionTransformerProperties();
 		fillProperties(properties);
 		return properties;
 	}

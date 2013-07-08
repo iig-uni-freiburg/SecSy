@@ -15,17 +15,17 @@ import logic.transformation.AbstractTransformerResult;
 import logic.transformation.TraceTransformerEvent;
 import logic.transformation.TraceTransformerResult;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.properties.AGPropertyEnforcementFilterProperties;
-import logic.transformation.transformer.properties.AbstractFilterProperties;
+import logic.transformation.transformer.properties.AGPropertyEnforcementTransformerProperties;
+import logic.transformation.transformer.properties.AbstractTransformerProperties;
 
 /**
- * This class defined abstract behaviour for filters that apply to groups of activities within a trace, e.g. SoD or BoD constraints.
+ * This class defined abstract behavior for transformers that apply to groups of activities within a trace, e.g. SoD or BoD constraints.
  * The activation probability is set to 1 to guarantee that on each trace,
  * the property is either ensured or violated.
  * 
  * @author Thomas Stocker
  */
-public abstract class ActivityGroupPropertyEnforcementFilter extends AbstractTraceFilter {
+public abstract class ActivityGroupPropertyEnforcementTransformer extends AbstractTraceTransformer {
 	
 	protected final String SUCCESSFULF_ENFORCEMENT = "Successful enforcements: %s";
 	protected final String SUCCESSFULF_VIOLATION = "Successful violations: %s";
@@ -34,32 +34,32 @@ public abstract class ActivityGroupPropertyEnforcementFilter extends AbstractTra
 	protected final String NONEEDF_ACTIVITIES_NOT_PRESENT = "No enforcement necessary - trace does not contain activity group %s";
 	protected final String NONEEDF_ENFORCEMENT = "Property already ensured in group %s.";
 	protected final String NONEEDF_VIOLATION = "Property already violated in group %s";
-	protected final String ERRORF_CUSTOM = "[FILTER ERROR] %s Cannot enforce property on %%s";
+	protected final String ERRORF_CUSTOM = "[TRANSFORMER ERROR] %s Cannot enforce property on %%s";
 	protected final String NOTICEF_ENFORCE = "Trying to %s property on group %s";
 	protected final String NOTICEF_TRACE_RESULT = "Trace after transformation: %s";
 	protected final String NOTICEF_TRACE = "Trace before transformation: %s";
 	
-	private double violationProbability = AGPropertyEnforcementFilterProperties.defaultViolationProbability;
+	private double violationProbability = AGPropertyEnforcementTransformerProperties.defaultViolationProbability;
 	private List<Set<String>> activityGroups = new ArrayList<Set<String>>();
 	
-	public enum FilterAction {ENSURE, VIOLATE};
+	public enum TransformerAction {ENSURE, VIOLATE};
 
-	public ActivityGroupPropertyEnforcementFilter(AGPropertyEnforcementFilterProperties properties) throws ParameterException, PropertyException {
+	public ActivityGroupPropertyEnforcementTransformer(AGPropertyEnforcementTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 		violationProbability = properties.getViolationProbability();
 		activityGroups = properties.getActivityGroups();
 	}
 
 	/**
-	 * Creates a new ActivityGroupFilter according to the given parameters.<br>
-	 * Generating a filter in this way will force the filter to ensure the property on all traces.
-	 * @param filterType A String-description of the filter.
-	 * @param includeMessages Indicates if the filter result should include status messages.
+	 * Creates a new ActivityGroupTransformer according to the given parameters.<br>
+	 * Generating a transformer in this way will force the transformer to ensure the property on all traces.
+	 * @param transformerType A String-description of the transformer.
+	 * @param includeMessages Indicates if the transformer result should include status messages.
 	 * @param activityGroups The activity groups for which the property should be applied.
 	 * @throws ParameterException 
 	 */
-	public ActivityGroupPropertyEnforcementFilter(TransformerType filterType, Set<String>... activityGroups) throws ParameterException {
-		super(filterType, 1.0);
+	public ActivityGroupPropertyEnforcementTransformer(TransformerType transformerType, Set<String>... activityGroups) throws ParameterException {
+		super(transformerType, 1.0);
 		Validate.notNull(activityGroups);
 		for(Set<String> activityGroup: activityGroups){
 			if(activityGroup == null){
@@ -70,18 +70,18 @@ public abstract class ActivityGroupPropertyEnforcementFilter extends AbstractTra
 	}
 	
 	/**
-	 * Creates a new ActivityGroupFilter according to the given parameters.<br>
-	 * Generating a filter in this way allows to specify the probability with which the property is violated on a given trace.
+	 * Creates a new ActivityGroupTransformer according to the given parameters.<br>
+	 * Generating a transformer in this way allows to specify the probability with which the property is violated on a given trace.
 	 * In all other cases the property will be enforced on the given trace.<br>
-	 * Note that in case the filter decides to violate the property if tries to violate it for all activity groups.
-	 * @param filterType A String-description of the filter.
+	 * Note that in case the transformer decides to violate the property if tries to violate it for all activity groups.
+	 * @param transformerType A String-description of the transformer.
 	 * @param violationProbability The probability with which the property should be violated on a given trace.
-	 * @param includeMessages Indicates if the filter result should include status messages.
+	 * @param includeMessages Indicates if the transformer result should include status messages.
 	 * @param activityGroups The activity groups for which the property should be applied.
 	 * @throws ParameterException 
 	 */
-	public ActivityGroupPropertyEnforcementFilter(TransformerType filterType, double violationProbability, Set<String>... activityGroups) throws ParameterException {
-		this(filterType, activityGroups);
+	public ActivityGroupPropertyEnforcementTransformer(TransformerType transformerType, double violationProbability, Set<String>... activityGroups) throws ParameterException {
+		this(transformerType, activityGroups);
 	}
 	
 	public void setViolationProbability(double probability){
@@ -117,7 +117,7 @@ public abstract class ActivityGroupPropertyEnforcementFilter extends AbstractTra
 		try {
 			result = new TraceTransformerResult(event.logTrace, true);
 		} catch (ParameterException e) {
-			// Cannot happen, since TraceFilterEvent ensures non-null values for log traces.
+			// Cannot happen, since TraceTransformerEvent ensures non-null values for log traces.
 			e.printStackTrace();
 		}
 		boolean ensureProperty = violationProbability==0.0 || rand.nextDouble()>violationProbability;
@@ -172,7 +172,7 @@ public abstract class ActivityGroupPropertyEnforcementFilter extends AbstractTra
 	/**
 	 * Removes entries from the trace that are irrelevant for the property, i.e. traces where specific fields are empty.
 	 * @param entries Complete list of entries within the trace that.
-	 * @param result The TraceFilterResult to be used for adding messages.
+	 * @param result The TraceTransformerResult to be used for adding messages.
 	 * @return A list containing relevant entries only.
 	 * @throws ParameterException 
 	 */
@@ -186,19 +186,19 @@ public abstract class ActivityGroupPropertyEnforcementFilter extends AbstractTra
 	 * Enforces the property on a given set of log entries.
 	 * @param activityGroup The group of activities for which the property must hold.
 	 * @param entries The entries that relate to one of the activities in the activity group.
-	 * @param filterResult The FilterResult to be used for adding messages.
+	 * @param transformerResult The TransformerResult to be used for adding messages.
 	 * @return Outcome of the enforcement procedure.
 	 * @throws ParameterException 
 	 * @see EnforcementResult
 	 */
-	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult filterResult) throws ParameterException{
+	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
 		Validate.notNull(activityGroup);
 		Validate.notEmpty(activityGroup);
 		Validate.noNullElements(activityGroup);
 		Validate.notNull(entries);
 		Validate.notEmpty(entries);
 		Validate.noNullElements(entries);
-		Validate.notNull(filterResult);
+		Validate.notNull(transformerResult);
 		return EnforcementResult.SUCCESSFUL;
 	}
 	
@@ -206,29 +206,29 @@ public abstract class ActivityGroupPropertyEnforcementFilter extends AbstractTra
 	 * Violates the property on a given set of log entries.
 	 * @param activityGroup The group of activities for which the property must not hold.
 	 * @param entries The entries that relate to one of the activities in the activity group.
-	 * @param filterResult The FilterResult to be used for adding messages.
+	 * @param transformerResult The TransformerResult to be used for adding messages.
 	 * @return Outcome of the violation procedure.
 	 * @throws ParameterException 
 	 * @see EnforcementResult
 	 */
-	protected EnforcementResult violateProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult filterResult) throws ParameterException{
+	protected EnforcementResult violateProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
 		Validate.notNull(activityGroup);
 		Validate.notEmpty(activityGroup);
 		Validate.noNullElements(activityGroup);
 		Validate.notNull(entries);
 		Validate.notEmpty(entries);
 		Validate.noNullElements(entries);
-		Validate.notNull(filterResult);
+		Validate.notNull(transformerResult);
 		return EnforcementResult.SUCCESSFUL;
 	}
 	
 	
 	@Override
-	protected void fillProperties(AbstractFilterProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
 		super.fillProperties(properties);
-		((AGPropertyEnforcementFilterProperties) properties).setViolationProbability(getViolationProbability());
+		((AGPropertyEnforcementTransformerProperties) properties).setViolationProbability(getViolationProbability());
 		for(Set<String> activityGroup: activityGroups){
-			((AGPropertyEnforcementFilterProperties) properties).addActivityGroup(activityGroup);
+			((AGPropertyEnforcementTransformerProperties) properties).addActivityGroup(activityGroup);
 		}
 	}
 

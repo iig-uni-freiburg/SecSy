@@ -11,7 +11,7 @@ import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 
 import logic.generator.DetailedLogEntryGenerator;
 import logic.generator.LogEntryGenerator;
-import logic.transformation.transformer.entry.AbstractEntryFilter;
+import logic.transformation.transformer.entry.AbstractEntryTransformer;
 import logic.transformation.transformer.exception.MissingRequirementException;
 
 /**
@@ -31,7 +31,7 @@ public class EntryTransformerManager {
 	/**
 	 * The list of managed log entry transformers.
 	 */
-	protected List<AbstractEntryFilter> entryTransformers = new ArrayList<AbstractEntryFilter>();
+	protected List<AbstractEntryTransformer> entryTransformers = new ArrayList<AbstractEntryTransformer>();
 	/**
 	 * The transformer manager source (= log entry generator).
 	 */
@@ -50,7 +50,7 @@ public class EntryTransformerManager {
 	public void setSource(LogEntryGenerator source) throws ParameterException {
 		Validate.notNull(source);
 		try{
-			for(AbstractEntryFilter transformer: entryTransformers){
+			for(AbstractEntryTransformer transformer: entryTransformers){
 				for(EntryField contextType: transformer.requiredContextInformation()){
 					if(!source.providesLogInformation(contextType))
 						throw new IllegalArgumentException("Transformer requirement ("+contextType+") cannot be provided by source.");
@@ -64,7 +64,7 @@ public class EntryTransformerManager {
 		this.entryGenerator = source;
 	}
 	
-	public List<AbstractEntryFilter> getEntryTransformers(){
+	public List<AbstractEntryTransformer> getEntryTransformers(){
 		return Collections.unmodifiableList(entryTransformers);
 	}
 	
@@ -82,7 +82,7 @@ public class EntryTransformerManager {
 	 *             If the given entry transformer is incompatible with the transformer
 	 *             manager source.
 	 */
-	public void addTransformer(AbstractEntryFilter entryTransformer) throws MissingRequirementException, ParameterException {
+	public void addTransformer(AbstractEntryTransformer entryTransformer) throws MissingRequirementException, ParameterException {
 		Validate.notNull(entryTransformer);
 		try {
 			if (entryGenerator != null)
@@ -112,8 +112,8 @@ public class EntryTransformerManager {
 	 */
 	public void applyTransformers(LogEntry logEntry, int caseNumber) throws ParameterException{
 		EntryTransformerEvent event = new EntryTransformerEvent(logEntry, caseNumber, entryGenerator);
-		for(AbstractEntryFilter tl: entryTransformers){
-			AbstractTransformerResult transformerResult = tl.filterLogEntry(event);
+		for(AbstractEntryTransformer tl: entryTransformers){
+			AbstractTransformerResult transformerResult = tl.transformLogEntry(event);
 			if(transformerResult.containsMessages()){
 //				System.out.println(transformerResult.getTransformerMessages());
 //				System.out.println();

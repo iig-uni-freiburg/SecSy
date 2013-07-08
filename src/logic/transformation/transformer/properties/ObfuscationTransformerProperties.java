@@ -14,32 +14,32 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 
 
-public class ObfuscationFilterProperties  extends AbstractMultipleTraceFilterProperties {
+public class ObfuscationTransformerProperties  extends AbstractMultipleTraceTransformerProperties {
 	
 	public static final EntryField[] defaultExcludedFields = {EntryField.TIME};
 
-	public ObfuscationFilterProperties() {
+	public ObfuscationTransformerProperties() {
 		super();
 	}
 
-	public ObfuscationFilterProperties(String fileName) throws IOException {
+	public ObfuscationTransformerProperties(String fileName) throws IOException {
 		super(fileName);
 	}
 	
 	public void setExcludedFields(EntryField... excludedFields) throws ParameterException {
 		validateExcludedFields(excludedFields);
-		props.setProperty(ObfuscationFilterProperty.EXCLUDED_FIELDS.toString(), ArrayUtils.toString(excludedFields));
+		props.setProperty(ObfuscationTransformerProperty.EXCLUDED_FIELDS.toString(), ArrayUtils.toString(excludedFields));
 	}
 	
 	public void setExcludedFields(Set<EntryField> excludedFields) throws ParameterException {
 		Validate.notNull(excludedFields);
 		Validate.noNullElements(excludedFields);
-		props.setProperty(ObfuscationFilterProperty.EXCLUDED_FIELDS.toString(), ArrayUtils.toString(excludedFields.toArray()));
+		props.setProperty(ObfuscationTransformerProperty.EXCLUDED_FIELDS.toString(), ArrayUtils.toString(excludedFields.toArray()));
 	}
 	
 	public Set<EntryField> getExcludedFields() throws PropertyException{
 		Set<EntryField> result = new HashSet<EntryField>();
-		String propertyValue = props.getProperty(ObfuscationFilterProperty.EXCLUDED_FIELDS.toString());
+		String propertyValue = props.getProperty(ObfuscationTransformerProperty.EXCLUDED_FIELDS.toString());
 		if(propertyValue == null)
 			return result;
 		StringTokenizer fieldTokens = StringUtils.splitArrayString(propertyValue, " ");
@@ -64,11 +64,11 @@ public class ObfuscationFilterProperties  extends AbstractMultipleTraceFilterPro
 	@Override
 	protected Properties getDefaultProperties(){
 		Properties defaultProperties = super.getDefaultProperties();
-		defaultProperties.setProperty(ObfuscationFilterProperty.EXCLUDED_FIELDS.toString(), ArrayUtils.toString(defaultExcludedFields));
+		defaultProperties.setProperty(ObfuscationTransformerProperty.EXCLUDED_FIELDS.toString(), ArrayUtils.toString(defaultExcludedFields));
 		return defaultProperties;
 	}
 
-	private enum ObfuscationFilterProperty {
+	private enum ObfuscationTransformerProperty {
 		EXCLUDED_FIELDS;
 	}
 	

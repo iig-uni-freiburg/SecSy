@@ -15,22 +15,22 @@ import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 
 import logic.transformation.TraceTransformerResult;
 import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.properties.AbstractFilterProperties;
-import logic.transformation.transformer.properties.IncompleteLoggingFilterProperties;
-import logic.transformation.transformer.properties.SkipActivitiesFilterProperties;
+import logic.transformation.transformer.properties.AbstractTransformerProperties;
+import logic.transformation.transformer.properties.IncompleteLoggingTransformerProperties;
+import logic.transformation.transformer.properties.SkipActivitiesTransformerProperties;
 
-public class IncompleteLoggingFilter extends AbstractMultipleTraceFilter {
+public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransformer {
 	
 	private final String CUSTOM_SUCCESS_FORMAT = "entry \"%s\" skipped";
 	private Set<String> skipActivities = new HashSet<String>();;
 	
-	public IncompleteLoggingFilter(SkipActivitiesFilterProperties properties) throws ParameterException, PropertyException {
+	public IncompleteLoggingTransformer(SkipActivitiesTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 		skipActivities = properties.getSkipActivities();
 	}
 
-	public IncompleteLoggingFilter(double activationProbability, int maxAppliances, Set<String> skipActivities) throws ParameterException {
-		super(TransformerType.INCOMPLETE_LOGGING_FILTER, activationProbability, maxAppliances);
+	public IncompleteLoggingTransformer(double activationProbability, int maxAppliances, Set<String> skipActivities) throws ParameterException {
+		super(TransformerType.INCOMPLETE_LOGGING, activationProbability, maxAppliances);
 		setSkipActivities(skipActivities);
 	}
 	
@@ -39,16 +39,16 @@ public class IncompleteLoggingFilter extends AbstractMultipleTraceFilter {
 	}
 	
 	public void setSkipActivities(Set<String> skipActivities) throws ParameterException{
-		SkipActivitiesFilterProperties.validateSkipActivities(skipActivities);
+		SkipActivitiesTransformerProperties.validateSkipActivities(skipActivities);
 		this.skipActivities.clear();
 		this.skipActivities = skipActivities;
 	}
 	
 	@Override
-	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult filterResult) throws ParameterException {
-		super.applyEntryTransformation(entry, filterResult);
+	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+		super.applyEntryTransformation(entry, transformerResult);
 		if(skipAllowed(entry.getActivity())){
-			addMessageToResult(getCustomSuccessMessage(entry.getActivity()), filterResult);
+			addMessageToResult(getCustomSuccessMessage(entry.getActivity()), transformerResult);
 			return true;
 		}
 		return false;
@@ -60,10 +60,10 @@ public class IncompleteLoggingFilter extends AbstractMultipleTraceFilter {
 	}
 	
 	@Override
-	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryFilterSuccess) throws ParameterException{
+	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryTransformerSuccess) throws ParameterException{
 		Validate.notNull(logTrace);
 		Validate.notNull(logEntry);
-		if(entryFilterSuccess){
+		if(entryTransformerSuccess){
 			logTrace.removeAllEntries(logTrace.getEntriesForGroup(logEntry.getGroup()));
 		}
 	}
@@ -79,14 +79,14 @@ public class IncompleteLoggingFilter extends AbstractMultipleTraceFilter {
 	}
 	
 	@Override
-	protected void fillProperties(AbstractFilterProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
 		super.fillProperties(properties);
-		((IncompleteLoggingFilterProperties) properties).setSkipActivities(skipActivities);
+		((IncompleteLoggingTransformerProperties) properties).setSkipActivities(skipActivities);
 	}
 
 	@Override
-	public AbstractFilterProperties getProperties() throws ParameterException, PropertyException {
-		IncompleteLoggingFilterProperties properties = new IncompleteLoggingFilterProperties();
+	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+		IncompleteLoggingTransformerProperties properties = new IncompleteLoggingTransformerProperties();
 		fillProperties(properties);
 		return properties;
 	}
