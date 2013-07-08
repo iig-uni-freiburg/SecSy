@@ -167,6 +167,12 @@ public class Simulator extends JFrame {
 					JOptionPane.showMessageDialog(null, "Internal exception while storing simulation components to disk.\nReason: " + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+				try {
+					GeneralProperties.getInstance().store();
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, "Cannot store general properties to disk.\nReason: " + e1.getMessage(), "I/O Exception", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 			}
 			
 			@Override
@@ -199,6 +205,7 @@ public class Simulator extends JFrame {
 						GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory);
 					}
 				} catch (Exception e1) {
+					System.out.println("weewewewewwe");
 					return;
 				}
 				

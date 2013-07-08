@@ -54,6 +54,8 @@ public class RoleLatticeDialog extends JDialog implements EdgeAddedListener{
 	
 	private RoleLattice lattice = null;
 	
+	private boolean editMode = false;
+	
 	/**
 	 * @wbp.parser.constructor
 	 */
@@ -61,6 +63,7 @@ public class RoleLatticeDialog extends JDialog implements EdgeAddedListener{
 		super(owner);
 		setResizable(false);
 		this.lattice = lattice;
+		editMode = true;
 		initialize(owner, context);
 	}
 
@@ -70,7 +73,11 @@ public class RoleLatticeDialog extends JDialog implements EdgeAddedListener{
 	}
 	
 	private void initialize(Window owner, Context context) throws ParameterException{
-		setTitle("Role lattice definition");
+		if(!editMode){
+			setTitle("Create role lattice");
+		} else {
+			setTitle("Edit role lattice");
+		}
 		Validate.notNull(context);
 		setBounds(100, 100, 480, 400);
 		setModal(true);
@@ -110,9 +117,11 @@ public class RoleLatticeDialog extends JDialog implements EdgeAddedListener{
 					}
 				});
 				cancelButton.setActionCommand("Cancel");
+				cancelButton.setEnabled(!editMode);
 				buttonPane.add(cancelButton);
 			}
 		}
+		
 		
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.NORTH);

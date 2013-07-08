@@ -75,6 +75,7 @@ public class GeneralProperties extends AbstractProperties{
 	
 	public void setSimulationDirectory(String directory) throws ParameterException, IOException, PropertyException {
 		validateSimulationDirectory(directory, false);
+		System.out.println("set: " + directory);
 		setProperty(GeneralProperty.SIMULATION_DIRECTORY, directory);
 		//Check, if the simulation directory is empty
 		File dir = new File(directory + pathSimulations);

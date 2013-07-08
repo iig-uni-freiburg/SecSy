@@ -43,7 +43,7 @@ public class SimulationDirectoryDialog extends JDialog implements PropertyChange
 	public SimulationDirectoryDialog(Window owner) {
 		super(owner);
 		setResizable(false);
-		setBounds(100, 100, 411, 365);
+		setBounds(100, 100, 369, 365);
 		setModal(true);
 		setLocationRelativeTo(owner);
 		
@@ -60,22 +60,22 @@ public class SimulationDirectoryDialog extends JDialog implements PropertyChange
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(20, 92, 370, 160);
+		scrollPane.setBounds(20, 101, 327, 151);
 		contentPanel.add(scrollPane);
 		scrollPane.setViewportView(getValueList());
 		
 		JTextArea txtrThereAreNo = new JTextArea();
 		txtrThereAreNo.setBackground(UIManager.getColor("Panel.background"));
-		txtrThereAreNo.setText("Please choose the simulation directory to work with.\n\nSimulation directories are directories with a specific structure \nand are required to store simulation-related content.");
+		txtrThereAreNo.setText("Please choose the simulation directory to work with.\n\nSimulation directories are directories with a specific \nstructure used to store simulation-related content.");
 		txtrThereAreNo.setBounds(20, 16, 392, 64);
 		contentPanel.add(txtrThereAreNo);
 		
 		JButton btnExistingDirectory = new JButton(openDirectoryAction);
-		btnExistingDirectory.setBounds(88, 264, 157, 29);
+		btnExistingDirectory.setBounds(45, 264, 157, 29);
 		contentPanel.add(btnExistingDirectory);
 		
 		JButton btnNewButton = new JButton(newDirectoryAction);
-		btnNewButton.setBounds(257, 264, 133, 29);
+		btnNewButton.setBounds(214, 264, 133, 29);
 		contentPanel.add(btnNewButton);
 
 		JPanel buttonPane = new JPanel();
