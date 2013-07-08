@@ -40,7 +40,7 @@ public class SoDTransformerDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public SoDTransformerDialog() {
-		setTitle("New SoD-Property Filter");
+		setTitle("New SoD-Property Transformer");
 		setBounds(100, 100, 300, 288);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -66,7 +66,7 @@ public class SoDTransformerDialog extends JDialog {
 		}
 		
 		txtSodTransformer = new JTextField();
-		txtSodTransformer.setText("SoD-Filter 01");
+		txtSodTransformer.setText("SoD-Transformer 01");
 		txtSodTransformer.setBounds(85, 17, 183, 28);
 		contentPanel.add(txtSodTransformer);
 		txtSodTransformer.setColumns(10);
