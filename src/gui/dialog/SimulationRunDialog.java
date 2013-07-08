@@ -35,10 +35,10 @@ import javax.swing.SwingConstants;
 
 import de.invation.code.toval.validate.ParameterException;
 
-import logic.filtering.TraceFilterManager;
-import logic.filtering.filter.trace.AbstractTraceFilter;
 import logic.simulation.SimulationRun;
 import logic.simulation.properties.SimulationRunProperties;
+import logic.transformation.TraceTransformerManager;
+import logic.transformation.transformer.trace.AbstractTraceFilter;
 import parser.PNMLFilter;
 import parser.PNMLParser;
 import petrinet.pt.PTNet;
@@ -111,7 +111,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		txtName.setText(getDialogObject().getName());
 		comboNet.setSelectedItem(getDialogObject().getPetriNet().getName());
 		spinPasses.setValue(getDialogObject().getPasses());
-		for(AbstractTraceFilter filter: getDialogObject().getTraceFilterManager().getTraceFilters()){
+		for(AbstractTraceFilter filter: getDialogObject().getTraceFilterManager().getTraceTransformers()){
 			filters.add(filter);
 		}
 		updateListFilters();
@@ -310,7 +310,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 						return;
 					}
 					
-					AbstractTraceFilter newFilter = FilterDialog.showDialog(SimulationRunDialog.this, activities);
+					AbstractTraceFilter newFilter = TransformerDialog.showDialog(SimulationRunDialog.this, activities);
 					if(newFilter == null){
 						//User cancelled filter dialog.
 						return;
@@ -370,7 +370,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 					}
 					
 					String oldFilterName = selectedFilter.getName();
-					AbstractTraceFilter adjustedFilter = FilterDialog.showDialog(SimulationRunDialog.this, activities, selectedFilter);
+					AbstractTraceFilter adjustedFilter = TransformerDialog.showDialog(SimulationRunDialog.this, activities, selectedFilter);
 					if(adjustedFilter == null){
 						//User cancelled the filter dialog
 						return;
@@ -531,7 +531,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		}
 		
 		// Get filters
-		TraceFilterManager filterManager = new TraceFilterManager();
+		TraceTransformerManager filterManager = new TraceTransformerManager();
 		//Add filters to filter manager.
 		for(AbstractTraceFilter filter: filters){
 			try{
@@ -556,7 +556,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 			} else {
 				setDialogObject(new SimulationRun(petriNet, new RandomPTTraverser(petriNet), passes, filterManager));
 			}
-			System.out.println(getDialogObject().getTraceFilterManager().getTraceFilters().size());
+			System.out.println(getDialogObject().getTraceFilterManager().getTraceTransformers().size());
 		} catch (ParameterException e) {
 			JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot create simulation run.\nReason: "+e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
     		return;

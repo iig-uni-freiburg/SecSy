@@ -13,11 +13,11 @@ import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogPerspective;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 
-import logic.filtering.EntryFilterManager;
-import logic.filtering.TraceFilterManager;
-import logic.filtering.filter.AbstractFilter;
 import logic.generator.time.CaseTimeGenerator.ExecutionTime;
 import logic.simulation.SimulationRun;
+import logic.transformation.EntryTransformerManager;
+import logic.transformation.TraceTransformerManager;
+import logic.transformation.transformer.AbstractTransformer;
 import petrinet.AbstractTransition;
 import exception.PNException;
 
@@ -54,8 +54,8 @@ public class TraceLogGenerator extends LogGenerator{
 	
 	@Override
 	protected void simulateNet(SimulationRun simulationRun) throws SimulationException, IOException{
-		EntryFilterManager entryFilterManager = null;
-		TraceFilterManager traceFilterManager = null;
+		EntryTransformerManager entryFilterManager = null;
+		TraceTransformerManager traceFilterManager = null;
 		try{
 			entryFilterManager = simulationRun.getEntryFilterManager();
 			entryFilterManager.setSource(getLogEntryGenerator());
@@ -115,7 +115,7 @@ public class TraceLogGenerator extends LogGenerator{
 					}
 				}
 				try {
-					traceFilterManager.applyFilters(trace);
+					traceFilterManager.applyTransformers(trace);
 				} catch (ParameterException e) {
 					// Is only thrown if applyFilters() is called with a null-parameter.
 					// This cannot happen, since trace is created before.
@@ -151,17 +151,17 @@ public class TraceLogGenerator extends LogGenerator{
 	}
 
 	@Override
-	public void filterMessage(String message) {
+	public void transformerMessage(String message) {
 		simulationListenerSupport.fireSimulationMessage(message);
 	}
 
 	@Override
-	public void filterSuccess(AbstractFilter filter) {
+	public void transformerSuccess(AbstractTransformer filter) {
 		// TODO Auto-generated method stub	
 	}
 
 	@Override
-	public void filterFailure(AbstractFilter filter) {
+	public void ransformerFailure(AbstractTransformer filter) {
 		// TODO Auto-generated method stub
 	}
 	

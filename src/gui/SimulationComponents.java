@@ -11,11 +11,6 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import logic.filtering.TraceFilterManager;
-import logic.filtering.filter.AbstractFilter;
-import logic.filtering.filter.FilterFactory;
-import logic.filtering.filter.exception.MissingRequirementException;
-import logic.filtering.filter.trace.AbstractTraceFilter;
 import logic.generator.AttributeValueGenerator;
 import logic.generator.CaseDataContainer;
 import logic.generator.Context;
@@ -36,6 +31,11 @@ import logic.simulation.properties.SimulationProperties;
 import logic.simulation.properties.SimulationProperty;
 import logic.simulation.properties.SimulationRunProperties;
 import logic.simulation.properties.SimulationRunProperty;
+import logic.transformation.TraceTransformerManager;
+import logic.transformation.transformer.AbstractTransformer;
+import logic.transformation.transformer.TransformerFactory;
+import logic.transformation.transformer.exception.MissingRequirementException;
+import logic.transformation.transformer.trace.AbstractTraceFilter;
 import parser.PNMLParser;
 import petrinet.pt.PTNet;
 import petrinet.pt.RandomPTTraverser;
@@ -215,7 +215,7 @@ public class SimulationComponents {
 		for(String filterFile: filterFiles){
 			MessageDialog.getInstance().addMessage("Loading filter: " + filterFile + "...   ");
 			try{
-				addFilter((AbstractTraceFilter) FilterFactory.loadFilter(filterFile), false);
+				addFilter((AbstractTraceFilter) TransformerFactory.loadFilter(filterFile), false);
 				MessageDialog.getInstance().addMessage("Done.");
 			} catch(Exception e){
 				MessageDialog.getInstance().addMessage("Error: "+e.getMessage());
@@ -366,7 +366,7 @@ public class SimulationComponents {
 			PTNet ptNet = getPetriNet(ptNetName);
 			if(ptNet == null)
 				throw new PropertyException(SimulationRunProperty.NET_NAME, ptNetName, "Unknown Petri net.");
-			TraceFilterManager filterManager = new TraceFilterManager();
+			TraceTransformerManager filterManager = new TraceTransformerManager();
 			for(String filterName: runProperties.getFilterNames()){
 				AbstractTraceFilter filter = getFilter(filterName);
 				if(filter == null)
@@ -398,7 +398,7 @@ public class SimulationComponents {
 //			System.out.println(dataContainer.getName());
 			storeCaseDataContainer(dataContainer);
 		}
-		for(AbstractFilter filter: filters.values()){
+		for(AbstractTransformer filter: filters.values()){
 //			System.out.println(filter.getName());
 			storeFilter(filter);
 		}
@@ -1092,7 +1092,7 @@ public class SimulationComponents {
 	 * @throws IOException if the filter cannot be stored due to an I/O Error.
 	 * @throws PropertyException if the filter cannot be stored due to an error during property extraction.
 	 */
-	public void storeFilter(AbstractFilter filter) throws ParameterException, IOException, PropertyException{
+	public void storeFilter(AbstractTransformer filter) throws ParameterException, IOException, PropertyException{
 		Validate.notNull(filter);
 		filter.getProperties().store(GeneralProperties.getInstance().getPathForFilters()+filter.getName());
 	}

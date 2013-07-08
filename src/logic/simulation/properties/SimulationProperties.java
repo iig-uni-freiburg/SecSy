@@ -16,8 +16,8 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatType;
 
-import logic.filtering.filter.AbstractFilter;
 import logic.simulation.SimulationRun;
+import logic.transformation.transformer.AbstractTransformer;
 
 public class SimulationProperties extends AbstractProperties{
 	
@@ -206,7 +206,7 @@ public class SimulationProperties extends AbstractProperties{
 		String simulationRunName = String.format(SIMULATION_RUN_FORMAT, getSimulationRunNames().size()+1);
 		addSimulationRunName(simulationRunName);
 		Set<String> filterNames = new HashSet<String>();
-		for(AbstractFilter filter: simulationRun.getTraceFilterManager().getTraceFilters()){
+		for(AbstractTransformer filter: simulationRun.getTraceFilterManager().getTraceTransformers()){
 			filterNames.add(filter.getName());
 		}
 		props.setProperty(simulationRunName, String.format(SIMULATION_RUN_VALUE_FORMAT, "'"+simulationRun.getName()+"'", "'"+simulationRun.getPetriNet().getName()+"'", simulationRun.getPasses(), ArrayUtils.toString(encapsulateValues(filterNames))));

@@ -27,10 +27,10 @@ import de.invation.code.toval.time.TimeScale;
 import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.validate.ParameterException;
 
-import logic.filtering.filter.AbstractFilter;
 import logic.simulation.ConfigurationException;
 import logic.simulation.Simulation;
 import logic.simulation.SimulationRun;
+import logic.transformation.transformer.AbstractTransformer;
 
 public class TimeFrameDialog extends JDialog {
 
@@ -133,8 +133,8 @@ public class TimeFrameDialog extends JDialog {
 				if(run.getPasses() < minPasses){
 					minPasses = run.getPasses();
 				}
-				if(run.getTraceFilterManager().getTraceFilters().size() > maxFilterCount){
-					maxFilterCount = run.getTraceFilterManager().getTraceFilters().size();
+				if(run.getTraceFilterManager().getTraceTransformers().size() > maxFilterCount){
+					maxFilterCount = run.getTraceFilterManager().getTraceTransformers().size();
 				}
 				if(maxFilterCount < 7){
 					preferredBoxHeight = minBoxHeight;
@@ -172,10 +172,10 @@ public class TimeFrameDialog extends JDialog {
 				g2d.drawString("Net: " + run.getPetriNet().getName(), lastPartEnd + 10, marginTop+40);
 				g2d.drawString("Passes: " + run.getPasses().toString(), lastPartEnd + 10, marginTop+60);
 					
-				if(!run.getTraceFilterManager().getTraceFilters().isEmpty()){
+				if(!run.getTraceFilterManager().getTraceTransformers().isEmpty()){
 					g2d.drawString("Filters:", lastPartEnd + 10, marginTop+90);
 					int filterCount = 0;
-					for(AbstractFilter filter: run.getTraceFilterManager().getTraceFilters()){
+					for(AbstractTransformer filter: run.getTraceFilterManager().getTraceTransformers()){
 						g2d.drawString(filter.getName(), lastPartEnd + 10, marginTop+90+(++filterCount)*20);
 					}
 				} else {

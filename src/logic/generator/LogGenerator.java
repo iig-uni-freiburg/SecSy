@@ -23,20 +23,20 @@ import de.uni.freiburg.iig.telematik.jawl.logformat.LogPerspective;
 import de.uni.freiburg.iig.telematik.jawl.writer.LogWriter;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 
-import logic.filtering.FilterListener;
-import logic.filtering.filter.FilterType;
-import logic.filtering.filter.trace.AbstractTraceFilter;
-import logic.filtering.filter.trace.multiple.UnauthorizedExecutionFilter;
 import logic.generator.time.CaseTimeGenerator;
 import logic.simulation.ConfigurationException;
 import logic.simulation.ConfigurationException.ErrorCode;
 import logic.simulation.SimulationListener;
 import logic.simulation.SimulationListenerSupport;
 import logic.simulation.SimulationRun;
+import logic.transformation.TransformerListener;
+import logic.transformation.transformer.TransformerType;
+import logic.transformation.transformer.trace.AbstractTraceFilter;
+import logic.transformation.transformer.trace.multiple.UnauthorizedExecutionFilter;
 import petrinet.AbstractPetriNet;
 
 
-public abstract class LogGenerator implements FilterListener{
+public abstract class LogGenerator implements TransformerListener{
 	
 	public static final String DEFAULT_LOG_PATH = "logs/";
 	public static final String DEFAULT_FILE_NAME = "LOG";
@@ -343,14 +343,14 @@ public abstract class LogGenerator implements FilterListener{
 			checkFilterRequirements(run);
 			simulationListenerSupport.fireSimulationMessage("Simulating net \""+run.getPetriNet().getName()+"\" ("+run.getPasses()+" passes).\n");
 			simulateNet(run);
-			simulationListenerSupport.fireSimulationMessage(run.getTraceFilterManager().getFilterSummary());
+			simulationListenerSupport.fireSimulationMessage(run.getTraceFilterManager().getTransformerSummary());
 			simulationListenerSupport.fireSimulationRunCompleted(run);
 		}
 	}
 	
 	private void checkFilterRequirements(SimulationRun run) throws ConfigurationException{
-		for(AbstractTraceFilter traceFilter: run.getTraceFilterManager().getTraceFilters()){
-			if(traceFilter.getFilterType().equals(FilterType.UNAUTHORIZED_EXECUTION_FILTER)){
+		for(AbstractTraceFilter traceFilter: run.getTraceFilterManager().getTraceTransformers()){
+			if(traceFilter.getFilterType().equals(TransformerType.UNAUTHORIZED_EXECUTION_FILTER)){
 				if(getLogEntryGenerator() instanceof DetailedLogEntryGenerator){
 					try {
 						((UnauthorizedExecutionFilter) traceFilter).setContext(((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext());

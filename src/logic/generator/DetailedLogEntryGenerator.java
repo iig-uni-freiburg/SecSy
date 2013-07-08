@@ -8,9 +8,9 @@ import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.EventType;
 import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
-import logic.filtering.EntryFilterManager;
 import logic.simulation.ConfigurationException;
 import logic.simulation.ConfigurationException.ErrorCode;
+import logic.transformation.EntryTransformerManager;
 import petrinet.AbstractTransition;
 
 /**
@@ -84,7 +84,7 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	 * @throws ConfigurationException 
 	 * @throws Exception If this generator is incompatible to the filter manager.
 	 */
-	public DetailedLogEntryGenerator(Context context, CaseDataContainer caseDataContainer, EntryFilterManager entryFilterManager) 
+	public DetailedLogEntryGenerator(Context context, CaseDataContainer caseDataContainer, EntryTransformerManager entryFilterManager) 
 			throws ParameterException, ConfigurationException {
 		super(entryFilterManager);
 		Validate.notNull(context);

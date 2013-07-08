@@ -2,12 +2,12 @@ package logic.simulation;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import logic.filtering.EntryFilterManager;
-import logic.filtering.TraceFilterManager;
-import logic.filtering.filter.entry.AbstractEntryFilter;
-import logic.filtering.filter.trace.AbstractTraceFilter;
 import logic.generator.TraceCompletionListener;
 import logic.simulation.properties.SimulationRunProperties;
+import logic.transformation.EntryTransformerManager;
+import logic.transformation.TraceTransformerManager;
+import logic.transformation.transformer.entry.AbstractEntryFilter;
+import logic.transformation.transformer.trace.AbstractTraceFilter;
 import petrinet.AbstractPetriNet;
 import petrinet.AbstractTransition;
 import traversal.PNTraverser;
@@ -25,8 +25,8 @@ public class SimulationRun implements TraceCompletionListener{
 	
 	protected AbstractPetriNet<?,?,?,?,?> petriNet = null;
 	protected PNTraverser<?> pnTraverser = null;
-	protected TraceFilterManager traceFilterManager = new TraceFilterManager();
-	protected EntryFilterManager entryFilterManager = new EntryFilterManager();
+	protected TraceTransformerManager traceFilterManager = new TraceTransformerManager();
+	protected EntryTransformerManager entryFilterManager = new EntryTransformerManager();
 	
 	protected Integer passes = null;
 	protected int generatedTraces = 0;
@@ -54,7 +54,7 @@ public class SimulationRun implements TraceCompletionListener{
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 														   int passes,
 														   PNTraverser traverser,
-														   TraceFilterManager traceFilterManager) 
+														   TraceTransformerManager traceFilterManager) 
 														   throws ParameterException {
 		this(petriNet, passes, traverser);
 		setTraceFilterManager(traceFilterManager);
@@ -62,7 +62,7 @@ public class SimulationRun implements TraceCompletionListener{
 	
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 			   												int passes,
-			   												TraceFilterManager traceFilterManager) 
+			   												TraceTransformerManager traceFilterManager) 
 			   											    throws ParameterException {
 		this(petriNet, passes, new RandomPNTraverser<T>(petriNet), traceFilterManager);
 	}
@@ -70,7 +70,7 @@ public class SimulationRun implements TraceCompletionListener{
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 			   												int passes,
 			   												PNTraverser traverser,
-			   												EntryFilterManager entryFilterManager) 
+			   												EntryTransformerManager entryFilterManager) 
 			   											    throws ParameterException {
 		this(petriNet, passes, traverser);
 		setEntryFilterManager(entryFilterManager);
@@ -79,15 +79,15 @@ public class SimulationRun implements TraceCompletionListener{
 	
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 														   int passes,
-														   EntryFilterManager entryFilterManager) 
+														   EntryTransformerManager entryFilterManager) 
 														   throws ParameterException {
 		this(petriNet, passes, new RandomPNTraverser<T>(petriNet), entryFilterManager);
 	}
 
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 														   int passes,
-														   TraceFilterManager traceFilterManager,
-														   EntryFilterManager entryFilterManager) 
+														   TraceTransformerManager traceFilterManager,
+														   EntryTransformerManager entryFilterManager) 
 														   throws ParameterException {
 		this(petriNet, passes);
 		setEntryFilterManager(entryFilterManager);
@@ -105,7 +105,7 @@ public class SimulationRun implements TraceCompletionListener{
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
 														   PNTraverser pnTraverser, 
 														   int passes, 
-														   TraceFilterManager traceFilterManager) 
+														   TraceTransformerManager traceFilterManager) 
 														   throws ParameterException {
 		this(petriNet, passes, traceFilterManager);
 		setPNTraverser(pnTraverser);
@@ -114,7 +114,7 @@ public class SimulationRun implements TraceCompletionListener{
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
 														   PNTraverser pnTraverser, 
 														   int passes, 
-														   EntryFilterManager entryFilterManager) 
+														   EntryTransformerManager entryFilterManager) 
 														   throws ParameterException {
 		this(petriNet, passes, entryFilterManager);
 		setPNTraverser(pnTraverser);
@@ -123,8 +123,8 @@ public class SimulationRun implements TraceCompletionListener{
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
 														   PNTraverser pnTraverser, 
 														   int passes, 
-														   TraceFilterManager traceFilterManager, 
-														   EntryFilterManager entryFilterManager) 
+														   TraceTransformerManager traceFilterManager, 
+														   EntryTransformerManager entryFilterManager) 
 														   throws ParameterException {
 		this(petriNet, passes, traceFilterManager, entryFilterManager);
 		setPNTraverser(pnTraverser);
@@ -150,20 +150,20 @@ public class SimulationRun implements TraceCompletionListener{
 		this.petriNet = petriNet;
 	}
 
-	public TraceFilterManager getTraceFilterManager() {
+	public TraceTransformerManager getTraceFilterManager() {
 		return traceFilterManager;
 	}
 	
-	public void setTraceFilterManager(TraceFilterManager traceFilterManager) throws ParameterException {
+	public void setTraceFilterManager(TraceTransformerManager traceFilterManager) throws ParameterException {
 		Validate.notNull(traceFilterManager);
 		this.traceFilterManager = traceFilterManager;
 	}
 	
-	public EntryFilterManager getEntryFilterManager() {
+	public EntryTransformerManager getEntryFilterManager() {
 		return entryFilterManager;
 	}
 	
-	public void setEntryFilterManager(EntryFilterManager entryFilterManager) throws ParameterException {
+	public void setEntryFilterManager(EntryTransformerManager entryFilterManager) throws ParameterException {
 		Validate.notNull(entryFilterManager);
 		this.entryFilterManager = entryFilterManager;
 	}
@@ -204,11 +204,11 @@ public class SimulationRun implements TraceCompletionListener{
 		setPetriNet(other.getPetriNet());
 		setPNTraverser(other.getPNTraverser());
 		entryFilterManager.clear();
-		for(AbstractEntryFilter entryFilter: other.getEntryFilterManager().getEntryFilters()){
-			entryFilterManager.addFilter(entryFilter);
+		for(AbstractEntryFilter entryFilter: other.getEntryFilterManager().getEntryTransformers()){
+			entryFilterManager.addTransformer(entryFilter);
 		}
 		traceFilterManager.clear();
-		for(AbstractTraceFilter traceFilter: other.getTraceFilterManager().getTraceFilters()){
+		for(AbstractTraceFilter traceFilter: other.getTraceFilterManager().getTraceTransformers()){
 			traceFilterManager.addFilter(traceFilter);
 		}
 	}
@@ -218,13 +218,13 @@ public class SimulationRun implements TraceCompletionListener{
 		SimulationRun result = null;
 		
 		try {
-			EntryFilterManager entryFilterManager = new EntryFilterManager();
-			for(AbstractEntryFilter entryFilter: getEntryFilterManager().getEntryFilters()){
-				entryFilterManager.addFilter(entryFilter);
+			EntryTransformerManager entryFilterManager = new EntryTransformerManager();
+			for(AbstractEntryFilter entryFilter: getEntryFilterManager().getEntryTransformers()){
+				entryFilterManager.addTransformer(entryFilter);
 			}
 			
-			TraceFilterManager traceFilterManager = new TraceFilterManager();
-			for(AbstractTraceFilter traceFilter: getTraceFilterManager().getTraceFilters()){
+			TraceTransformerManager traceFilterManager = new TraceTransformerManager();
+			for(AbstractTraceFilter traceFilter: getTraceFilterManager().getTraceTransformers()){
 				traceFilterManager.addFilter(traceFilter);
 			}
 			
@@ -252,7 +252,7 @@ public class SimulationRun implements TraceCompletionListener{
 		}
 		StringBuilder builder = new StringBuilder();
 		builder.append('\n');
-		for(AbstractTraceFilter filter: getTraceFilterManager().getTraceFilters()){
+		for(AbstractTraceFilter filter: getTraceFilterManager().getTraceTransformers()){
 			builder.append(String.format(filterformat, filter.toString()));
 		}
 		return builder.toString();

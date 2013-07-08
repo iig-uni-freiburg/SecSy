@@ -4,8 +4,8 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
-import logic.filtering.EntryFilterManager;
 import logic.simulation.ConfigurationException;
+import logic.transformation.EntryTransformerManager;
 import petrinet.AbstractTransition;
 
 /**
@@ -13,7 +13,7 @@ import petrinet.AbstractTransition;
  * Additionally, it can be generated with a reference to an entry filter manager,
  * whose filters are applied on generated log traces.
  * 
- * @see EntryFilterManager
+ * @see EntryTransformerManager
  * 
  * @author Thomas Stocker
  */
@@ -22,7 +22,7 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 * The filter manager, that manages the set of entry filters that
 	 * are applied on generated log entries.
 	 */
-	protected EntryFilterManager entryFilterManager = null;
+	protected EntryTransformerManager entryFilterManager = null;
 	
 	/**
 	 * Creates a new log entry generator.<br>
@@ -41,7 +41,7 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 * @throws ParameterException 
 	 * @throws Exception If this generator is incompatible to the filter manager.
 	 */
-	public LogEntryGenerator(EntryFilterManager entryFilterManager) throws ParameterException{
+	public LogEntryGenerator(EntryTransformerManager entryFilterManager) throws ParameterException{
 		setEntryfilterManager(entryFilterManager);
 	}
 	
@@ -56,7 +56,7 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 * @throws ParameterException 
 	 * @throws IllegalArgumentException If the log entry generator is incompatible with the filter manager.
 	 */
-	public void setEntryfilterManager(EntryFilterManager entryFilterManager) throws ParameterException{
+	public void setEntryfilterManager(EntryTransformerManager entryFilterManager) throws ParameterException{
 		Validate.notNull(entryFilterManager);
 		this.entryFilterManager = entryFilterManager;
 		this.entryFilterManager.setSource(this);
@@ -77,7 +77,7 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	public LogEntry getLogEntryFor(AbstractTransition<?,?> transition, int caseNumber) throws ParameterException {
 		LogEntry entry = prepareLogEntry(transition, caseNumber);
 		if(entryFilterManager != null)
-			entryFilterManager.applyFilters(entry, caseNumber);
+			entryFilterManager.applyTransformers(entry, caseNumber);
 		return entry;
 	}
 	
