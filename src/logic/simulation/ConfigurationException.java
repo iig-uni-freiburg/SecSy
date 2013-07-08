@@ -9,7 +9,7 @@ public class ConfigurationException extends Exception {
 	private final String msg_NoTimeGenerator = "No time generator defined.";
 	private final String msg_NoContext = "No context defined.";
 	private final String msg_ContextInconsistency = "Context inconsistency between entry generator and case data generator.";
-	private final String msg_FilterMisconfiguration = "Inconsistency in filter configuration.";
+	private final String msg_TransformerMisconfiguration = "Inconsistency in transformer configuration.";
 	
 	private final String reasonFormat = "%s\nReason: %s";
 	
@@ -33,7 +33,7 @@ public class ConfigurationException extends Exception {
 			case NO_ENTRYGENERATOR: message = msg_NoEntryGenerator;
 			case NO_TIMEGENERATOR: message = msg_NoTimeGenerator;
 			case CONTEXT_INCONSISTENCY: message = msg_ContextInconsistency;
-			case FILTER_MISCONFIGURATION: message = msg_FilterMisconfiguration;
+			case TRANSFORMER_MISCONFIGURATION: message = msg_TransformerMisconfiguration;
 		}
 		if(message != null && reason != null){
 			message = String.format(reasonFormat, message, reason);
@@ -42,7 +42,7 @@ public class ConfigurationException extends Exception {
 	}
 
 	public enum ErrorCode {
-		NO_CONTEXT, NO_LOGGENERATOR, NO_ENTRYGENERATOR, NO_TIMEGENERATOR, CONTEXT_INCONSISTENCY, FILTER_MISCONFIGURATION;
+		NO_CONTEXT, NO_LOGGENERATOR, NO_ENTRYGENERATOR, NO_TIMEGENERATOR, CONTEXT_INCONSISTENCY, TRANSFORMER_MISCONFIGURATION;
 	}
 
 }

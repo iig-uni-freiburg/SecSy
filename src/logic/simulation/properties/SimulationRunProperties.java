@@ -96,18 +96,18 @@ public class SimulationRunProperties extends AbstractProperties{
 	}
 	
 	
-	//-- Filter names
+	//-- Transformer names
 	
-	public void setFilterNames(Set<String> filterNames) throws ParameterException{
-		Validate.notNull(filterNames);
-		Validate.noNullElements(filterNames);
+	public void setTransformerNames(Set<String> transformerNames) throws ParameterException{
+		Validate.notNull(transformerNames);
+		Validate.noNullElements(transformerNames);
 		
-		setProperty(SimulationRunProperty.FILTERS, ArrayUtils.toString(encapsulateValues(filterNames)));
+		setProperty(SimulationRunProperty.TRANSFORMERS, ArrayUtils.toString(encapsulateValues(transformerNames)));
 	}
 	
-	public Set<String> getFilterNames(){
+	public Set<String> getTransformerNames(){
 		Set<String> result = new HashSet<String>();
-		String propertyValue = getProperty(SimulationRunProperty.FILTERS);
+		String propertyValue = getProperty(SimulationRunProperty.TRANSFORMERS);
 		if(propertyValue == null)
 			return result;
 		StringTokenizer nameTokens = StringUtils.splitArrayString(propertyValue, " ");

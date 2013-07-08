@@ -42,7 +42,7 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	 * Creates a new detailed log entry generator using the given context and case data generator.<br>
 	 * The log context holds required information about authorized subjects for activity execution
 	 * and the case data container holds required information about the data usage of log activities.<br>
-	 * In this case, no filter manager is used and no filters are applied
+	 * In this case, no transformer manager is used and no transformers are applied
 	 * on generated log entries.<br>
 	 * The given log context has to be equal to the context of the case data container,
 	 * otherwise an exception is raised.
@@ -70,23 +70,23 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	
 	/**
 	 * Creates a new detailed log entry generator using the given context, case data generator
-	 * and entry filter manager.<br>
+	 * and entry transformer manager.<br>
 	 * The log context holds required information about authorized subjects for activity execution,
 	 * the case data container holds required information about the data usage of log activities
-	 * and the log entry generator contains all entry filters that should be applied to generated log entries.
-	 * This log entry generator may be incompatible to the given entry filter manager,
-	 * if it does dot provide enough information for filters to be applied.
+	 * and the log entry generator contains all entry transformers that should be applied to generated log entries.
+	 * This log entry generator may be incompatible to the given entry transformer manager,
+	 * if it does dot provide enough information for transformers to be applied.
 	 * 
 	 * @param context Log context.
 	 * @param caseDataContainer Case data container.
-	 * @param entryFilterManager Entry filter manager.
+	 * @param entryTransformerManager Entry transformer manager.
 	 * @throws ParameterException 
 	 * @throws ConfigurationException 
-	 * @throws Exception If this generator is incompatible to the filter manager.
+	 * @throws Exception If this generator is incompatible to the transformer manager.
 	 */
-	public DetailedLogEntryGenerator(Context context, CaseDataContainer caseDataContainer, EntryTransformerManager entryFilterManager) 
+	public DetailedLogEntryGenerator(Context context, CaseDataContainer caseDataContainer, EntryTransformerManager entryTransformerManager) 
 			throws ParameterException, ConfigurationException {
-		super(entryFilterManager);
+		super(entryTransformerManager);
 		Validate.notNull(context);
 		if(!context.isValid())
 			throw new ParameterException(ParameterException.ErrorCode.INCOMPATIBILITY, "Context is not valid");
@@ -171,7 +171,7 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	 * it returns true for the entry field TIME. Time information is assumed to be added
 	 * by the corresponding log generator (e.g. TraceLogGenerator) to every generated log entry.
 	 * However, it is important to return <code>true</code> to ensure proper
-	 * compatibility checks with entry filters.
+	 * compatibility checks with entry transformers.
 	 * 
 	 * @param field The type of log information requested.
 	 * @return <code>true</code> if this entry generator provides the information;<br>

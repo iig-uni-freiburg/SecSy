@@ -8,5 +8,5 @@ public enum SimulationRunProperty {
 		
 		PASSES,
 		
-		FILTERS;
+		TRANSFORMERS;
 }

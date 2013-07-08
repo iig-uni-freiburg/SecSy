@@ -54,13 +54,13 @@ public class TraceLogGenerator extends LogGenerator{
 	
 	@Override
 	protected void simulateNet(SimulationRun simulationRun) throws SimulationException, IOException{
-		EntryTransformerManager entryFilterManager = null;
-		TraceTransformerManager traceFilterManager = null;
+		EntryTransformerManager entryTransformerManager = null;
+		TraceTransformerManager traceTransformerManager = null;
 		try{
-			entryFilterManager = simulationRun.getEntryFilterManager();
-			entryFilterManager.setSource(getLogEntryGenerator());
-			traceFilterManager = simulationRun.getTraceFilterManager();
-			traceFilterManager.setSource(getLogEntryGenerator());
+			entryTransformerManager = simulationRun.getEntryTransformerManager();
+			entryTransformerManager.setSource(getLogEntryGenerator());
+			traceTransformerManager = simulationRun.getTraceTransformerManager();
+			traceTransformerManager.setSource(getLogEntryGenerator());
 		}catch(ParameterException e){
 			// Is only thrown if setSource() methods are called with null-Parameters.
 			// This cannot happen, since simulateNet is called by startSimulation(),
@@ -115,9 +115,9 @@ public class TraceLogGenerator extends LogGenerator{
 					}
 				}
 				try {
-					traceFilterManager.applyTransformers(trace);
+					traceTransformerManager.applyTransformers(trace);
 				} catch (ParameterException e) {
-					// Is only thrown if applyFilters() is called with a null-parameter.
+					// Is only thrown if applyTransformers() is called with a null-parameter.
 					// This cannot happen, since trace is created before.
 					e.printStackTrace();
 				}
@@ -156,12 +156,12 @@ public class TraceLogGenerator extends LogGenerator{
 	}
 
 	@Override
-	public void transformerSuccess(AbstractTransformer filter) {
+	public void transformerSuccess(AbstractTransformer transformer) {
 		// TODO Auto-generated method stub	
 	}
 
 	@Override
-	public void ransformerFailure(AbstractTransformer filter) {
+	public void ransformerFailure(AbstractTransformer transformer) {
 		// TODO Auto-generated method stub
 	}
 	

@@ -1,7 +1,9 @@
-package gui.dialog;
+package gui.dialog.transformer;
 
 import gui.Hints;
 import gui.SimulationComponents;
+import gui.dialog.AbstractSimulationDialog;
+import gui.dialog.ValueChooserDialog;
 import gui.misc.CustomListRenderer;
 
 import java.awt.BorderLayout;
@@ -104,8 +106,8 @@ public class TransformerDialog extends AbstractSimulationDialog {
 		super(owner, new Object[]{activities});
 	}
 	
-	public TransformerDialog(Window owner, Set<String> activities, AbstractTraceTransformer filter) {
-		super(owner, true, new Object[]{activities, filter});
+	public TransformerDialog(Window owner, Set<String> activities, AbstractTraceTransformer transformer) {
+		super(owner, true, new Object[]{activities, transformer});
 	}
 
 	@Override
@@ -172,16 +174,16 @@ public class TransformerDialog extends AbstractSimulationDialog {
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 					if(e.getStateChange() == ItemEvent.SELECTED){
-						TransformerType filterType = (TransformerType) comboTransformerType.getSelectedItem();
-						boolean bodsodTransformer = filterType == TransformerType.SOD || filterType == TransformerType.BOD;
+						TransformerType transformerType = (TransformerType) comboTransformerType.getSelectedItem();
+						boolean bodsodTransformer = transformerType == TransformerType.SOD || transformerType == TransformerType.BOD;
 						txtMaxAppliances.setEnabled(!bodsodTransformer);
 						lblMaxAppliances.setEnabled(!bodsodTransformer);
 						lblMax.setEnabled(!bodsodTransformer);
 						lblTransformerActivation.setText(bodsodTransformer ? "Violation:" : "Activation");
-						separator.setVisible(filterType != TransformerType.UNAUTHORIZED_EXECUTION);
-						comboTransformerType.setToolTipText(getHint(filterType));
-						lblHint.setText(getHint(filterType));
-						updateConfigurationPanel(filterType);
+						separator.setVisible(transformerType != TransformerType.UNAUTHORIZED_EXECUTION);
+						comboTransformerType.setToolTipText(getHint(transformerType));
+						lblHint.setText(getHint(transformerType));
+						updateConfigurationPanel(transformerType);
 					}
 				}
 			});
@@ -212,15 +214,15 @@ public class TransformerDialog extends AbstractSimulationDialog {
 		return panelGeneral;
 	}
 	
-	private String getHint(TransformerType filterType){
-		switch(filterType){
-		case OBFUSCATION: return Hints.hintObfuscationFilter;
-		case DAY_DELAY: return Hints.hintDayDelayFilter;
-		case SKIP_ACTIVITIES: return Hints.hintSkipActivitiesFilter;
-		case INCOMPLETE_LOGGING: return Hints.hintIncompleteLoggingFilter;
-		case UNAUTHORIZED_EXECUTION: return Hints.hintUnauthorizedExecutionFilter;
-		case BOD: return Hints.hintBoDFilter;
-		case SOD: return Hints.hintSoDFilter;
+	private String getHint(TransformerType transformerType){
+		switch(transformerType){
+		case OBFUSCATION: return Hints.hintObfuscationTransformer;
+		case DAY_DELAY: return Hints.hintDayDelayTransformer;
+		case SKIP_ACTIVITIES: return Hints.hintSkipActivitiesTransformer;
+		case INCOMPLETE_LOGGING: return Hints.hintIncompleteLoggingTransformer;
+		case UNAUTHORIZED_EXECUTION: return Hints.hintUnauthorizedExecutionTransformer;
+		case BOD: return Hints.hintBoDTransformer;
+		case SOD: return Hints.hintSoDTransformer;
 		}
 		return "";
 	}
@@ -230,18 +232,18 @@ public class TransformerDialog extends AbstractSimulationDialog {
 		setBounds(100, 100, 320, 432);
 	}
 	
-	private void updateConfigurationPanel(TransformerType filterType){
+	private void updateConfigurationPanel(TransformerType transformerType){
 		panelConfiguration.removeAll();
-		JPanel filterPanel = getConfigPanel(filterType);
-		if(filterPanel != null){
-			panelConfiguration.add(filterPanel, BorderLayout.CENTER);
+		JPanel transformerPanel = getConfigPanel(transformerType);
+		if(transformerPanel != null){
+			panelConfiguration.add(transformerPanel, BorderLayout.CENTER);
 		}
 		pack();
 		repaint();
 	}
 	
-	private JPanel getConfigPanel(TransformerType filterType){
-		switch (filterType) {
+	private JPanel getConfigPanel(TransformerType transformerType){
+		switch (transformerType) {
 		case DAY_DELAY:
 			return getConfigDayDelay();
 		case SOD:
@@ -608,50 +610,50 @@ public class TransformerDialog extends AbstractSimulationDialog {
 					}
 				}
 			} catch(ParameterException e){
-				JOptionPane.showMessageDialog(TransformerDialog.this, "Cannot change filter properties.\nReason: " + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(TransformerDialog.this, "Cannot change transformer properties.\nReason: " + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 		} else {
-			AbstractTraceTransformer filter = null;
+			AbstractTraceTransformer transformer = null;
 			try {
 				switch(getTransformerType()){
 				
 					case UNAUTHORIZED_EXECUTION:
-						filter = new UnauthorizedExecutionTransformer(activationProbability, maxAppliances);
+						transformer = new UnauthorizedExecutionTransformer(activationProbability, maxAppliances);
 						break;
 						
 					case DAY_DELAY: 
-						filter = new DayDelayTransformer(activationProbability, maxAppliances, minDays, maxDays);
+						transformer = new DayDelayTransformer(activationProbability, maxAppliances, minDays, maxDays);
 						break;
 						
 					case SKIP_ACTIVITIES:
-						filter = new SkipActivitiesTransformer(activationProbability, maxAppliances, skipActivities);
+						transformer = new SkipActivitiesTransformer(activationProbability, maxAppliances, skipActivities);
 						break;
 						
 					case INCOMPLETE_LOGGING:
-						filter = new IncompleteLoggingTransformer(activationProbability, maxAppliances, skipActivities);
+						transformer = new IncompleteLoggingTransformer(activationProbability, maxAppliances, skipActivities);
 						break;
 						
 					case OBFUSCATION:
-						filter = new ObfuscationTransformer(activationProbability, maxAppliances, excludedFields);
+						transformer = new ObfuscationTransformer(activationProbability, maxAppliances, excludedFields);
 						break;
 						
 					case BOD:
-						filter = new BoDPropertyTransformer(activationProbability, bindingActivities);
+						transformer = new BoDPropertyTransformer(activationProbability, bindingActivities);
 						break;
 					case SOD:
-						filter = new SoDPropertyTransformer(activationProbability, bindingActivities);
+						transformer = new SoDPropertyTransformer(activationProbability, bindingActivities);
 						break;
 				}
-				if(filter == null) {
-					JOptionPane.showMessageDialog(TransformerDialog.this, "Filter was not created. Missing constant in switch-statement?", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				if(transformer == null) {
+					JOptionPane.showMessageDialog(TransformerDialog.this, "Transformer was not created. Missing constant in switch-statement?", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				
-				filter.setName(TransformerName);
-				setDialogObject(filter);
+				transformer.setName(TransformerName);
+				setDialogObject(transformer);
 			} catch (ParameterException e) {
-				JOptionPane.showMessageDialog(TransformerDialog.this, "Cannot set filter properties.\nReason: " + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(TransformerDialog.this, "Cannot set transformer properties.\nReason: " + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 		}
@@ -665,19 +667,19 @@ public class TransformerDialog extends AbstractSimulationDialog {
 	
 	private boolean validateInputFields(){
 		
-		//Validate filter name
+		//Validate transformer name
 		TransformerName = txtTransformerName.getText();
 		if(TransformerName == null || TransformerName.isEmpty()){
-			JOptionPane.showMessageDialog(TransformerDialog.this, "Affected field: Filter name.\nReason: Null or empty value.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(TransformerDialog.this, "Affected field: Transformer name.\nReason: Null or empty value.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		
-		Set<String> filterNames = new HashSet<String>(SimulationComponents.getInstance().getFilterNames());
+		Set<String> transformerNames = new HashSet<String>(SimulationComponents.getInstance().getTransformerNames());
 		if(editMode){
-			filterNames.remove(getDialogObject().getName());
+			transformerNames.remove(getDialogObject().getName());
 		}
-		if(filterNames.contains(TransformerName)){
-			JOptionPane.showMessageDialog(TransformerDialog.this, "There is already a filter with name \""+TransformerName+"\"", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+		if(transformerNames.contains(TransformerName)){
+			JOptionPane.showMessageDialog(TransformerDialog.this, "There is already a transformer with name \""+TransformerName+"\"", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		TransformerName = TransformerName.replace(' ', '_');
@@ -693,10 +695,10 @@ public class TransformerDialog extends AbstractSimulationDialog {
 		}
 		activationProbability = activationProbability / 100.0;
 			
-		TransformerType filterType = getTransformerType();
+		TransformerType transformerType = getTransformerType();
 		//Check max appliances
 		maxAppliances = null;
-		if(filterType != TransformerType.BOD && filterType != TransformerType.SOD){
+		if(transformerType != TransformerType.BOD && transformerType != TransformerType.SOD){
 			try {
 				maxAppliances = Validate.positiveInteger(txtMaxAppliances.getText());
 			} catch (ParameterException e1) {
@@ -705,7 +707,7 @@ public class TransformerDialog extends AbstractSimulationDialog {
 			}
 		}
 				
-		switch(filterType){
+		switch(transformerType){
 		
 		case UNAUTHORIZED_EXECUTION:
 			return true;
@@ -814,37 +816,37 @@ public class TransformerDialog extends AbstractSimulationDialog {
 		return dialog.getDialogObject();
 	}
 	
-	public static AbstractTraceTransformer showDialog(Window owner,  Set<String> activities, AbstractTraceTransformer traceFilter){
-		TransformerDialog dialog = new TransformerDialog(owner, activities, traceFilter);
+	public static AbstractTraceTransformer showDialog(Window owner,  Set<String> activities, AbstractTraceTransformer traceTransformer){
+		TransformerDialog dialog = new TransformerDialog(owner, activities, traceTransformer);
 		return dialog.getDialogObject();
 	}
 
 	public static void main(String[] args) throws ParameterException, XMLStreamException, PropertyException {
 		Set<String> activities = new HashSet<String>(Arrays.asList("act 1", "act 2", "act 3", "act 4"));
 		
-		UnauthorizedExecutionTransformer unFilter = new UnauthorizedExecutionTransformer(0.5, 10);
-		unFilter.setName("un Filter");
+		UnauthorizedExecutionTransformer unTransformer = new UnauthorizedExecutionTransformer(0.5, 10);
+		unTransformer.setName("un Transformer");
 		
-		DayDelayTransformer dayFilter = new DayDelayTransformer(0.2, 12, 2, 3);
-		dayFilter.setName("day Filter");
+		DayDelayTransformer dayTransformer = new DayDelayTransformer(0.2, 12, 2, 3);
+		dayTransformer.setName("day Transformer");
 		
 		Set<String> skipActivities = new HashSet<String>(Arrays.asList("act 1", "act 2"));
-		SkipActivitiesTransformer skipFilter = new SkipActivitiesTransformer(0.4, 3, skipActivities);
-		skipFilter.setName("skip Filter");
+		SkipActivitiesTransformer skipTransformer = new SkipActivitiesTransformer(0.4, 3, skipActivities);
+		skipTransformer.setName("skip Transformer");
 		
-		IncompleteLoggingTransformer inFilter = new IncompleteLoggingTransformer(0.4, 3, skipActivities);
-		inFilter.setName("in Filter");
+		IncompleteLoggingTransformer inTransformer = new IncompleteLoggingTransformer(0.4, 3, skipActivities);
+		inTransformer.setName("in Transformer");
 		
-		ObfuscationTransformer obFilter = new ObfuscationTransformer(0.6, 5, EntryField.ACTIVITY);
-		obFilter.setName("ob Filter");
+		ObfuscationTransformer obTransformer = new ObfuscationTransformer(0.6, 5, EntryField.ACTIVITY);
+		obTransformer.setName("ob Transformer");
 		
-		SoDPropertyTransformer sodFilter = new SoDPropertyTransformer(0.1, skipActivities);
-		sodFilter.setName("sod");
+		SoDPropertyTransformer sodTransformer = new SoDPropertyTransformer(0.1, skipActivities);
+		sodTransformer.setName("sod");
 		
-		BoDPropertyTransformer bodFilter = new BoDPropertyTransformer(0.1, skipActivities);
-		bodFilter.setName("bod");
+		BoDPropertyTransformer bodTransformer = new BoDPropertyTransformer(0.1, skipActivities);
+		bodTransformer.setName("bod");
 		
-		AbstractTraceTransformer filter = TransformerDialog.showDialog(null, activities, bodFilter);
+		AbstractTraceTransformer transformer = TransformerDialog.showDialog(null, activities, bodTransformer);
 	}
 
 }

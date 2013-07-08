@@ -127,19 +127,19 @@ public class TimeFrameDialog extends JDialog {
 				e.printStackTrace();
 			}
 			
-			int maxFilterCount = 0;
+			int maxTransformerCount = 0;
 			for(SimulationRun run: simulationRuns){
 				sumPasses += run.getPasses();
 				if(run.getPasses() < minPasses){
 					minPasses = run.getPasses();
 				}
-				if(run.getTraceFilterManager().getTraceTransformers().size() > maxFilterCount){
-					maxFilterCount = run.getTraceFilterManager().getTraceTransformers().size();
+				if(run.getTraceTransformerManager().getTraceTransformers().size() > maxTransformerCount){
+					maxTransformerCount = run.getTraceTransformerManager().getTraceTransformers().size();
 				}
-				if(maxFilterCount < 7){
+				if(maxTransformerCount < 7){
 					preferredBoxHeight = minBoxHeight;
 				} else {
-					preferredBoxHeight = minBoxHeight + (maxFilterCount-6)*20;
+					preferredBoxHeight = minBoxHeight + (maxTransformerCount-6)*20;
 				}
 			}
 			factor = minBoxWidth/minPasses.doubleValue();
@@ -172,14 +172,14 @@ public class TimeFrameDialog extends JDialog {
 				g2d.drawString("Net: " + run.getPetriNet().getName(), lastPartEnd + 10, marginTop+40);
 				g2d.drawString("Passes: " + run.getPasses().toString(), lastPartEnd + 10, marginTop+60);
 					
-				if(!run.getTraceFilterManager().getTraceTransformers().isEmpty()){
-					g2d.drawString("Filters:", lastPartEnd + 10, marginTop+90);
-					int filterCount = 0;
-					for(AbstractTransformer filter: run.getTraceFilterManager().getTraceTransformers()){
-						g2d.drawString(filter.getName(), lastPartEnd + 10, marginTop+90+(++filterCount)*20);
+				if(!run.getTraceTransformerManager().getTraceTransformers().isEmpty()){
+					g2d.drawString("Transformers:", lastPartEnd + 10, marginTop+90);
+					int transformerCount = 0;
+					for(AbstractTransformer transformer: run.getTraceTransformerManager().getTraceTransformers()){
+						g2d.drawString(transformer.getName(), lastPartEnd + 10, marginTop+90+(++transformerCount)*20);
 					}
 				} else {
-					g2d.drawString("No filters", lastPartEnd + 10, marginTop+90);
+					g2d.drawString("No transformers", lastPartEnd + 10, marginTop+90);
 				}
 					
 				if(count++ <= simulationRuns.size()){

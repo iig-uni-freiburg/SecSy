@@ -10,8 +10,8 @@ import petrinet.AbstractTransition;
 
 /**
  * This class is used to generate Log entries from fired transitions.<br>
- * Additionally, it can be generated with a reference to an entry filter manager,
- * whose filters are applied on generated log traces.
+ * Additionally, it can be generated with a reference to an entry transformer manager,
+ * whose transformers are applied on generated log traces.
  * 
  * @see EntryTransformerManager
  * 
@@ -19,54 +19,54 @@ import petrinet.AbstractTransition;
  */
 public class LogEntryGenerator implements TraceCompletionListener{
 	/**
-	 * The filter manager, that manages the set of entry filters that
+	 * The transformer manager, that manages the set of entry transformers that
 	 * are applied on generated log entries.
 	 */
-	protected EntryTransformerManager entryFilterManager = null;
+	protected EntryTransformerManager entryTransformerManager = null;
 	
 	/**
 	 * Creates a new log entry generator.<br>
-	 * In this case, no filter manager is used and no filters are applied
+	 * In this case, no transformer manager is used and no transformers are applied
 	 * on generated log entries.
 	 */
 	public LogEntryGenerator(){}
 	
 	/**
-	 * Creates a new log entry generator with the given entry filter manager,
-	 * that contains all entry filters that should be applied to generated log entries.
-	 * This log entry generator may be incompatible to the given entry filter manager,
-	 * if it does dot provide enough information for filters to be applied.
+	 * Creates a new log entry generator with the given entry transformer manager,
+	 * that contains all entry transformers that should be applied to generated log entries.
+	 * This log entry generator may be incompatible to the given entry transformer manager,
+	 * if it does dot provide enough information for transformers to be applied.
 	 * 
-	 * @param entryFilterManager Entry filter manager.
+	 * @param entryTransformerManager Entry transformer manager.
 	 * @throws ParameterException 
-	 * @throws Exception If this generator is incompatible to the filter manager.
+	 * @throws Exception If this generator is incompatible to the transformer manager.
 	 */
-	public LogEntryGenerator(EntryTransformerManager entryFilterManager) throws ParameterException{
-		setEntryfilterManager(entryFilterManager);
+	public LogEntryGenerator(EntryTransformerManager entryTransformerManager) throws ParameterException{
+		setEntryTransformerManager(entryTransformerManager);
 	}
 	
 	public void checkValidity() throws ConfigurationException{}
 	
 	/**
-	 * Sets the entry filter manager of the log entry generator.<br>
-	 * This log entry generator may be incompatible to the given entry filter manager,
-	 * if it does dot provide enough information for filters to be applied.
+	 * Sets the entry transformer manager of the log entry generator.<br>
+	 * This log entry generator may be incompatible to the given entry transformer manager,
+	 * if it does dot provide enough information for transformers to be applied.
 	 * 
-	 * @param entryFilterManager
+	 * @param entryTransformerManager
 	 * @throws ParameterException 
-	 * @throws IllegalArgumentException If the log entry generator is incompatible with the filter manager.
+	 * @throws IllegalArgumentException If the log entry generator is incompatible with the transformer manager.
 	 */
-	public void setEntryfilterManager(EntryTransformerManager entryFilterManager) throws ParameterException{
-		Validate.notNull(entryFilterManager);
-		this.entryFilterManager = entryFilterManager;
-		this.entryFilterManager.setSource(this);
+	public void setEntryTransformerManager(EntryTransformerManager entryTransformerManager) throws ParameterException{
+		Validate.notNull(entryTransformerManager);
+		this.entryTransformerManager = entryTransformerManager;
+		this.entryTransformerManager.setSource(this);
 	}
 	
 	/**
 	 * Generates a log entry containing information related to the fired transition and the case number.
 	 * A case is defined as a process execution (path through the Petri net). 
 	 * After preparing a context specific log entry with the help of {@link #prepareLogEntry(String)}, 
-	 * this method applies all managed distortion filters on the entry.
+	 * this method applies all managed distortion transformers on the entry.
 	 * 
 	 * @param transition The fired transition.
 	 * @param caseNumber The number of the corresponding case.
@@ -76,8 +76,8 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 */
 	public LogEntry getLogEntryFor(AbstractTransition<?,?> transition, int caseNumber) throws ParameterException {
 		LogEntry entry = prepareLogEntry(transition, caseNumber);
-		if(entryFilterManager != null)
-			entryFilterManager.applyTransformers(entry, caseNumber);
+		if(entryTransformerManager != null)
+			entryTransformerManager.applyTransformers(entry, caseNumber);
 		return entry;
 	}
 	
@@ -106,7 +106,7 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 * it returns true for the entry field TIME. Time information is assumed to be added
 	 * by the corresponding log generator (e.g. TraceLogGenerator) to every generated log entry.
 	 * However, it is important to return <code>true</code> to ensure proper
-	 * compatibility checks with entry filters.
+	 * compatibility checks with entry transformers.
 	 * 
 	 * @param field The type of log information requested.
 	 * @return <code>true</code> if this entry generator provides the information;<br>

@@ -376,7 +376,7 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	
 	/**
 	 * Increments the actual time of the case with the given number by the given time.<br>
-	 * This method is public to allow external case time increments (e.g. by time-oriented filters).
+	 * This method is public to allow external case time increments (e.g. by time-oriented transformers).
 	 * @param caseNumber Case number.
 	 * @param increase Increase in milliseconds.
 	 * @throws ParameterException 

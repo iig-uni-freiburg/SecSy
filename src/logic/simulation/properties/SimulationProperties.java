@@ -205,11 +205,11 @@ public class SimulationProperties extends AbstractProperties{
 		
 		String simulationRunName = String.format(SIMULATION_RUN_FORMAT, getSimulationRunNames().size()+1);
 		addSimulationRunName(simulationRunName);
-		Set<String> filterNames = new HashSet<String>();
-		for(AbstractTransformer filter: simulationRun.getTraceFilterManager().getTraceTransformers()){
-			filterNames.add(filter.getName());
+		Set<String> transformerNames = new HashSet<String>();
+		for(AbstractTransformer transformer: simulationRun.getTraceTransformerManager().getTraceTransformers()){
+			transformerNames.add(transformer.getName());
 		}
-		props.setProperty(simulationRunName, String.format(SIMULATION_RUN_VALUE_FORMAT, "'"+simulationRun.getName()+"'", "'"+simulationRun.getPetriNet().getName()+"'", simulationRun.getPasses(), ArrayUtils.toString(encapsulateValues(filterNames))));
+		props.setProperty(simulationRunName, String.format(SIMULATION_RUN_VALUE_FORMAT, "'"+simulationRun.getName()+"'", "'"+simulationRun.getPetriNet().getName()+"'", simulationRun.getPasses(), ArrayUtils.toString(encapsulateValues(transformerNames))));
 	}
 	
 	public Set<SimulationRunProperties> getSimulationRuns() throws PropertyException, ParameterException{
@@ -243,13 +243,13 @@ public class SimulationProperties extends AbstractProperties{
 			throw new PropertyException(SimulationProperty.SIMULATION_RUN, propertyValue, "Invalid property value: Cannot extract number of passes");
 		}
 		
-		Set<String> filterNames = new HashSet<String>();
+		Set<String> transformerNames = new HashSet<String>();
 		StringTokenizer nameTokens = StringUtils.splitArrayString(tokens.get(3), " ");
 		while(nameTokens.hasMoreTokens()){
-			String filterNameEncapsulated = nameTokens.nextToken();
-			if(filterNameEncapsulated.length() <= 2)
-				throw new PropertyException(SimulationProperty.SIMULATION_RUN, propertyValue, "Invalid property value: Too short filter name");
-			filterNames.add(filterNameEncapsulated.substring(1, filterNameEncapsulated.length()-1));
+			String transformerNameEncapsulated = nameTokens.nextToken();
+			if(transformerNameEncapsulated.length() <= 2)
+				throw new PropertyException(SimulationProperty.SIMULATION_RUN, propertyValue, "Invalid property value: Too short transformer name");
+			transformerNames.add(transformerNameEncapsulated.substring(1, transformerNameEncapsulated.length()-1));
 		}
 		
 		if(tokens.get(0).length() < 3){
@@ -263,7 +263,7 @@ public class SimulationProperties extends AbstractProperties{
 		result.setName(tokens.get(0).substring(1, tokens.get(0).length()-1));
 		result.setNetName(tokens.get(1).substring(1, tokens.get(1).length()-1));
 		result.setPasses(passes);
-		result.setFilterNames(filterNames);
+		result.setTransformerNames(transformerNames);
 		
 		return result;
 	}

@@ -33,11 +33,11 @@ public class TraceTransformerManager {
 	
 	private TransformerListenerSupport transformerListenerSupport = new TransformerListenerSupport();
 	
-	public void registerFilterListener(TransformerListener listener) throws ParameterException{
+	public void registerTransformerListener(TransformerListener listener) throws ParameterException{
 		transformerListenerSupport.addTransformerListener(listener);
 	}
 	
-	public void removeFilterListener(TransformerListener listener){
+	public void removeTransformerListener(TransformerListener listener){
 		transformerListenerSupport.removeTransformerListener(listener);
 	}
 	
@@ -51,8 +51,8 @@ public class TraceTransformerManager {
 				}
 			}
 		} catch(ParameterException e){
-			// Cannot happen, since filters are required to never return null-values
-			// in the method filter.requiredContextInformation().
+			// Cannot happen, since transformers are required to never return null-values
+			// in the method transformer.requiredContextInformation().
 			e.printStackTrace();
 		}
 		this.source = source;
@@ -72,7 +72,7 @@ public class TraceTransformerManager {
 	 * @throws MissingRequirementException 
 	 * @throws ParameterException 
 	 */
-	public void addFilter(AbstractTraceTransformer traceTransformer) throws MissingRequirementException, ParameterException{
+	public void addTransformer(AbstractTraceTransformer traceTransformer) throws MissingRequirementException, ParameterException{
 		Validate.notNull(traceTransformer);
 		try{
 			if(source!=null)
@@ -80,8 +80,8 @@ public class TraceTransformerManager {
 					if(!source.providesLogInformation(contextType))
 						throw new MissingRequirementException(contextType);
 		} catch(ParameterException e){
-			// Cannot happen, since filters are required to never return null-values
-			// in the method filter.requiredContextInformation().
+			// Cannot happen, since transformers are required to never return null-values
+			// in the method transformer.requiredContextInformation().
 			e.printStackTrace();
 		}
 		traceTransformers.add(traceTransformer);
@@ -105,7 +105,7 @@ public class TraceTransformerManager {
 						transformerListenerSupport.fireTransformerFailure(traceTransformer);
 					}
 				} else {
-					//Filter not applied
+					//Transformer not applied
 				}
 			}
 		}
@@ -146,7 +146,7 @@ public class TraceTransformerManager {
 	
 	public String getTransformerSummary(){
 		StringBuilder builder = new StringBuilder();
-		builder.append("Filter Summary:\n\n");
+		builder.append("Transformer Summary:\n\n");
 		for(AbstractTraceTransformer transformer: getTraceTransformers()){
 			builder.append(getTransformerSummary(transformer));
 			builder.append("\n");

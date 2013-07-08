@@ -1,4 +1,4 @@
-package gui.dialog.filter;
+package gui.dialog.transformer;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -18,17 +18,17 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.AbstractListModel;
 import javax.swing.JSeparator;
 
-public class SoDFilterDialog extends JDialog {
+public class SoDTransformerDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtSodfilter;
+	private JTextField txtSodTransformer;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			SoDFilterDialog dialog = new SoDFilterDialog();
+			SoDTransformerDialog dialog = new SoDTransformerDialog();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -39,7 +39,7 @@ public class SoDFilterDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public SoDFilterDialog() {
+	public SoDTransformerDialog() {
 		setTitle("New SoD-Property Filter");
 		setBounds(100, 100, 300, 288);
 		getContentPane().setLayout(new BorderLayout());
@@ -65,11 +65,11 @@ public class SoDFilterDialog extends JDialog {
 			contentPanel.add(lblPasses);
 		}
 		
-		txtSodfilter = new JTextField();
-		txtSodfilter.setText("SoD-Filter 01");
-		txtSodfilter.setBounds(85, 17, 183, 28);
-		contentPanel.add(txtSodfilter);
-		txtSodfilter.setColumns(10);
+		txtSodTransformer = new JTextField();
+		txtSodTransformer.setText("SoD-Filter 01");
+		txtSodTransformer.setBounds(85, 17, 183, 28);
+		contentPanel.add(txtSodTransformer);
+		txtSodTransformer.setColumns(10);
 		
 		JSpinner spinner = new JSpinner();
 		spinner.setBounds(85, 47, 111, 28);

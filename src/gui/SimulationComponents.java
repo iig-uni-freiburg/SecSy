@@ -66,7 +66,7 @@ public class SimulationComponents {
 	private Map<String, PTNet> petriNets = new HashMap<String, PTNet>();
 	private Map<String, Context> contexts = new HashMap<String, Context>();
 	private Map<String, CaseDataContainer> caseDataContainers = new HashMap<String, CaseDataContainer>();
-	private Map<String, AbstractTraceTransformer> filters = new HashMap<String, AbstractTraceTransformer>();
+	private Map<String, AbstractTraceTransformer> transformers = new HashMap<String, AbstractTraceTransformer>();
 	private Map<String, CaseTimeGenerator> caseTimeGenerators = new HashMap<String, CaseTimeGenerator>();
 	private Map<String, Simulation> simulations = new HashMap<String, Simulation>();
 	
@@ -94,7 +94,7 @@ public class SimulationComponents {
 		petriNets.clear();
 		contexts.clear();
 		caseDataContainers.clear();
-		filters.clear();
+		transformers.clear();
 		caseTimeGenerators.clear();
 		simulations.clear();
 		loadSimulationComponents();
@@ -204,18 +204,18 @@ public class SimulationComponents {
 		}
 		MessageDialog.getInstance().newLine();
 		
-		//6. Load filters
-		MessageDialog.getInstance().addMessage("6. Searching for filters:");
-		List<String> filterFiles = null;
+		//6. Load transformers
+		MessageDialog.getInstance().addMessage("6. Searching for transformers:");
+		List<String> transformerFiles = null;
 		try {
-			filterFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForFilters(), true);
+			transformerFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForTransformers(), true);
 		} catch (IOException e1) {
-			throw new IOException("Cannot access filter directory.");
+			throw new IOException("Cannot access transformer directory.");
 		}
-		for(String filterFile: filterFiles){
-			MessageDialog.getInstance().addMessage("Loading filter: " + filterFile + "...   ");
+		for(String transformerFile: transformerFiles){
+			MessageDialog.getInstance().addMessage("Loading transformer: " + transformerFile + "...   ");
 			try{
-				addFilter((AbstractTraceTransformer) TransformerFactory.loadTransformer(filterFile), false);
+				addTransformer((AbstractTraceTransformer) TransformerFactory.loadTransformer(transformerFile), false);
 				MessageDialog.getInstance().addMessage("Done.");
 			} catch(Exception e){
 				MessageDialog.getInstance().addMessage("Error: "+e.getMessage());
@@ -366,15 +366,15 @@ public class SimulationComponents {
 			PTNet ptNet = getPetriNet(ptNetName);
 			if(ptNet == null)
 				throw new PropertyException(SimulationRunProperty.NET_NAME, ptNetName, "Unknown Petri net.");
-			TraceTransformerManager filterManager = new TraceTransformerManager();
-			for(String filterName: runProperties.getFilterNames()){
-				AbstractTraceTransformer filter = getFilter(filterName);
-				if(filter == null)
-					throw new PropertyException(SimulationRunProperty.FILTERS, filterName, "Unknown filter.");
-				filterManager.addFilter(filter);
+			TraceTransformerManager transformerManager = new TraceTransformerManager();
+			for(String transformerName: runProperties.getTransformerNames()){
+				AbstractTraceTransformer transformer = getTransformer(transformerName);
+				if(transformer == null)
+					throw new PropertyException(SimulationRunProperty.TRANSFORMERS, transformerName, "Unknown transformer.");
+				transformerManager.addTransformer(transformer);
 			}
 		
-			SimulationRun newSimulationRun = new SimulationRun(ptNet, runProperties.getPasses(), new RandomPTTraverser(ptNet), filterManager);
+			SimulationRun newSimulationRun = new SimulationRun(ptNet, runProperties.getPasses(), new RandomPTTraverser(ptNet), transformerManager);
 			newSimulationRun.setName(runName);
 			simulationRuns.add(newSimulationRun);
 		}
@@ -398,9 +398,9 @@ public class SimulationComponents {
 //			System.out.println(dataContainer.getName());
 			storeCaseDataContainer(dataContainer);
 		}
-		for(AbstractTransformer filter: filters.values()){
-//			System.out.println(filter.getName());
-			storeFilter(filter);
+		for(AbstractTransformer transformer: transformers.values()){
+//			System.out.println(transformer.getName());
+			storeTransformer(transformer);
 		}
 		for(CaseTimeGenerator timeGenerator: caseTimeGenerators.values()){
 //			System.out.println(timeGenerator.getName());
@@ -1052,107 +1052,107 @@ public class SimulationComponents {
 //	}
 //	
 	
-	//------- Adding and removing filters -------------------------------------------------------------------------
+	//------- Adding and removing transformers -------------------------------------------------------------------------
 	
 	/**
-	 * Adds a new filter.<br>
-	 * The filter is also stores as property-file in the simulation directory.
-	 * @param filter The filter to add.
-	 * @throws ParameterException if the given filter is <code>null</code>.
+	 * Adds a new transformer.<br>
+	 * The transformer is also stores as property-file in the simulation directory.
+	 * @param transformer The transformer to add.
+	 * @throws ParameterException if the given transformer is <code>null</code>.
 	 * @throws PropertyException if the procedure of property extraction fails.
-	 * @throws IOException if the property-representation of the new filter cannot be stored.
+	 * @throws IOException if the property-representation of the new transformer cannot be stored.
 	 */
-	public void addFilter(AbstractTraceTransformer filter) throws ParameterException, IOException, PropertyException{
-		addFilter(filter, true);
+	public void addTransformer(AbstractTraceTransformer transformer) throws ParameterException, IOException, PropertyException{
+		addTransformer(transformer, true);
 	}
 	
 	/**
-	 * Adds a new filter.<br>
-	 * Depending on the value of the store-parameter, the filter is also stores as property-file in the simulation directory.
-	 * @param filter The new filter to add.
-	 * @param storeToFile Indicates if the filter should be stored on disk.
+	 * Adds a new transformer.<br>
+	 * Depending on the value of the store-parameter, the transformer is also stores as property-file in the simulation directory.
+	 * @param transformer The new transformer to add.
+	 * @param storeToFile Indicates if the transformer should be stored on disk.
 	 * @throws ParameterException if any parameter is invalid.
-	 * @throws PropertyException if the filter cannot be stored due to an error during property extraction.
+	 * @throws PropertyException if the transformer cannot be stored due to an error during property extraction.
 	 * @throws IOException if the cannot be stored due to an I/O Error.
 	 */
-	public void addFilter(AbstractTraceTransformer filter, boolean storeToFile) throws ParameterException, IOException, PropertyException{
-		Validate.notNull(filter);
+	public void addTransformer(AbstractTraceTransformer transformer, boolean storeToFile) throws ParameterException, IOException, PropertyException{
+		Validate.notNull(transformer);
 		Validate.notNull(storeToFile);
-		filters.put(filter.getName(), filter);
+		transformers.put(transformer.getName(), transformer);
 		if(storeToFile){
-			storeFilter(filter);
+			storeTransformer(transformer);
 		}
 	}
 	
 	/**
-	 * Stores the given filter in form of a property-file in the simulation directory.<br>
-	 * The filter name will be used as file name.
-	 * @param filter The filter to store.
-	 * @throws ParameterException if the given filter is <code>null</code> or invalid.
-	 * @throws IOException if the filter cannot be stored due to an I/O Error.
-	 * @throws PropertyException if the filter cannot be stored due to an error during property extraction.
+	 * Stores the given transformer in form of a property-file in the simulation directory.<br>
+	 * The transformer name will be used as file name.
+	 * @param transformer The transformer to store.
+	 * @throws ParameterException if the given transformer is <code>null</code> or invalid.
+	 * @throws IOException if the transformer cannot be stored due to an I/O Error.
+	 * @throws PropertyException if the transformer cannot be stored due to an error during property extraction.
 	 */
-	public void storeFilter(AbstractTransformer filter) throws ParameterException, IOException, PropertyException{
-		Validate.notNull(filter);
-		filter.getProperties().store(GeneralProperties.getInstance().getPathForFilters()+filter.getName());
+	public void storeTransformer(AbstractTransformer transformer) throws ParameterException, IOException, PropertyException{
+		Validate.notNull(transformer);
+		transformer.getProperties().store(GeneralProperties.getInstance().getPathForTransformers()+transformer.getName());
 	}
 	
 	/**
-	 * Checks, if there are filter-components.
-	 * @return <code>true</code> if there is at least one filter;<br>
+	 * Checks, if there are transformer-components.
+	 * @return <code>true</code> if there is at least one transformer;<br>
 	 * <code>false</code> otherwise.
 	 */
-	public boolean containsFilters(){
-		return !filters.isEmpty();
+	public boolean containsTransformers(){
+		return !transformers.isEmpty();
 	}
 	
 	/**
-	 * Checks, if there is a filter with the given name.
-	 * @return <code>true</code> if there is such a filter;<br>
+	 * Checks, if there is a transformer with the given name.
+	 * @return <code>true</code> if there is such a transformer;<br>
 	 * <code>false</code> otherwise.
 	 */
-	public boolean containsFilter(String name){
-		return filters.get(name) != null;
+	public boolean containsTransformer(String name){
+		return transformers.get(name) != null;
 	}
 	
 	/**
-	 * Returns all filters, i.e. filters stored in the simulation directory.
-	 * @return A set containing all filters.
+	 * Returns all transformers, i.e. transformers stored in the simulation directory.
+	 * @return A set containing all transformers.
 	 */
-	public Collection<AbstractTraceTransformer> getFilters(){
-		return Collections.unmodifiableCollection(filters.values());
+	public Collection<AbstractTraceTransformer> getTransformers(){
+		return Collections.unmodifiableCollection(transformers.values());
 	}
 	
 	/**
-	 * Returns the names of all filters, i.e. filters stored in the simulation directory.
-	 * @return A set containing all filter names.
+	 * Returns the names of all transformers, i.e. transformers stored in the simulation directory.
+	 * @return A set containing all transformer names.
 	 */
-	public Set<String> getFilterNames(){
-		return Collections.unmodifiableSet(filters.keySet());
+	public Set<String> getTransformerNames(){
+		return Collections.unmodifiableSet(transformers.keySet());
 	}
 	
 	/**
-	 * Returns the filter with the given name, if there is one.
-	 * @param name The name of the desired filter.
-	 * @return The filter with the given name, or <code>null</code> if there is no such filter.
+	 * Returns the transformer with the given name, if there is one.
+	 * @param name The name of the desired transformer.
+	 * @return The transformer with the given name, or <code>null</code> if there is no such transformer.
 	 * @throws ParameterException if the given name is <code>null</code>.
 	 */
-	public AbstractTraceTransformer getFilter(String name) throws ParameterException{
+	public AbstractTraceTransformer getTransformer(String name) throws ParameterException{
 		Validate.notNull(name);
-		return filters.get(name);
+		return transformers.get(name);
 	}
 	
 	/**
-	 * Removes the filter with the given name from the simulation components<br>
+	 * Removes the transformer with the given name from the simulation components<br>
 	 * and also deletes the corresponding property-file in the simulation directory.
-	 * @param name The name of the filter to remove.
+	 * @param name The name of the transformer to remove.
 	 * @throws PropertyException if the path for the simulation directory cannot be extracted from the general properties file.
 	 * @throws ParameterException if there is an internal parameter misconfiguration.
-	 * @throws IOException if the corresponding property file for the filter cannot be deleted.
+	 * @throws IOException if the corresponding property file for the transformer cannot be deleted.
 	 */
-	public void removeFilter(String name) throws PropertyException, IOException, ParameterException{
-		if(filters.remove(name) != null){
-			FileUtils.deleteFile(GeneralProperties.getInstance().getPathForFilters()+name);
+	public void removeTransformer(String name) throws PropertyException, IOException, ParameterException{
+		if(transformers.remove(name) != null){
+			FileUtils.deleteFile(GeneralProperties.getInstance().getPathForTransformers()+name);
 		}
 	}
 	

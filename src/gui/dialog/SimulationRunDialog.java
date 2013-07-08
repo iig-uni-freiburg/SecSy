@@ -2,6 +2,7 @@ package gui.dialog;
 
 import gui.Hints;
 import gui.SimulationComponents;
+import gui.dialog.transformer.TransformerDialog;
 import gui.misc.CustomListRenderer;
 
 import java.awt.Window;
@@ -50,11 +51,11 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 
 	private static final long serialVersionUID = 5957764226864259142L;
 	
-	private JButton btnAddFilter = null;
-	private JButton btnNewFilter = null;
-	private JButton btnEditFilter = null;
-	private JButton btnFilterUp = null;
-	private JButton btnFilterDown = null;
+	private JButton btnAddTransformer = null;
+	private JButton btnNewTransformer = null;
+	private JButton btnEditTransformer = null;
+	private JButton btnTransformerUp = null;
+	private JButton btnTransformerDown = null;
 	private JButton btnImportNet = null;
 	private JTextField txtName = null;
 	
@@ -62,12 +63,12 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 	
 	private JSpinner spinPasses = null;
 	
-	private JList listFilters = null;
-	private DefaultListModel listFiltersModel = null;
+	private JList listTransformers = null;
+	private DefaultListModel listTransformersModel = null;
 	
 	//---------------------------------------------------
 	
-	private List<AbstractTraceTransformer> filters = null;
+	private List<AbstractTraceTransformer> transformers = null;
 	
 	/**
 	 * @wbp.parser.constructor
@@ -82,8 +83,8 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 	
 	@Override
 	protected void initialize(Object... parameters) {
-		listFiltersModel = new DefaultListModel();
-		filters = new ArrayList<AbstractTraceTransformer>();
+		listTransformersModel = new DefaultListModel();
+		transformers = new ArrayList<AbstractTraceTransformer>();
 		if(editMode){
 			setDialogObject((SimulationRun) parameters[0]);
 		}
@@ -111,10 +112,10 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		txtName.setText(getDialogObject().getName());
 		comboNet.setSelectedItem(getDialogObject().getPetriNet().getName());
 		spinPasses.setValue(getDialogObject().getPasses());
-		for(AbstractTraceTransformer filter: getDialogObject().getTraceFilterManager().getTraceTransformers()){
-			filters.add(filter);
+		for(AbstractTraceTransformer transformer: getDialogObject().getTraceTransformerManager().getTraceTransformers()){
+			transformers.add(transformer);
 		}
-		updateListFilters();
+		updateListTransformers();
 	}
 
 	@Override
@@ -163,20 +164,20 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		separator.setBounds(19, 155, 382, 12);
 		mainPanel().add(separator);
 		
-		JLabel lblFilter = new JLabel("Trace Filter:");
-		lblFilter.setBounds(19, 174, 74, 16);
-		mainPanel().add(lblFilter);
+		JLabel lblTransformer = new JLabel("Trace Transformer:");
+		lblTransformer.setBounds(19, 174, 74, 16);
+		mainPanel().add(lblTransformer);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(19, 194, 382, 155);
 		mainPanel().add(scrollPane);
-		scrollPane.setViewportView(getListFilters());
+		scrollPane.setViewportView(getListTransformers());
 		
-		mainPanel().add(getButtonAddFilter());
-		mainPanel().add(getButtonNewFilter());
-		mainPanel().add(getButtonEditFilter());
-		mainPanel().add(getButtonFilterUp());
-		mainPanel().add(getButtonFilterDown());
+		mainPanel().add(getButtonAddTransformer());
+		mainPanel().add(getButtonNewTransformer());
+		mainPanel().add(getButtonEditTransformer());
+		mainPanel().add(getButtonTransformerUp());
+		mainPanel().add(getButtonTransformerDown());
 		
 		mainPanel().add(getButtonImportNet());
 	}
@@ -202,106 +203,106 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		comboNet.setModel(new DefaultComboBoxModel(netNames.toArray()));
 	}
 	
-	private JList getListFilters(){
-		if(listFilters == null){
-			listFilters = new JList(listFiltersModel);
-			listFilters.setToolTipText(Hints.hintFilterList);
-			listFilters.setCellRenderer(new CustomListRenderer());
-			listFilters.setFixedCellHeight(20);
-			listFilters.setVisibleRowCount(10);
-			listFilters.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			listFilters.setBorder(null);
+	private JList getListTransformers(){
+		if(listTransformers == null){
+			listTransformers = new JList(listTransformersModel);
+			listTransformers.setToolTipText(Hints.hintTransformerList);
+			listTransformers.setCellRenderer(new CustomListRenderer());
+			listTransformers.setFixedCellHeight(20);
+			listTransformers.setVisibleRowCount(10);
+			listTransformers.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			listTransformers.setBorder(null);
 			
-			listFilters.addKeyListener(new KeyListener() {
+			listTransformers.addKeyListener(new KeyListener() {
 				
 				@Override
 				public void keyTyped(KeyEvent e) {}
 				
 				@Override
 				public void keyReleased(KeyEvent e) {
-					removeSelectedFilters();
-					updateListFilters();
+					removeSelectedTransformers();
+					updateListTransformers();
 				}
 				
 				@Override
 				public void keyPressed(KeyEvent e) {}
 			});
 		}
-		updateListFilters();
-		return listFilters;
+		updateListTransformers();
+		return listTransformers;
 	}
 	
-	private void updateListFilters(){
-		listFiltersModel.clear();
-		for(AbstractTraceTransformer filter: filters){
-			listFiltersModel.addElement(filter);
+	private void updateListTransformers(){
+		listTransformersModel.clear();
+		for(AbstractTraceTransformer transformer: transformers){
+			listTransformersModel.addElement(transformer);
 		}
 	}
 	
-	private void removeSelectedFilters(){
-		if(listFilters.getSelectedValues() == null || listFilters.getSelectedValues().length == 0){
+	private void removeSelectedTransformers(){
+		if(listTransformers.getSelectedValues() == null || listTransformers.getSelectedValues().length == 0){
 			return;
 		}
-		for(Object selectedFilter: listFilters.getSelectedValues()){
-			filters.remove((AbstractTraceTransformer) selectedFilter);
+		for(Object selectedTransformer: listTransformers.getSelectedValues()){
+			transformers.remove((AbstractTraceTransformer) selectedTransformer);
 		}
 	}
 	
-	private Set<String> getFilterNames(){
-		Set<String> filterNames = new HashSet<String>();
-		for(AbstractTraceTransformer filter: filters){
-			filterNames.add(filter.getName());
+	private Set<String> getTransformerNames(){
+		Set<String> transformerNames = new HashSet<String>();
+		for(AbstractTraceTransformer transformer: transformers){
+			transformerNames.add(transformer.getName());
 		}
-		return filterNames;
+		return transformerNames;
 	}
 	
-	private AbstractTraceTransformer getFilter(String filterName){
-		for(AbstractTraceTransformer filter: filters){
-			if(filter.getName().equals(filterName)){
-				return filter;
+	private AbstractTraceTransformer getTransformer(String transformerName){
+		for(AbstractTraceTransformer transformer: transformers){
+			if(transformer.getName().equals(transformerName)){
+				return transformer;
 			}
 		}
 		return null;
 	}
 	
-	private JButton getButtonAddFilter(){
-		if(btnAddFilter == null){
-			btnAddFilter = new JButton("Add");
-			btnAddFilter.addActionListener(new ActionListener() {
+	private JButton getButtonAddTransformer(){
+		if(btnAddTransformer == null){
+			btnAddTransformer = new JButton("Add");
+			btnAddTransformer.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(SimulationComponents.getInstance().containsFilters()){
-						List<String> filterNames = new ArrayList<String>(SimulationComponents.getInstance().getFilterNames());
-						Collections.sort(filterNames);
-						List<String> chosenFilters = ValueChooserDialog.showDialog(SimulationRunDialog.this, "Choose Existing Filter", filterNames, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-						if(chosenFilters != null){
-							for(String filterName: chosenFilters){
+					if(SimulationComponents.getInstance().containsTransformers()){
+						List<String> transformerNames = new ArrayList<String>(SimulationComponents.getInstance().getTransformerNames());
+						Collections.sort(transformerNames);
+						List<String> chosenTransformers = ValueChooserDialog.showDialog(SimulationRunDialog.this, "Choose Existing Transformer", transformerNames, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+						if(chosenTransformers != null){
+							for(String transformerName: chosenTransformers){
 								try {
-									filters.add(SimulationComponents.getInstance().getFilter(filterName));
+									transformers.add(SimulationComponents.getInstance().getTransformer(transformerName));
 								} catch (ParameterException e1) {
-									JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot add filter \""+filterName+"\"\nReason: " + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+									JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot add transformer \""+transformerName+"\"\nReason: " + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 					        		return;
 								}
 							}
-							updateListFilters();
+							updateListTransformers();
 						}
 					} else {
-						JOptionPane.showMessageDialog(SimulationRunDialog.this, "Simulation components do not contain any filters yet.", "Simulation Components", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(SimulationRunDialog.this, "Simulation components do not contain any transformers yet.", "Simulation Components", JOptionPane.INFORMATION_MESSAGE);
 						return;
 					}
 				}
 			});
-			btnAddFilter.setBounds(20, 353, 80, 29);
+			btnAddTransformer.setBounds(20, 353, 80, 29);
 		}
-		return btnAddFilter;
+		return btnAddTransformer;
 	}
 	
-	private JButton getButtonNewFilter(){
-		if(btnNewFilter == null){
-			btnNewFilter = new JButton("New");
-			btnNewFilter.addActionListener(new ActionListener() {
+	private JButton getButtonNewTransformer(){
+		if(btnNewTransformer == null){
+			btnNewTransformer = new JButton("New");
+			btnNewTransformer.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(comboNet.getSelectedItem() == null){
-						JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot add new filter without Petri net.", "Missing Requirement", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot add new transformer without Petri net.", "Missing Requirement", JOptionPane.ERROR_MESSAGE);
 		        		return;
 					}
 					
@@ -310,25 +311,25 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 						return;
 					}
 					
-					AbstractTraceTransformer newFilter = TransformerDialog.showDialog(SimulationRunDialog.this, activities);
-					if(newFilter == null){
-						//User cancelled filter dialog.
+					AbstractTraceTransformer newTransformer = TransformerDialog.showDialog(SimulationRunDialog.this, activities);
+					if(newTransformer == null){
+						//User cancelled transformer dialog.
 						return;
 					}
 					
 					try {
-						SimulationComponents.getInstance().addFilter(newFilter);
+						SimulationComponents.getInstance().addTransformer(newTransformer);
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot add new filter \""+newFilter.getName()+"\" to simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot add new transformer \""+newTransformer.getName()+"\" to simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 		        		return;
 					}
-					filters.add(newFilter);
-					updateListFilters();
+					transformers.add(newTransformer);
+					updateListTransformers();
 				}
 			});
-			btnNewFilter.setBounds(100, 353, 80, 29);
+			btnNewTransformer.setBounds(100, 353, 80, 29);
 		}
-		return btnNewFilter;
+		return btnNewTransformer;
 	}
 	
 	private Set<String> getActivities(){
@@ -354,82 +355,82 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		return activities;
 	}
 	
-	private JButton getButtonEditFilter(){
-		if(btnEditFilter == null){
-			btnEditFilter = new JButton("Edit");
-			btnEditFilter.addActionListener(new ActionListener() {
+	private JButton getButtonEditTransformer(){
+		if(btnEditTransformer == null){
+			btnEditTransformer = new JButton("Edit");
+			btnEditTransformer.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(listFilters.getSelectedValue() == null){
+					if(listTransformers.getSelectedValue() == null){
 						return;
 					}
-					AbstractTraceTransformer selectedFilter = (AbstractTraceTransformer) listFilters.getSelectedValue();
+					AbstractTraceTransformer selectedTransformer = (AbstractTraceTransformer) listTransformers.getSelectedValue();
 					
 					Set<String> activities = getActivities();
 					if(activities == null){
 						return;
 					}
 					
-					String oldFilterName = selectedFilter.getName();
-					AbstractTraceTransformer adjustedFilter = TransformerDialog.showDialog(SimulationRunDialog.this, activities, selectedFilter);
-					if(adjustedFilter == null){
-						//User cancelled the filter dialog
+					String oldTransformerName = selectedTransformer.getName();
+					AbstractTraceTransformer adjustedTransformer = TransformerDialog.showDialog(SimulationRunDialog.this, activities, selectedTransformer);
+					if(adjustedTransformer == null){
+						//User cancelled the transformer dialog
 						return;
 					}
-					if(!oldFilterName.equals(adjustedFilter.getName())){
+					if(!oldTransformerName.equals(adjustedTransformer.getName())){
 						try {
-							SimulationComponents.getInstance().removeFilter(oldFilterName);
-							SimulationComponents.getInstance().addFilter(adjustedFilter);
+							SimulationComponents.getInstance().removeTransformer(oldTransformerName);
+							SimulationComponents.getInstance().addTransformer(adjustedTransformer);
 						} catch (Exception e1) {
-							JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot add filter\""+adjustedFilter.getName()+"\" under new name to simulation components.\nReason: "+e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot add transformer\""+adjustedTransformer.getName()+"\" under new name to simulation components.\nReason: "+e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 				    		return;
 						}
 					}
-					updateListFilters();
+					updateListTransformers();
 				}
 			});
-			btnEditFilter.setBounds(180, 353, 80, 29);
+			btnEditTransformer.setBounds(180, 353, 80, 29);
 		}
-		return btnEditFilter;
+		return btnEditTransformer;
 	}
 	
-	private JButton getButtonFilterUp(){
-		if(btnFilterUp == null){
-			btnFilterUp = new JButton("Up");
-			btnFilterUp.addActionListener(new ActionListener() {
+	private JButton getButtonTransformerUp(){
+		if(btnTransformerUp == null){
+			btnTransformerUp = new JButton("Up");
+			btnTransformerUp.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(listFilters.getSelectedValue() == null)
+					if(listTransformers.getSelectedValue() == null)
 						return;
-					int selectedIndex = listFilters.getSelectedIndex();
-					if(listFiltersModel.size() > 1 && selectedIndex > 0){
-						Collections.swap(filters, selectedIndex, selectedIndex-1);
-						updateListFilters();
-						listFilters.setSelectedIndex(selectedIndex-1);
+					int selectedIndex = listTransformers.getSelectedIndex();
+					if(listTransformersModel.size() > 1 && selectedIndex > 0){
+						Collections.swap(transformers, selectedIndex, selectedIndex-1);
+						updateListTransformers();
+						listTransformers.setSelectedIndex(selectedIndex-1);
 					}
 				}
 			});
-			btnFilterUp.setBounds(280, 353, 60, 29);
+			btnTransformerUp.setBounds(280, 353, 60, 29);
 		}
-		return btnFilterUp;
+		return btnTransformerUp;
 	}
 	
-	private JButton getButtonFilterDown(){
-		if(btnFilterDown == null){
-			btnFilterDown = new JButton("Down");
-			btnFilterDown.addActionListener(new ActionListener() {
+	private JButton getButtonTransformerDown(){
+		if(btnTransformerDown == null){
+			btnTransformerDown = new JButton("Down");
+			btnTransformerDown.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(listFilters.getSelectedValue() == null)
+					if(listTransformers.getSelectedValue() == null)
 						return;
-					int selectedIndex = listFilters.getSelectedIndex();
-					if(listFiltersModel.size() > 1 && selectedIndex < listFiltersModel.size()-1){
-						Collections.swap(filters, selectedIndex, selectedIndex+1);
-						updateListFilters();
-						listFilters.setSelectedIndex(selectedIndex+1);
+					int selectedIndex = listTransformers.getSelectedIndex();
+					if(listTransformersModel.size() > 1 && selectedIndex < listTransformersModel.size()-1){
+						Collections.swap(transformers, selectedIndex, selectedIndex+1);
+						updateListTransformers();
+						listTransformers.setSelectedIndex(selectedIndex+1);
 					}
 				}
 			});
-			btnFilterDown.setBounds(340, 353, 60, 29);
+			btnTransformerDown.setBounds(340, 353, 60, 29);
 		}
-		return btnFilterDown;
+		return btnTransformerDown;
 	}
 	
 	private JButton getButtonImportNet(){
@@ -514,7 +515,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
     		return;
 		}
 		
-		//Validate filter name
+		//Validate transformer name
 		String runName = txtName.getText();
 		
 		//Get number of passes
@@ -530,14 +531,14 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
     		return;
 		}
 		
-		// Get filters
-		TraceTransformerManager filterManager = new TraceTransformerManager();
-		//Add filters to filter manager.
-		for(AbstractTraceTransformer filter: filters){
+		// Get transformers
+		TraceTransformerManager transformerManager = new TraceTransformerManager();
+		//Add transformers to transformer manager.
+		for(AbstractTraceTransformer transformer: transformers){
 			try{
-				filterManager.addFilter(filter);
+				transformerManager.addTransformer(transformer);
 			} catch(Exception ex){
-				JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot add filter \""+filter.getName()+"\"", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot add transformer \""+transformer.getName()+"\"", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 	    		return;
 			}
 		}
@@ -548,15 +549,15 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 					getDialogObject().setName(runName);
 					getDialogObject().setPetriNet(petriNet);
 					getDialogObject().setPasses(passes);
-					getDialogObject().setTraceFilterManager(filterManager);
+					getDialogObject().setTraceTransformerManager(transformerManager);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot change simulation run properties.\nReason: "+e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 		    		return;
 				}
 			} else {
-				setDialogObject(new SimulationRun(petriNet, new RandomPTTraverser(petriNet), passes, filterManager));
+				setDialogObject(new SimulationRun(petriNet, new RandomPTTraverser(petriNet), passes, transformerManager));
 			}
-			System.out.println(getDialogObject().getTraceFilterManager().getTraceTransformers().size());
+			System.out.println(getDialogObject().getTraceTransformerManager().getTraceTransformers().size());
 		} catch (ParameterException e) {
 			JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot create simulation run.\nReason: "+e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
     		return;

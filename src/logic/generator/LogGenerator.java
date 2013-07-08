@@ -266,7 +266,7 @@ public abstract class LogGenerator implements TransformerListener{
 				// Cannot happen, since simulation run is not null
 				e.printStackTrace();
 			}
-			simulationRun.getTraceFilterManager().registerFilterListener(this);
+			simulationRun.getTraceTransformerManager().registerTransformerListener(this);
 		}
 	}
 	
@@ -339,23 +339,23 @@ public abstract class LogGenerator implements TransformerListener{
 		for(SimulationRun run: simulationRuns){
 			simulationListenerSupport.fireSimulationMessage("Starting new simulation run: "+run.getName());
 			simulationListenerSupport.fireSimulationRunStarted(run);
-			simulationListenerSupport.fireSimulationMessage("Checking filter requirements.");
-			checkFilterRequirements(run);
+			simulationListenerSupport.fireSimulationMessage("Checking transformer requirements.");
+			checkTransformerRequirements(run);
 			simulationListenerSupport.fireSimulationMessage("Simulating net \""+run.getPetriNet().getName()+"\" ("+run.getPasses()+" passes).\n");
 			simulateNet(run);
-			simulationListenerSupport.fireSimulationMessage(run.getTraceFilterManager().getTransformerSummary());
+			simulationListenerSupport.fireSimulationMessage(run.getTraceTransformerManager().getTransformerSummary());
 			simulationListenerSupport.fireSimulationRunCompleted(run);
 		}
 	}
 	
-	private void checkFilterRequirements(SimulationRun run) throws ConfigurationException{
-		for(AbstractTraceTransformer traceFilter: run.getTraceFilterManager().getTraceTransformers()){
-			if(traceFilter.getType().equals(TransformerType.UNAUTHORIZED_EXECUTION)){
+	private void checkTransformerRequirements(SimulationRun run) throws ConfigurationException{
+		for(AbstractTraceTransformer traceTransformer: run.getTraceTransformerManager().getTraceTransformers()){
+			if(traceTransformer.getType().equals(TransformerType.UNAUTHORIZED_EXECUTION)){
 				if(getLogEntryGenerator() instanceof DetailedLogEntryGenerator){
 					try {
-						((UnauthorizedExecutionTransformer) traceFilter).setContext(((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext());
+						((UnauthorizedExecutionTransformer) traceTransformer).setContext(((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext());
 					} catch (ParameterException e) {
-						throw new ConfigurationException(ErrorCode.CONTEXT_INCONSISTENCY, "Missing context reference in UnauthorizedExecution-filter");
+						throw new ConfigurationException(ErrorCode.CONTEXT_INCONSISTENCY, "Missing context reference in UnauthorizedExecution-transformer");
 					}
 				}
 			}
