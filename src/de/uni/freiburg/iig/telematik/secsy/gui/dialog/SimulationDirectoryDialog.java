@@ -1,6 +1,4 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
-import gui.misc.CustomListRenderer;
-import gui.properties.GeneralProperties;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -23,6 +21,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+
+import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
+import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 
 
 public class SimulationDirectoryDialog extends JDialog implements PropertyChangeListener {

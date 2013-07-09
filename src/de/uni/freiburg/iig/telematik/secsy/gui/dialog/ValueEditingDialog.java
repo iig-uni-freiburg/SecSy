@@ -1,5 +1,4 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
-import gui.misc.CustomListRenderer;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -17,6 +16,8 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+
+import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 
 
 public class ValueEditingDialog extends AbstractSimulationDialog {

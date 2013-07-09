@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
 
-import gui.misc.CustomListRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.Window;
@@ -29,6 +28,7 @@ import logic.generator.Context;
 import de.invation.code.toval.constraint.AbstractConstraint;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 
 public class RoutingConstraintsDialog extends JDialog {
 

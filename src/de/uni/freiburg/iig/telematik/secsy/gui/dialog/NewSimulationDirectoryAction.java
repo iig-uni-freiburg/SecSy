@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
 
-import gui.properties.GeneralProperties;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -10,6 +9,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import de.invation.code.toval.properties.PropertyException;
+import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 
 public class NewSimulationDirectoryAction extends AbstractSimulationDirectoryAction {
 

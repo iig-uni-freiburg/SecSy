@@ -1,8 +1,5 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl;
 
-import gui.permission.CircularObjectPermissionPanel;
-import gui.permission.ObjectPermissionItemEvent;
-import gui.permission.ObjectPermissionItemListener;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -12,6 +9,9 @@ import javax.swing.table.AbstractTableModel;
 
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.secsy.gui.permission.CircularObjectPermissionPanel;
+import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemEvent;
+import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemListener;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 
 

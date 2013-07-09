@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
 
-import gui.properties.GeneralProperties;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -47,6 +46,7 @@ import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatFactory;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatType;
 import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
+import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 
 import logic.generator.CaseDataContainer;

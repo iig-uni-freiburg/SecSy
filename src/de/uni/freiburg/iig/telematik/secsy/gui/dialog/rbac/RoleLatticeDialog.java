@@ -29,6 +29,7 @@ import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.DefineGenerateDialog;
+import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.RoleLattice;
 
 import logic.generator.Context;
@@ -36,7 +37,6 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
-import gui.misc.CustomListRenderer;
 
 
 public class RoleLatticeDialog extends JDialog implements EdgeAddedListener{

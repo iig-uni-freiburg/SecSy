@@ -1,4 +1,4 @@
-package gui.permission;
+package de.uni.freiburg.iig.telematik.secsy.gui.permission;
 
 import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;

@@ -1,4 +1,4 @@
-package gui.permission;
+package de.uni.freiburg.iig.telematik.secsy.gui.permission;
 
 import javax.swing.JCheckBox;
 

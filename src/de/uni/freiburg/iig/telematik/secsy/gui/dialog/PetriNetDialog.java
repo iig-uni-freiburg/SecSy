@@ -1,5 +1,4 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
-import gui.misc.CustomListRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,6 +24,7 @@ import javax.swing.event.ListSelectionListener;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
+import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 import de.uni.freiburg.iig.telematik.sepia.parser.PNMLFilter;
 import de.uni.freiburg.iig.telematik.sepia.parser.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;

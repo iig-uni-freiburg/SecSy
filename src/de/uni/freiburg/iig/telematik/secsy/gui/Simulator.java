@@ -1,5 +1,4 @@
 package de.uni.freiburg.iig.telematik.secsy.gui;
-import gui.properties.GeneralProperties;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -35,6 +34,7 @@ import de.uni.freiburg.iig.telematik.secsy.gui.dialog.ExecutionDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.SimulationDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.SimulationDirectoryDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.TimeFrameDialog;
+import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 
 import logic.simulation.Simulation;
 

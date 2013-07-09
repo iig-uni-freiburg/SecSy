@@ -45,6 +45,7 @@ import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatFactory;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
+import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 import de.uni.freiburg.iig.telematik.sepia.parser.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.RandomPTTraverser;
@@ -55,7 +56,6 @@ import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACLModelProp
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelProperties;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelType;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.RBACModelProperties;
-import gui.properties.GeneralProperties;
 
 
 public class SimulationComponents {

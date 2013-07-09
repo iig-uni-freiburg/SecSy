@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
 
-import gui.properties.GeneralProperties;
 
 import java.awt.Window;
 import java.io.IOException;
@@ -9,6 +8,7 @@ import javax.swing.AbstractAction;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 
 
 public abstract class AbstractSimulationDirectoryAction extends AbstractAction {

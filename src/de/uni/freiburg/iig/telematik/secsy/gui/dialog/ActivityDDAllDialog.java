@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
 
-import gui.misc.CustomListRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -43,6 +42,7 @@ import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
+import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 
 import logic.generator.time.properties.TimeProperties;
 

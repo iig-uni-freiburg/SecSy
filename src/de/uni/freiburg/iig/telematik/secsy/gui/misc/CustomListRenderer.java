@@ -1,4 +1,4 @@
-package gui.misc;
+package de.uni.freiburg.iig.telematik.secsy.gui.misc;
 
 import java.awt.Color;
 import java.awt.Component;

@@ -1,5 +1,4 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
-import gui.misc.CustomListRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -22,6 +21,8 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
+
+import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 
 
 public class ValueChooserDialog extends JDialog {

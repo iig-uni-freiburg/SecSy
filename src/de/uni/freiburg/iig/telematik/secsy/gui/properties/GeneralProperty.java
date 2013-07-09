@@ -1,4 +1,4 @@
-package gui.properties;
+package de.uni.freiburg.iig.telematik.secsy.gui.properties;
 
 public enum GeneralProperty {
 	

@@ -1,5 +1,4 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
-import gui.misc.CustomListRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -24,6 +23,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
 

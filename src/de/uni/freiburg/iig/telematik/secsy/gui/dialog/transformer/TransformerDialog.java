@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer;
 
-import gui.misc.CustomListRenderer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -39,6 +38,7 @@ import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.AbstractSimulationDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.ValueChooserDialog;
+import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 
 import logic.transformation.transformer.TransformerType;
 import logic.transformation.transformer.trace.AbstractTraceTransformer;

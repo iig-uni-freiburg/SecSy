@@ -1,7 +1,4 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl;
-import gui.misc.VerticalTableHeaderCellRenderer;
-import gui.permission.ObjectPermissionItemEvent;
-import gui.permission.ObjectPermissionItemListener;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -20,6 +17,9 @@ import javax.swing.table.TableCellRenderer;
 import de.invation.code.toval.types.DataUsage;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.secsy.gui.misc.VerticalTableHeaderCellRenderer;
+import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemEvent;
+import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemListener;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 
 import logic.generator.Context;

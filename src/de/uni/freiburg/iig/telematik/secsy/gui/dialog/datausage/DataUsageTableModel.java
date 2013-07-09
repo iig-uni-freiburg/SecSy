@@ -1,9 +1,5 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog.datausage;
 
-import gui.permission.ObjectPermissionItemEvent;
-import gui.permission.ObjectPermissionItemListener;
-import gui.permission.ObjectPermissionListenerSupport;
-import gui.permission.ObjectPermissionPanel;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -14,6 +10,10 @@ import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
 import de.invation.code.toval.types.DataUsage;
+import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemEvent;
+import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemListener;
+import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionListenerSupport;
+import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionPanel;
 
 
 import logic.generator.Context;
