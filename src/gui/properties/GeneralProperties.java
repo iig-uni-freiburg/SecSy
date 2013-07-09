@@ -1,6 +1,5 @@
 package gui.properties;
 
-import gui.SimulationComponents;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +15,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 
 
 public class GeneralProperties extends AbstractProperties{
@@ -75,7 +75,6 @@ public class GeneralProperties extends AbstractProperties{
 	
 	public void setSimulationDirectory(String directory) throws ParameterException, IOException, PropertyException {
 		validateSimulationDirectory(directory, false);
-		System.out.println("set: " + directory);
 		setProperty(GeneralProperty.SIMULATION_DIRECTORY, directory);
 		//Check, if the simulation directory is empty
 		File dir = new File(directory + pathSimulations);

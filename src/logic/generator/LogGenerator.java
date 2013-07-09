@@ -22,6 +22,7 @@ import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogPerspective;
 import de.uni.freiburg.iig.telematik.jawl.writer.LogWriter;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 
 import logic.generator.time.CaseTimeGenerator;
 import logic.simulation.ConfigurationException;
@@ -33,7 +34,6 @@ import logic.transformation.TransformerListener;
 import logic.transformation.transformer.TransformerType;
 import logic.transformation.transformer.trace.AbstractTraceTransformer;
 import logic.transformation.transformer.trace.multiple.UnauthorizedExecutionTransformer;
-import petrinet.AbstractPetriNet;
 
 
 public abstract class LogGenerator implements TransformerListener{

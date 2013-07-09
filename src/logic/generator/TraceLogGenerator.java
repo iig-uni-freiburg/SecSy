@@ -12,14 +12,14 @@ import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogPerspective;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
+import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 
 import logic.generator.time.CaseTimeGenerator.ExecutionTime;
 import logic.simulation.SimulationRun;
 import logic.transformation.EntryTransformerManager;
 import logic.transformation.TraceTransformerManager;
 import logic.transformation.transformer.AbstractTransformer;
-import petrinet.AbstractTransition;
-import exception.PNException;
 
 /**
  * This class overrides the abstract class {@link LogGenerator}.

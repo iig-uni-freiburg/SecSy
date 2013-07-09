@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import logic.generator.properties.ContextProperties;
-import petrinet.AbstractTransition;
-import util.PNUtils;
 import de.invation.code.toval.constraint.AbstractConstraint;
 import de.invation.code.toval.constraint.NumberConstraint;
 import de.invation.code.toval.misc.SetUtils;
@@ -24,6 +22,8 @@ import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.RBACModel;

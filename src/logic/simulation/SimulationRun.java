@@ -2,16 +2,16 @@ package logic.simulation;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.traversal.PNTraverser;
+import de.uni.freiburg.iig.telematik.sepia.traversal.RandomPNTraverser;
 import logic.generator.TraceCompletionListener;
 import logic.simulation.properties.SimulationRunProperties;
 import logic.transformation.EntryTransformerManager;
 import logic.transformation.TraceTransformerManager;
 import logic.transformation.transformer.entry.AbstractEntryTransformer;
 import logic.transformation.transformer.trace.AbstractTraceTransformer;
-import petrinet.AbstractPetriNet;
-import petrinet.AbstractTransition;
-import traversal.PNTraverser;
-import traversal.RandomPNTraverser;
 
 /**
  * Simple class for simulation runs.

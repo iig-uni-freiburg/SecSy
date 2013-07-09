@@ -11,6 +11,7 @@ import java.util.List;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 
 import logic.generator.CaseDataContainer;
 import logic.generator.Context;
@@ -24,7 +25,6 @@ import logic.generator.time.properties.TimeProperties;
 import logic.simulation.ConfigurationException.ErrorCode;
 import logic.simulation.properties.EntryGenerationType;
 import logic.simulation.properties.SimulationProperties;
-import util.PNUtils;
 
 public class Simulation implements SimulationListener{
 

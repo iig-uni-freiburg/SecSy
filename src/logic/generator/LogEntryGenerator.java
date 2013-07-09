@@ -4,9 +4,9 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import logic.simulation.ConfigurationException;
 import logic.transformation.EntryTransformerManager;
-import petrinet.AbstractTransition;
 
 /**
  * This class is used to generate Log entries from fired transitions.<br>

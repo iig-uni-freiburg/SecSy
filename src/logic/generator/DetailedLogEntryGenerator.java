@@ -8,10 +8,10 @@ import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.EventType;
 import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import logic.simulation.ConfigurationException;
 import logic.simulation.ConfigurationException.ErrorCode;
 import logic.transformation.EntryTransformerManager;
-import petrinet.AbstractTransition;
 
 /**
  * This class is used to generate Log entries from fired transitions.<br>
