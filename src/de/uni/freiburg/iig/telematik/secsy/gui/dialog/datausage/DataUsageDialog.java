@@ -28,8 +28,8 @@ import javax.swing.event.ListSelectionListener;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.ValueChooserDialog;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 
-import logic.generator.Context;
 
 public class DataUsageDialog extends JDialog {
 

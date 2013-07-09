@@ -20,9 +20,9 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.misc.VerticalTableHeaderCellRenderer;
 import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemEvent;
 import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemListener;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 
-import logic.generator.Context;
 
 
 public class AdvancedACLTable extends JTable implements ObjectPermissionItemListener, ItemListener{

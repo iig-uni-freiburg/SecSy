@@ -14,9 +14,9 @@ import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemEv
 import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemListener;
 import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionListenerSupport;
 import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionPanel;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 
 
-import logic.generator.Context;
 
 public class DataUsageTableModel extends AbstractTableModel implements ObjectPermissionItemListener{
 	

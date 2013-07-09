@@ -26,11 +26,11 @@ import javax.swing.border.EmptyBorder;
 import de.invation.code.toval.time.TimeScale;
 import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.AbstractTransformer;
 
-import logic.simulation.ConfigurationException;
-import logic.simulation.Simulation;
-import logic.simulation.SimulationRun;
-import logic.transformation.transformer.AbstractTransformer;
 
 public class TimeFrameDialog extends JDialog {
 

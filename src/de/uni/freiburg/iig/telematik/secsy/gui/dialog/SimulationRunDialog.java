@@ -35,16 +35,16 @@ import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.TransformerDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.SimulationRunProperties;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerManager;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.AbstractTraceTransformer;
 import de.uni.freiburg.iig.telematik.sepia.parser.PNMLFilter;
 import de.uni.freiburg.iig.telematik.sepia.parser.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.RandomPTTraverser;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 
-import logic.simulation.SimulationRun;
-import logic.simulation.properties.SimulationRunProperties;
-import logic.transformation.TraceTransformerManager;
-import logic.transformation.transformer.trace.AbstractTraceTransformer;
 
 
 public class SimulationRunDialog extends AbstractSimulationDialog {

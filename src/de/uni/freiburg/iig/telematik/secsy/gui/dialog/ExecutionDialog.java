@@ -26,10 +26,10 @@ import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.ExecutionTask;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationListener;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
 
-import logic.simulation.Simulation;
-import logic.simulation.SimulationListener;
-import logic.simulation.SimulationRun;
 
 public class ExecutionDialog extends JDialog implements SimulationListener {
 

@@ -10,13 +10,13 @@ import de.invation.code.toval.time.TimeScale;
 import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.ExecutionDialog;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SimulationException;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceStartListener;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationListener;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
 
-import logic.generator.SimulationException;
-import logic.generator.TraceStartListener;
-import logic.simulation.ConfigurationException;
-import logic.simulation.Simulation;
-import logic.simulation.SimulationListener;
-import logic.simulation.SimulationRun;
 
 public class ExecutionTask extends SwingWorker<Boolean, String> implements TraceStartListener, SimulationListener {
 	

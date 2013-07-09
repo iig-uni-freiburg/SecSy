@@ -39,18 +39,18 @@ import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.AbstractSimulationDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.ValueChooserDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.TransformerType;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.AbstractTraceTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.BoDPropertyTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.SoDBoDPropertyTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.SoDPropertyTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.multiple.AbstractMultipleTraceTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.multiple.DayDelayTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.multiple.IncompleteLoggingTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.multiple.ObfuscationTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.multiple.SkipActivitiesTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.multiple.UnauthorizedExecutionTransformer;
 
-import logic.transformation.transformer.TransformerType;
-import logic.transformation.transformer.trace.AbstractTraceTransformer;
-import logic.transformation.transformer.trace.BoDPropertyTransformer;
-import logic.transformation.transformer.trace.SoDBoDPropertyTransformer;
-import logic.transformation.transformer.trace.SoDPropertyTransformer;
-import logic.transformation.transformer.trace.multiple.AbstractMultipleTraceTransformer;
-import logic.transformation.transformer.trace.multiple.DayDelayTransformer;
-import logic.transformation.transformer.trace.multiple.IncompleteLoggingTransformer;
-import logic.transformation.transformer.trace.multiple.ObfuscationTransformer;
-import logic.transformation.transformer.trace.multiple.SkipActivitiesTransformer;
-import logic.transformation.transformer.trace.multiple.UnauthorizedExecutionTransformer;
 
 public class TransformerDialog extends AbstractSimulationDialog {
 	

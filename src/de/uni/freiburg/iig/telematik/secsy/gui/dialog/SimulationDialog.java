@@ -47,21 +47,21 @@ import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatType;
 import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGenerator;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogGenerator;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGenerator;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeGeneratorFactory;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.EntryGenerationType;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 
-import logic.generator.CaseDataContainer;
-import logic.generator.Context;
-import logic.generator.DetailedLogEntryGenerator;
-import logic.generator.LogEntryGenerator;
-import logic.generator.LogGenerator;
-import logic.generator.TraceLogGenerator;
-import logic.generator.time.CaseTimeGenerator;
-import logic.generator.time.properties.TimeGeneratorFactory;
-import logic.generator.time.properties.TimeProperties;
-import logic.simulation.ConfigurationException;
-import logic.simulation.Simulation;
-import logic.simulation.SimulationRun;
-import logic.simulation.properties.EntryGenerationType;
 
 public class SimulationDialog extends JDialog {
 

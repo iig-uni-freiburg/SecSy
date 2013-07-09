@@ -45,10 +45,10 @@ import de.invation.code.toval.time.Weekday;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeGeneratorFactory;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties.CaseStartPrecision;
 
-import logic.generator.time.properties.TimeGeneratorFactory;
-import logic.generator.time.properties.TimeProperties;
-import logic.generator.time.properties.TimeProperties.CaseStartPrecision;
 import javax.swing.ScrollPaneConstants;
 
 public class TimeGeneratorDialog extends JDialog {

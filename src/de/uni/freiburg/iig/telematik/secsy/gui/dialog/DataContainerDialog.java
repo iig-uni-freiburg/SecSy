@@ -42,9 +42,9 @@ import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.AttributeValueGenerator;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
 
-import logic.generator.AttributeValueGenerator;
-import logic.generator.CaseDataContainer;
 
 public class DataContainerDialog extends JDialog {
 

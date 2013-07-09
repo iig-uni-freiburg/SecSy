@@ -27,8 +27,8 @@ import de.invation.code.toval.time.TimeScale;
 import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties;
 
-import logic.generator.time.properties.TimeProperties;
 
 public class ActivityDDDialog extends JDialog {
 

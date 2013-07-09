@@ -29,7 +29,6 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import logic.generator.Context;
 import de.invation.code.toval.constraint.AbstractConstraint;
 import de.invation.code.toval.constraint.NumberConstraint;
 import de.invation.code.toval.constraint.NumberOperator;
@@ -38,6 +37,7 @@ import de.invation.code.toval.constraint.OperatorFormats;
 import de.invation.code.toval.constraint.StringConstraint;
 import de.invation.code.toval.constraint.StringOperator;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 
 
 public class ConstraintDialog extends JDialog {

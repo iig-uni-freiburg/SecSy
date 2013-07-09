@@ -19,11 +19,11 @@ import javax.swing.border.EmptyBorder;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.RBACModel;
 
-import logic.generator.Context;
 
 
 public class ACLDialog extends JDialog {

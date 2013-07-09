@@ -34,12 +34,12 @@ import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl.ACLDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.datausage.DataUsageDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 
-import logic.generator.Context;
 
 
 public class ContextDialog extends JDialog {

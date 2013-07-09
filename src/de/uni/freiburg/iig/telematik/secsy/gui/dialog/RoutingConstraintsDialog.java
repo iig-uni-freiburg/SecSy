@@ -24,11 +24,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import logic.generator.Context;
 import de.invation.code.toval.constraint.AbstractConstraint;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 
 public class RoutingConstraintsDialog extends JDialog {
 

@@ -35,8 +35,8 @@ import de.uni.freiburg.iig.telematik.secsy.gui.dialog.SimulationDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.SimulationDirectoryDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.TimeFrameDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
 
-import logic.simulation.Simulation;
 
 
 public class Simulator extends JFrame {

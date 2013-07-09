@@ -36,12 +36,12 @@ import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl.ACLDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.rbac.RoleLatticeDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.rbac.RoleMembershipDialog;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.RBACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.RoleLattice;
 
-import logic.generator.Context;
 
 
 public class ACModelDialog extends JDialog {

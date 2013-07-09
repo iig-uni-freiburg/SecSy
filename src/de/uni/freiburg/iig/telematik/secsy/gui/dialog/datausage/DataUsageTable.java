@@ -19,8 +19,8 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemEvent;
 import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemListener;
 import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionPanel;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 
-import logic.generator.Context;
 
 public class DataUsageTable extends JTable implements ObjectPermissionItemListener{
 
