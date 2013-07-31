@@ -36,6 +36,9 @@ import de.uni.freiburg.iig.telematik.secsy.gui.dialog.SimulationDirectoryDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.TimeFrameDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
+import de.uni.freiburg.iig.telematik.sepia.parser.PNMLFilter;
+import de.uni.freiburg.iig.telematik.sepia.parser.PNMLParser;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 
 
 
@@ -205,7 +208,6 @@ public class Simulator extends JFrame {
 						GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory);
 					}
 				} catch (Exception e1) {
-					System.out.println("weewewewewwe");
 					return;
 				}
 				
@@ -227,6 +229,61 @@ public class Simulator extends JFrame {
 		
 		JMenuItem mntmPetriNetpnml = new JMenuItem("Petri net (PNML)...");
 		mntmPetriNetpnml.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, 0));
+		mntmPetriNetpnml.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(Simulator.this,
+											  "Transitions with names starting with \"_\" will be interpreted as silent transitions.\n"
+											  + "(Their firing will not result in the generation of s log event.)\n\n"
+											  + "Transition labels (not names/IDs!) will be interpreted as process activities.\n"
+											  + "This way, it is possible to consider duplicated activities in processes.",
+											  "Petri net import",
+											  JOptionPane.INFORMATION_MESSAGE);
+
+				JFileChooser fc = new JFileChooser();
+				fc.setAcceptAllFileFilterUsed(false);
+				fc.addChoosableFileFilter(new PNMLFilter());
+				int returnValue = fc.showOpenDialog(Simulator.this);
+				if (returnValue == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+
+					// Try to import the Petri net.
+					PTNet petriNet = null;
+					try {
+						petriNet = PNMLParser.parsePNML(file.getAbsolutePath(), true);
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(Simulator.this,"Cannot parse Petri net.\nReason: " + ex.getMessage(), "Parsing Exeption", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					String netName = petriNet.getName();
+					try {
+						while (netName == null || SimulationComponents.getInstance().getPetriNet(netName) != null) {
+							netName = JOptionPane.showInputDialog(Simulator.this, "Name for the Petri net:", file.getName().substring(0, file.getName().lastIndexOf(".")));
+						}
+					} catch (ParameterException e1) {
+						JOptionPane.showMessageDialog(Simulator.this, "Cannot check if net name is already in use.\nReason: " + e1.getMessage(), "Internal Exeption", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					try {
+						if (!petriNet.getName().equals(netName))
+							petriNet.setName(netName);
+					} catch (ParameterException e2) {
+						JOptionPane.showMessageDialog(Simulator.this, "Cannot change Petri net name to\"" + netName + "\".\nReason: " + e2.getMessage(), "Internal Exeption", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+
+					try {
+						SimulationComponents.getInstance().addPetriNet(petriNet);
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(Simulator.this, "Cannot add imported net to simulation components.\nReason: " + e1.getMessage(), "Internal Exeption", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				} else {
+					// User aborted the dialog.
+				}
+			}
+		});
 		mnImport.add(mntmPetriNetpnml);
 		getContentPane().setLayout(null);
 		
