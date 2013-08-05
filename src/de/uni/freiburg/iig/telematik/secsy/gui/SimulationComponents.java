@@ -1,5 +1,4 @@
 package de.uni.freiburg.iig.telematik.secsy.gui;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,8 +14,8 @@ import de.invation.code.toval.constraint.AbstractConstraint;
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatFactory;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
@@ -26,7 +25,6 @@ import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.properties.CaseDataContainerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.properties.ContextProperties;
@@ -46,6 +44,7 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.Abst
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.TransformerFactory;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.exception.MissingRequirementException;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.AbstractTraceTransformer;
+import de.uni.freiburg.iig.telematik.sepia.export.PNMLExporter;
 import de.uni.freiburg.iig.telematik.sepia.parser.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.RandomPTTraverser;
@@ -333,10 +332,11 @@ public class SimulationComponents {
 		}
 		
 		LogFormat logFormat= LogFormatFactory.getFormat(properties.getLogFormatType());
-//		String fileName = new File(properties.getFileName()).getName();
-//		fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 		String fileName = properties.getFileName();
-		LogGenerator logGenerator = new TraceLogGenerator(logFormat, GeneralProperties.getInstance().getSimulationDirectory(), fileName);
+		
+		//Log Generator
+		TraceLogGenerator logGenerator = new TraceLogGenerator(logFormat, GeneralProperties.getInstance().getSimulationDirectory(), fileName);
+		logGenerator.setEventHandling(properties.getEventHandling());
 		
 		EntryGenerationType generationType = properties.getEntryGenerationType();
 		LogEntryGenerator entryGenerator = null;
@@ -674,9 +674,7 @@ public class SimulationComponents {
 		Validate.notNull(storeToFile);
 		petriNets.put(petriNet.getName(), petriNet);
 		if(storeToFile){
-			FileWriter writer = new FileWriter(GeneralProperties.getInstance().getPathForPetriNets()+petriNet.getName());
-			writer.write(petriNet.toPNML());
-			writer.close();
+			PNMLExporter.export(petriNet, GeneralProperties.getInstance().getPathForPetriNets(), petriNet.getName());
 		}
 	}
 	

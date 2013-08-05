@@ -11,31 +11,26 @@ import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGenerator;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGeneratorStartComplete;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.EventHandling;
 
 
 public class SimulatorFactory {
 	
-	public static Simulation createTraceSimulator(TraceLogGeneratorType logGeneratorType,
+	public static Simulation createTraceSimulator(EventHandling eventHandling,
 												 LogFormat logFormat,
 												 long startTime,
 												 int casesPerDay) 
 			throws ParameterException, IOException, PerspectiveException, ConfigurationException{
 		
-		TraceLogGenerator logGenerator = null;
-		switch(logGeneratorType){
-			case TRACE_GENERATOR: logGenerator = new TraceLogGenerator(logFormat);
-			break;
-			case TRACE_GENERATOR_SC: logGenerator = new TraceLogGeneratorStartComplete(logFormat);
-			break;
-		}
+		TraceLogGenerator logGenerator =  new TraceLogGenerator(logFormat);
+		logGenerator.setEventHandling(eventHandling);
 		LogEntryGenerator entryGenerator = new LogEntryGenerator();
 		CaseTimeGenerator timeGenerator = new CaseTimeGenerator(startTime, casesPerDay);
 		return new Simulation(logGenerator, entryGenerator, timeGenerator);
 	}
 	
-	public static Simulation createTraceSimulator(TraceLogGeneratorType logGeneratorType,
+	public static Simulation createTraceSimulator(EventHandling eventHandling,
 												 Context context,
 			 									 LogFormat logFormat,
 			 									 long startTime,
@@ -44,10 +39,10 @@ public class SimulatorFactory {
 
 		AttributeValueGenerator valueGenerator = new AttributeValueGenerator();
 		CaseDataContainer caseDataContainer = new CaseDataContainer(context, valueGenerator);
-		return createTraceSimulator(logGeneratorType, context, caseDataContainer, logFormat, startTime, casesPerDay);
+		return createTraceSimulator(eventHandling, context, caseDataContainer, logFormat, startTime, casesPerDay);
 	}
 	
-	public static Simulation createTraceSimulator(TraceLogGeneratorType logGeneratorType, 
+	public static Simulation createTraceSimulator(EventHandling eventHandling, 
 												 Context context,
 												 CaseDataContainer caseDataContainer,
 												 LogFormat logFormat, 
@@ -56,25 +51,13 @@ public class SimulatorFactory {
 			throws ParameterException, IOException, PerspectiveException,
 			ConfigurationException {
 
-		TraceLogGenerator logGenerator = null;
-		switch (logGeneratorType) {
-		case TRACE_GENERATOR:
-			logGenerator = new TraceLogGenerator(logFormat);
-			break;
-		case TRACE_GENERATOR_SC:
-			logGenerator = new TraceLogGeneratorStartComplete(logFormat);
-			break;
-		}
+		TraceLogGenerator logGenerator =  new TraceLogGenerator(logFormat);
+		logGenerator.setEventHandling(eventHandling);
 		DetailedLogEntryGenerator entryGenerator = new DetailedLogEntryGenerator(context, caseDataContainer);
 		CaseTimeGenerator timeGenerator = new CaseTimeGenerator(startTime, casesPerDay);
 		return new Simulation(logGenerator, entryGenerator, timeGenerator);
 	}
 
-	
-	public enum TraceLogGeneratorType {
-		TRACE_GENERATOR, TRACE_GENERATOR_SC;
-	}
-	
 	public enum EntryGeneratorType {
 		STANDARD, DETAILED;
 	}

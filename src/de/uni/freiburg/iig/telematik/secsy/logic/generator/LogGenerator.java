@@ -31,6 +31,7 @@ import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationExcepti
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TransformerListener;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.TransformerType;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.AbstractTraceTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.multiple.SkipActivitiesTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.multiple.UnauthorizedExecutionTransformer;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 
@@ -352,11 +353,22 @@ public abstract class LogGenerator implements TransformerListener{
 		for(AbstractTraceTransformer traceTransformer: run.getTraceTransformerManager().getTraceTransformers()){
 			if(traceTransformer.getType().equals(TransformerType.UNAUTHORIZED_EXECUTION)){
 				if(getLogEntryGenerator() instanceof DetailedLogEntryGenerator){
+					Context context = ((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext();
 					try {
-						((UnauthorizedExecutionTransformer) traceTransformer).setContext(((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext());
+						((UnauthorizedExecutionTransformer) traceTransformer).setContext(context);
 					} catch (ParameterException e) {
-						throw new ConfigurationException(ErrorCode.CONTEXT_INCONSISTENCY, "Missing context reference in UnauthorizedExecution-transformer");
+						throw new ConfigurationException(ErrorCode.NO_CONTEXT, "Cannot set context for UnauthorizedExecution-transformer: " + context);
 					}
+				} else {
+					throw new ConfigurationException(ErrorCode.TRANSFORMER_MISCONFIGURATION, "Incompatible Transformer: UnauthorizedExecution-transformer requires a context.");
+				}
+			}
+			if(traceTransformer.getType().equals(TransformerType.SKIP_ACTIVITIES)){
+				CaseTimeGenerator timeGenerator = getCaseTimeGenerator();
+				try {
+					((SkipActivitiesTransformer) traceTransformer).setTimeGenerator(timeGenerator);
+				} catch (ParameterException e) {
+					throw new ConfigurationException(ErrorCode.NO_TIMEGENERATOR, "Cannot set time generator for SkipActivities-transformer: " + timeGenerator);
 				}
 			}
 		}

@@ -8,6 +8,7 @@ import de.invation.code.toval.misc.RandomUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
+import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerEvent;
@@ -23,8 +24,6 @@ public class DayDelayTransformer extends AbstractMultipleTraceTransformer{
 	
 	private int minDays;
 	private int maxDays;
-	
-	private long delayInMilliseconds = 0;
 
 	public DayDelayTransformer(DayDelayTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
@@ -53,13 +52,18 @@ public class DayDelayTransformer extends AbstractMultipleTraceTransformer{
 	
 	@Override
 	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event) throws ParameterException {
-		// TODO Auto-generated method stub
-		return super.applyTransformation(event);
+		TraceTransformerResult result = super.applyTransformation(event);
+		if(result.isSuccess()){
+			for(LogEntry transformedEntry: transformedEntries){
+				transformedEntry.lockField(EntryField.TIME, "Transformer-Enforcement: DayDelay");
+			}
+		}
+		return result;
 	}
 
 	@Override
-	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
-		super.applyEntryTransformation(entry, transformerResult);
+	protected boolean applyEntryTransformation(LogTrace trace, LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+		super.applyEntryTransformation(trace, entry, transformerResult);
 		
 		// Check, if timestamps can be altered for the entry itself and all its successors within the trace
 		if(entry.isFieldLocked(EntryField.TIME)){
@@ -73,25 +77,29 @@ public class DayDelayTransformer extends AbstractMultipleTraceTransformer{
 			}
 		}
 		
-		int extraDays = RandomUtils.randomIntBetween(minDays, maxDays+1);
-		delayInMilliseconds = 86400000 * extraDays;
-		if(addTimeToEntry(entry, delayInMilliseconds)){
-			addMessageToResult(getSuccessMessage(entry.getActivity(), extraDays), transformerResult);
-			return true;
-		} else {
-			// Should not happen, locking property is checked before
-			addMessageToResult(super.getErrorMessage("entry " + entry.getActivity() + ": Cannot add delay due t olocked time-field"), transformerResult);
-			return false;
-		}
-	}
-	
-	private boolean addTimeToEntry(LogEntry entry, long millseconds){
 		try {
-			entry.setTimestamp(new Date(entry.getTimestamp().getTime()+delayInMilliseconds));
-		} catch (Exception e) {
+			int extraDays = RandomUtils.randomIntBetween(minDays, maxDays+1);
+			long delayInMilliseconds = 86400000 * extraDays;
+			if(entry.addTime(delayInMilliseconds)){
+			
+				// -> Adjust the start times of all following entries.
+				// Since locking properties are checked before in applyEntryTransformation, there should not occur any errors
+				for(LogEntry succeedingEntry: trace.getSucceedingEntries(entry)){
+					succeedingEntry.addTime(delayInMilliseconds);
+				}
+				addMessageToResult(getSuccessMessage(entry.getActivity(), extraDays), transformerResult);
+				
+				return true;
+			} else {
+				// Should not happen, locking property is checked before
+				addMessageToResult(super.getErrorMessage("entry " + entry.getActivity() + ": Cannot add delay due t olocked time-field"), transformerResult);
+				return false;
+			}
+		} catch(LockingException e){
+			//should not happen, since we checked field locking properties before.
+			e.printStackTrace();
 			return false;
 		}
-		return true;
 	}
 	
 	private String getSuccessMessage(String activityName, int extraDays){
@@ -114,19 +122,6 @@ public class DayDelayTransformer extends AbstractMultipleTraceTransformer{
 		DayDelayTransformerProperties properties = new DayDelayTransformerProperties();
 		fillProperties(properties);
 		return properties;
-	}
-
-	@Override
-	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryTransformerSuccess) throws ParameterException {
-		// This method is called when the start time of an entry is postponed by a day-delay
-		// -> Adjust the start times of all following entries.
-		if(entryTransformerSuccess){
-			// Start time for entry has been postponed.
-			// Since locking properties are checked before in applyEntryTransformation, there should not occur any errors
-			for(LogEntry succeedingEntry: logTrace.getSucceedingEntries(logEntry)){
-				addTimeToEntry(succeedingEntry, delayInMilliseconds);
-			}
-		}
 	}
 	
 	public static void main(String[] args) throws Exception{

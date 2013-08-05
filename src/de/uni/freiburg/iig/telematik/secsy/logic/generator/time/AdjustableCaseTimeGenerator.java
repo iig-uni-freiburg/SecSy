@@ -168,7 +168,7 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	 * @throws ParameterException 
 	 */
 	@Override
-	protected TimeValue getDurationFor(String activity) throws ParameterException{
+	public TimeValue getDurationFor(String activity) throws ParameterException{
 		Validate.notNull(activity);
 		if(!activityDurations.containsKey(activity))
 			return super.getDurationFor(activity);
@@ -184,7 +184,7 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	 * @throws ParameterException 
 	 */
 	@Override
-	protected TimeValue getDelayFor(String activity) throws ParameterException{
+	public TimeValue getDelayFor(String activity) throws ParameterException{
 		Validate.notNull(activity);
 		if(!activityDelays.containsKey(activity))
 			return super.getDelayFor(activity);

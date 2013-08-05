@@ -243,7 +243,7 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * @throws ParameterException 
 	 */
 	@Override
-	protected TimeValue getDurationFor(String activity) throws ParameterException{
+	public TimeValue getDurationFor(String activity) throws ParameterException{
 		Validate.notNull(activity);
 		if(activityDurations.containsKey(activity)){
 			//Activity duration was adjusted
@@ -287,7 +287,7 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * @throws ParameterException 
 	 */
 	@Override
-	protected TimeValue getDelayFor(String activity) throws ParameterException{
+	public TimeValue getDelayFor(String activity) throws ParameterException{
 		Validate.notNull(activity);
 		if(activityDelays.containsKey(activity)){
 			//Activity delay was adjusted

@@ -24,6 +24,7 @@ public class ExecutionTask extends SwingWorker<Boolean, String> implements Trace
 	private ExecutionDialog executionDialog = null;
 	private int targetCases = 0;
 	private TimeValue executionTime = null;
+	private SimulationException exception = null;
 		
 	public ExecutionTask(Simulation simulation, ExecutionDialog executionDialog) { 
 		this.simulation = simulation;
@@ -39,26 +40,29 @@ public class ExecutionTask extends SwingWorker<Boolean, String> implements Trace
 			simulation.addSimulationListener(ExecutionTask.this);
 			simulation.getLogGenerator().registerTraceStartListener(ExecutionTask.this);
 		} catch (ParameterException e2) {
-			throw new SimulationException("Cannot register execution thread as log generator listener.\nReason: " + e2.getMessage());
+			exception = new SimulationException("Cannot register execution thread as log generator listener.\nReason: " + e2.getMessage());
+			throw exception;
 		}
 		
 		try {
-			System.out.println("Execute simulation");
 			simulation.executeSimulation();
 		} catch (ConfigurationException e1) {
-			throw new SimulationException("Simulation components are not connected properly.\nReason: " + e1.getMessage());
+			exception = new SimulationException("Simulation components are not connected properly.\nReason: " + e1.getMessage());
+			throw exception;
 		} catch (SimulationException e1) {
-			throw new SimulationException("Exception during process simulation.\nReason: " + e1.getMessage());
+			exception = new SimulationException("Exception during process simulation.\nReason: " + e1.getMessage());
+			throw exception;
 		} catch (IOException e1) {
-			throw new SimulationException("I/O Exception during process simulation.\nReason: " + e1.getMessage());
+			exception = new SimulationException("I/O Exception during process simulation.\nReason: " + e1.getMessage());
+			throw exception;
 		}
 		
 		long endTime = System.currentTimeMillis();
 		try {
-			System.out.println("sddsdsd");
 			executionTime = new TimeValue(endTime - startTime, TimeScale.MILLISECONDS);
 		} catch (ParameterException e) {
-			throw new SimulationException("Cannot set execution time.\nReason: " + e.getMessage());
+			exception = new SimulationException("Cannot set execution time.\nReason: " + e.getMessage());
+			throw exception;
 		}
 		
 		return true;
@@ -66,7 +70,11 @@ public class ExecutionTask extends SwingWorker<Boolean, String> implements Trace
 	
 	@Override
 	protected void done() {
-		executionDialog.taskCompleted();
+		if(exception == null){
+			executionDialog.taskCompleted();
+		} else {
+			executionDialog.taskCancelled(exception);
+		}
 	}
 
 	public TimeValue getExecutionTime(){

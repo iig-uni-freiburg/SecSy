@@ -3,8 +3,6 @@ package de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties;
 public enum SimulationProperty {
 	SIMULATION_NAME,
 	
-	LOG_PATH,
-	
 	FILE_NAME,
 	
 	ENTRY_GENERATION,
@@ -20,4 +18,6 @@ public enum SimulationProperty {
 	SIMULATION_RUN,
 	
 	SIMULATION_RUNS,
+	
+	EVENT_HANDLING;
 }

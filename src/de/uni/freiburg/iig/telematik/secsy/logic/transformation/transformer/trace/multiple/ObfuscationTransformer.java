@@ -68,8 +68,8 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer {
 	}
 
 	@Override
-	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
-		super.applyEntryTransformation(entry, transformerResult);
+	protected boolean applyEntryTransformation(LogTrace trace, LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+		super.applyEntryTransformation(trace, entry, transformerResult);
 		//Find all fields that can be obfuscated
 		List<EntryField> possibleFields = new ArrayList<EntryField>();
 		possibleFields.remove(EntryField.ORIGINATOR_CANDIDATES);
@@ -204,11 +204,6 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer {
 			}
 		}
 		
-	}
-
-	@Override
-	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryTransformerSuccess) throws ParameterException {
-		// TODO Auto-generated method stub
 	}
 
 	@Override

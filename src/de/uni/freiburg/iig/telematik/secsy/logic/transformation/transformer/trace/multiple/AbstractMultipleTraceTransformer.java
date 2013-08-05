@@ -3,8 +3,10 @@ package de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.tra
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -40,6 +42,8 @@ public abstract class AbstractMultipleTraceTransformer extends AbstractTraceTran
 	 */
 	protected int targetAppliances;
 	
+	protected Set<LogEntry> transformedEntries = new HashSet<LogEntry>();
+	
 	public AbstractMultipleTraceTransformer(AbstractMultipleTraceTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 		maxAppliances = properties.getMaxAppliances();
@@ -61,8 +65,10 @@ public abstract class AbstractMultipleTraceTransformer extends AbstractTraceTran
 
 	@Override
 	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event) throws ParameterException {
+		transformedEntries.clear();
 		TraceTransformerResult result = new TraceTransformerResult(event.logTrace, true);
-		//Decide how many unauthorized executions are inserted
+		
+		//Decide on how many log entries, the filter is applied.
 		determineAppliances(event.logTrace.size(), result);
 		
 		int successfulAppliances = 0;
@@ -72,10 +78,10 @@ public abstract class AbstractMultipleTraceTransformer extends AbstractTraceTran
 		LogEntry nextEntry;
 		while(successfulAppliances<targetAppliances && iter.hasNext()){
 			nextEntry = iter.next();
-			if(applyEntryTransformation(nextEntry, result)){
-				traceFeedback(result.getLogTrace(), nextEntry, true);
+			if(applyEntryTransformation(event.logTrace, nextEntry, result)){
 				successfulAppliances++;
-			} else traceFeedback(result.getLogTrace(), nextEntry, false);
+				transformedEntries.add(nextEntry);
+			}
 		}
 		if(successfulAppliances==0){
 			result.setTransformerSuccess(false);
@@ -89,15 +95,14 @@ public abstract class AbstractMultipleTraceTransformer extends AbstractTraceTran
 		return result;
 	}
 	
-	protected abstract void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryTransformerSuccess) throws ParameterException;
-	
 	protected void determineAppliances(int logEntries, AbstractTransformerResult result) throws ParameterException{
 		Validate.notNull(logEntries);
 		while((targetAppliances=rand.nextInt(maxAppliances)+1)>logEntries){}
 		addMessageToResult(getNoticeMessage(String.format(TARGET_APPLIANCES_FORMAT, targetAppliances)), result);
 	}
 	
-	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+	protected boolean applyEntryTransformation(LogTrace trace, LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+		Validate.notNull(trace);
 		Validate.notNull(entry);
 		Validate.notNull(transformerResult);
 		return true;
