@@ -27,6 +27,7 @@ public class SimulationProperties extends AbstractProperties{
 	public static final String defaultName = "NewSimulation";
 	public static final String defaultFileName = "NewSimulationOutput";
 	public static final String defaultLogPath = "logs/";
+	public static final EventHandling defaultEventHandling = EventHandling.END;
 	
 	public static final EntryGenerationType defaultEntryGenerationType = EntryGenerationType.SIMPLE;
 	public static final LogFormatType defaultLogFormat = LogFormatType.MXML;
@@ -114,6 +115,26 @@ public class SimulationProperties extends AbstractProperties{
 			throw new PropertyException(SimulationProperty.ENTRY_GENERATION, propertyValue);
 		}
 		return generationType;
+	}
+	
+	//-- Event Handling
+	
+	public void setEventHandling(EventHandling eventHandling) throws ParameterException{
+		Validate.notNull(eventHandling);
+		setProperty(SimulationProperty.EVENT_HANDLING, eventHandling.toString());
+	}
+		
+	public EventHandling getEventHandling() throws PropertyException {
+		String propertyValue = getProperty(SimulationProperty.EVENT_HANDLING);
+		if(propertyValue == null)
+			throw new PropertyException(SimulationProperty.EVENT_HANDLING, propertyValue);
+		EventHandling eventHandling = null;
+		try {
+			eventHandling = EventHandling.valueOf(propertyValue);
+		}catch(Exception e){
+			throw new PropertyException(SimulationProperty.EVENT_HANDLING, propertyValue);
+		}
+		return eventHandling;
 	}
 	
 	
@@ -308,9 +329,9 @@ public class SimulationProperties extends AbstractProperties{
 		
 		defaultProperties.setProperty(SimulationProperty.SIMULATION_NAME.toString(), defaultName);
 		defaultProperties.setProperty(SimulationProperty.FILE_NAME.toString(), defaultFileName);
-		defaultProperties.setProperty(SimulationProperty.LOG_PATH.toString(), defaultLogPath);
 		defaultProperties.setProperty(SimulationProperty.ENTRY_GENERATION.toString(), defaultEntryGenerationType.toString());
 		defaultProperties.setProperty(SimulationProperty.LOG_FORMAT.toString(), defaultLogFormat.toString());
+		defaultProperties.setProperty(SimulationProperty.EVENT_HANDLING.toString(), defaultEventHandling.toString());
 		
 		return defaultProperties;
 	}

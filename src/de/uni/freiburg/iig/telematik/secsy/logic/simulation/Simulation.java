@@ -17,6 +17,7 @@ import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGener
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.SimulationException;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeGeneratorFactory;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties;
@@ -195,13 +196,13 @@ public class Simulation implements SimulationListener{
 		
 		properties.setName(getName());
 		
-//		properties.setLogPath(getLogGenerator().getLogPath());
-		
 		properties.setFileName(getLogGenerator().getFileNameShort());
 		
 		properties.setLogFormat(getLogGenerator().getLogFormat().getLogFormatType());
 		
 		properties.setTimeGeneratorName(getCaseTimeGenerator().getName());
+		
+		properties.setEventHandling(((TraceLogGenerator) getLogGenerator()).getEventHandling());
 		
 		if(getLogEntryGenerator() instanceof DetailedLogEntryGenerator){
 			properties.setEntryGeneration(EntryGenerationType.DETAILED);

@@ -424,7 +424,8 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 			case MINUTE:
 				calendar.set(Calendar.SECOND, 0);
 			case SECOND:
-				calendar.set(Calendar.MILLISECOND, 0);	
+				calendar.set(Calendar.MILLISECOND, 0);
+			case MILLISECOND:
 			}
 			startTime = calendar.getTimeInMillis();
 			dayCaseStartingTimes.add(startTime);
@@ -475,7 +476,7 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * @throws ParameterException 
 	 * @see CaseTimeGenerator#defaultDuration
 	 */
-	protected TimeValue getDurationFor(String activity) throws ParameterException{
+	public TimeValue getDurationFor(String activity) throws ParameterException{
 		Validate.notNull(activity);
 		return defaultActivityDuration;
 	}
@@ -493,7 +494,7 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * @return The delay added after the end time of the given activity.
 	 * @throws ParameterException 
 	 */
-	protected TimeValue getDelayFor(String activity) throws ParameterException{
+	public TimeValue getDelayFor(String activity) throws ParameterException{
 		Validate.notNull(activity);
 		return defaultActivityDelay;
 	}

@@ -6,6 +6,7 @@ import java.util.Date;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.jawl.log.EventType;
 import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
@@ -14,6 +15,7 @@ import de.uni.freiburg.iig.telematik.jawl.logformat.LogPerspective;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator.ExecutionTime;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.EventHandling;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformerManager;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerManager;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.AbstractTransformer;
@@ -30,6 +32,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
  *
  */
 public class TraceLogGenerator extends LogGenerator{
+	
+	private EventHandling eventHandling = EventHandling.END;
 	
 	public TraceLogGenerator(LogFormat logFormat) 
 			throws ParameterException, IOException, PerspectiveException {
@@ -52,6 +56,14 @@ public class TraceLogGenerator extends LogGenerator{
 			throw new IllegalArgumentException("Cannot set event perspective for trace log generator.");
 	}
 	
+	public EventHandling getEventHandling() {
+		return eventHandling;
+	}
+
+	public void setEventHandling(EventHandling eventHandling) {
+		this.eventHandling = eventHandling;
+	}
+
 	@Override
 	protected void simulateNet(SimulationRun simulationRun) throws SimulationException, IOException{
 		EntryTransformerManager entryTransformerManager = null;
@@ -146,7 +158,29 @@ public class TraceLogGenerator extends LogGenerator{
 	 * @throws LockingException If the time field of the given entry is locked.
 	 */
 	protected void addEntryToTrace(LogTrace trace, LogEntry logEntry, ExecutionTime executionTime) throws LockingException{
-		logEntry.setTimestamp(new Date(executionTime.startTime));
+		
+		switch(eventHandling){
+		
+		case START:
+			logEntry.setTimestamp(new Date(executionTime.startTime));
+			logEntry.setEventType(EventType.start);
+			break;
+		case END:
+			logEntry.setTimestamp(new Date(executionTime.endTime));
+			logEntry.setEventType(EventType.complete);
+			break;
+		case BOTH:
+			String group = String.valueOf(logEntry.hashCode());
+			logEntry.setEventType(EventType.start);
+			logEntry.setTimestamp(new Date(executionTime.startTime));
+			logEntry.setGroup(group);
+			trace.addEntry(logEntry);
+			LogEntry completeEntry = logEntry.clone();
+			completeEntry.setEventType(EventType.complete);
+			completeEntry.setTimestamp(new Date(executionTime.endTime));
+			completeEntry.setGroup(group);
+			trace.addEntry(completeEntry);
+		}
 		trace.addEntry(logEntry);
 	}
 
@@ -165,6 +199,8 @@ public class TraceLogGenerator extends LogGenerator{
 		// TODO Auto-generated method stub
 	}
 	
-	
+	public enum TimestampInterpretation {
+		ACTIVITY_START, ACTIVITY_END;
+	}
 
 }

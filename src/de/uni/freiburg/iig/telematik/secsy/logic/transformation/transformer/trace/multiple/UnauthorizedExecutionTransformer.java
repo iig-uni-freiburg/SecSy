@@ -55,10 +55,11 @@ public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTrans
 	public boolean isValid(){
 		return context != null;
 	}
+	
 
 	@Override
-	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
-		super.applyEntryTransformation(entry, transformerResult);
+	protected boolean applyEntryTransformation(LogTrace trace, LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+		super.applyEntryTransformation(trace, entry, transformerResult);
 		
 		if(!isValid()){
 			addMessageToResult(getErrorMessage("Cannot apply transformer in invalid state: No context reference."), transformerResult);
@@ -133,11 +134,6 @@ public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTrans
 	@Override
 	public List<EntryField> requiredContextInformation() {
 		return Arrays.asList(EntryField.ACTIVITY, EntryField.ORIGINATOR);
-	}
-
-	@Override
-	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryTransformerSuccess) throws ParameterException {
-		// TODO Auto-generated method stub
 	}
 
 	@Override

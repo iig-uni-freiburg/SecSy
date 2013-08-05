@@ -45,10 +45,11 @@ public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransform
 	}
 	
 	@Override
-	protected boolean applyEntryTransformation(LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
-		super.applyEntryTransformation(entry, transformerResult);
+	protected boolean applyEntryTransformation(LogTrace trace, LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+		super.applyEntryTransformation(trace, entry, transformerResult);
 		if(skipAllowed(entry.getActivity())){
-			addMessageToResult(getCustomSuccessMessage(entry.getActivity()), transformerResult);
+			if(trace.removeAllEntries(trace.getEntriesForGroup(entry.getGroup())))
+				addMessageToResult(getCustomSuccessMessage(entry.getActivity()), transformerResult);
 			return true;
 		}
 		return false;
@@ -59,14 +60,6 @@ public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransform
 		return skipActivities.contains(activity);
 	}
 	
-	@Override
-	protected void traceFeedback(LogTrace logTrace, LogEntry logEntry, boolean entryTransformerSuccess) throws ParameterException{
-		Validate.notNull(logTrace);
-		Validate.notNull(logEntry);
-		if(entryTransformerSuccess){
-			logTrace.removeAllEntries(logTrace.getEntriesForGroup(logEntry.getGroup()));
-		}
-	}
 	
 	protected String getCustomSuccessMessage(String activity) throws ParameterException{
 		Validate.notNull(activity);

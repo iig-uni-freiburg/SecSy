@@ -26,6 +26,7 @@ import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.ExecutionTask;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SimulationException;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationListener;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
@@ -117,7 +118,6 @@ public class ExecutionDialog extends JDialog implements SimulationListener {
 	
 	public void startSimulation(){
 		
-		System.out.println("Start simulation");
 		//Prepare file writer
 		try {
 			if(fileWriter != null){
@@ -146,10 +146,18 @@ public class ExecutionDialog extends JDialog implements SimulationListener {
 		
 		//Start the task
 		task.execute();
+
 	}
 	
 	public JTextArea getTextArea(){
 		return area;
+	}
+	
+	public void taskCancelled(SimulationException exception){
+		addMessage("Simulation Cancelled:");
+		addMessage(exception.getMessage());
+		JOptionPane.showMessageDialog(ExecutionDialog.this,"Simulation procedure was cancelled.\nReason: " + exception.getMessage(), "Simulation Exception",JOptionPane.ERROR_MESSAGE);
+		return;
 	}
 	
 	public void taskCompleted(){
