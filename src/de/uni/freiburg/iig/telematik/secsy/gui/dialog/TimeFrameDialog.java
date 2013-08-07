@@ -44,6 +44,8 @@ public class TimeFrameDialog extends JDialog {
 		super(parent);
 		setModal(true);
 		
+		setTitle("Time Frame");
+		
 		getContentPane().setLayout(new BorderLayout());
 		
 		getContentPane().add(getTimeFramePanel(simulation), BorderLayout.CENTER);

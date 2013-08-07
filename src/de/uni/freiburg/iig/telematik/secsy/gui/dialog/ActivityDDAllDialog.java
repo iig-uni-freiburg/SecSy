@@ -50,7 +50,7 @@ public class ActivityDDAllDialog extends JDialog {
 	
 	private static final long serialVersionUID = 6589034118115595410L;
 	
-	private final String valueFormatWithDeviation = "%s: %s with %s deviation";
+	private final String valueFormatWithDeviation = "%s: %s with %s%% deviation";
 	private final String valueFormatWithoutDeviation = "%s: %s with no deviation";
 
 	private JPanel mainPanel = null;
@@ -74,8 +74,8 @@ public class ActivityDDAllDialog extends JDialog {
 	
 	private ButtonGroup buttonGroup = new ButtonGroup();
 	
-	private JRadioButton rdbtnDefaultDelayFixed;
-	private JRadioButton rdbtnDefaultDelayBounded;
+	private JRadioButton rdbtnDefaultFixedValue;
+	private JRadioButton rdbtnDefaultBoundedValue;
 	
 	private JLabel lblDefaultFixedDeviation;
 	private JLabel lblDefaultFixedValue;
@@ -111,6 +111,8 @@ public class ActivityDDAllDialog extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(getMainPanel(), BorderLayout.CENTER);
 		
+		setTitle("Activity " + dialogType.toString() + "s");
+		
 		initializeFields();
 		
 		setVisible(true);
@@ -138,32 +140,32 @@ public class ActivityDDAllDialog extends JDialog {
 			
 			mainPanel.add(getEditButton());
 			
-			rdbtnDefaultDelayFixed = new JRadioButton("Default "+dialogType.toString().toLowerCase()+" fixed");
-			rdbtnDefaultDelayFixed.setBounds(35, 297, 180, 23);
-			rdbtnDefaultDelayFixed.setSelected(true);
-			rdbtnDefaultDelayFixed.addItemListener(new ItemListener() {
+			rdbtnDefaultFixedValue = new JRadioButton("Default "+dialogType.toString().toLowerCase()+" fixed");
+			rdbtnDefaultFixedValue.setBounds(35, 297, 180, 23);
+			rdbtnDefaultFixedValue.setSelected(true);
+			rdbtnDefaultFixedValue.addItemListener(new ItemListener() {
 				
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 					updateDefaultValuePanelVisibility();
 				}
 			});
-			buttonGroup.add(rdbtnDefaultDelayFixed);
-			mainPanel.add(rdbtnDefaultDelayFixed);
+			buttonGroup.add(rdbtnDefaultFixedValue);
+			mainPanel.add(rdbtnDefaultFixedValue);
 			
 			mainPanel.add(getDefaultFixedPanel());
 			
-			rdbtnDefaultDelayBounded = new JRadioButton("Default "+dialogType.toString().toLowerCase()+" bounded");
-			rdbtnDefaultDelayBounded.setBounds(35, 412, 211, 23);
-			rdbtnDefaultDelayBounded.addItemListener(new ItemListener() {
+			rdbtnDefaultBoundedValue = new JRadioButton("Default "+dialogType.toString().toLowerCase()+" bounded");
+			rdbtnDefaultBoundedValue.setBounds(35, 412, 211, 23);
+			rdbtnDefaultBoundedValue.addItemListener(new ItemListener() {
 				
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 					updateDefaultValuePanelVisibility();
 				}
 			});
-			mainPanel.add(rdbtnDefaultDelayBounded);
-			buttonGroup.add(rdbtnDefaultDelayBounded);
+			mainPanel.add(rdbtnDefaultBoundedValue);
+			buttonGroup.add(rdbtnDefaultBoundedValue);
 			
 			mainPanel.add(getDefaultBoundedPanel());
 			
@@ -224,7 +226,7 @@ public class ActivityDDAllDialog extends JDialog {
 			panelDefaultFixed.add(txtDefaultFixedDeviation);
 			
 			
-			lblDefaultFixedValue = new JLabel("Delay:");
+			lblDefaultFixedValue = new JLabel("Duration:");
 			lblDefaultFixedValue.setHorizontalAlignment(SwingConstants.TRAILING);
 			lblDefaultFixedValue.setBounds(20, 50, 84, 16);
 			panelDefaultFixed.add(lblDefaultFixedValue);
@@ -348,7 +350,7 @@ public class ActivityDDAllDialog extends JDialog {
 			btnOK.setBounds(199, 6, 75, 28);
 			btnOK.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(!rdbtnDefaultDelayBounded.isSelected()){
+					if(!rdbtnDefaultBoundedValue.isSelected()){
 						if(dialogType.equals(DialogType.Duration)){
 							timeProperties.removeDefaultActivityDurationBounds();
 						} else {
@@ -567,7 +569,7 @@ public class ActivityDDAllDialog extends JDialog {
 	}
 	
 	private void updateDefaultValuePanelVisibility(){
-		boolean fixedVisibility = rdbtnDefaultDelayFixed.isSelected();
+		boolean fixedVisibility = rdbtnDefaultFixedValue.isSelected();
 		lblDefaultFixedValue.setEnabled(fixedVisibility);
 		lblDefaultFixedDeviation.setEnabled(fixedVisibility);
 		txtDefaultFixedValue.setEnabled(fixedVisibility);
@@ -575,7 +577,7 @@ public class ActivityDDAllDialog extends JDialog {
 		lblPercent.setEnabled(fixedVisibility);
 		comboDefaultValueScale.setEnabled(fixedVisibility);
 		btnApplyFixed.setEnabled(fixedVisibility);
-		boolean boundedVisibility = rdbtnDefaultDelayBounded.isSelected();
+		boolean boundedVisibility = rdbtnDefaultBoundedValue.isSelected();
 		lblMinimum.setEnabled(boundedVisibility);
 		lblMaximum.setEnabled(boundedVisibility);
 		txtDefaultBoundedMinDelay.setEnabled(boundedVisibility);
@@ -597,7 +599,7 @@ public class ActivityDDAllDialog extends JDialog {
 				defaultValue = timeProperties.getDefaultActivityDuration();
 				defaultDeviation = timeProperties.getDefaultActivityDurationDeviation();
 				if(timeProperties.existDefaultActivityDurationBounds()){
-					rdbtnDefaultDelayBounded.setSelected(true);
+					rdbtnDefaultBoundedValue.setSelected(true);
 					defaultMinValue = timeProperties.getDefaultActivityMinDuration();
 					defaultMaxValue = timeProperties.getDefaultActivityMaxDuration();
 				}
@@ -605,7 +607,7 @@ public class ActivityDDAllDialog extends JDialog {
 				defaultValue = timeProperties.getDefaultActivityDelay();
 				defaultDeviation = timeProperties.getDefaultActivityDelayDeviation();
 				if(timeProperties.existDefaultActivityDelayBounds()){
-					rdbtnDefaultDelayBounded.setSelected(true);
+					rdbtnDefaultBoundedValue.setSelected(true);
 					defaultMinValue = timeProperties.getDefaultActivityMinDelay();
 					defaultMaxValue = timeProperties.getDefaultActivityMaxDelay();
 				}

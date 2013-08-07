@@ -164,10 +164,12 @@ public class TraceLogGenerator extends LogGenerator{
 		case START:
 			logEntry.setTimestamp(new Date(executionTime.startTime));
 			logEntry.setEventType(EventType.start);
+			trace.addEntry(logEntry);
 			break;
 		case END:
 			logEntry.setTimestamp(new Date(executionTime.endTime));
 			logEntry.setEventType(EventType.complete);
+			trace.addEntry(logEntry);
 			break;
 		case BOTH:
 			String group = String.valueOf(logEntry.hashCode());
@@ -181,7 +183,6 @@ public class TraceLogGenerator extends LogGenerator{
 			completeEntry.setGroup(group);
 			trace.addEntry(completeEntry);
 		}
-		trace.addEntry(logEntry);
 	}
 
 	@Override
