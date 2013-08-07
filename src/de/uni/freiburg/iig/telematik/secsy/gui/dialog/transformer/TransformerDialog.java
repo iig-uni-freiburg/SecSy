@@ -128,11 +128,11 @@ public class TransformerDialog extends AbstractSimulationDialog {
 			
 			panelGeneral = new JPanel();
 			panelGeneral.setLayout(null);
-			panelGeneral.setPreferredSize(new Dimension(360, 250));
+			panelGeneral.setPreferredSize(new Dimension(380, 250));
 			
 			JLabel lblTransformerType = new JLabel("Transformer Type:");
-			lblTransformerType.setHorizontalAlignment(JLabel.TRAILING);
-			lblTransformerType.setBounds(20, 18, 80, 27);
+			lblTransformerType.setHorizontalAlignment(JLabel.LEADING);
+			lblTransformerType.setBounds(20, 18, 120, 27);
 			panelGeneral.add(lblTransformerType);
 			
 			lblHint = new JLabel();
@@ -168,7 +168,7 @@ public class TransformerDialog extends AbstractSimulationDialog {
 			
 			comboTransformerType = new JComboBox();
 			comboTransformerType.setModel(new DefaultComboBoxModel(TransformerType.values()));
-			comboTransformerType.setBounds(105, 20, 240, 27);
+			comboTransformerType.setBounds(145, 20, 220, 27);
 			comboTransformerType.addItemListener(new ItemListener() {
 				
 				@Override

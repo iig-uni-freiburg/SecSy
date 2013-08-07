@@ -251,7 +251,7 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 				//Duration deviation was explicitly set
 				//-> Add random deviation to adjusted duration
 				TimeValue duration = activityDurations.get(activity);
-				long deviation = ((int) Math.signum(rand.nextInt()))*(Math.abs(rand.nextLong()) % ((long) (duration.getValue()*durationDeviations.get(activity))));
+				long deviation = ((int) Math.signum(rand.nextInt()))*(Math.abs(rand.nextLong()) % ((long) Math.ceil(duration.getValue()*durationDeviations.get(activity))));
 				return new TimeValue(duration.getValue() + deviation, duration.getScale());
 			} else {
 				//Duration deviation was not explicitly set
@@ -270,7 +270,7 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 			//Else check if deviation for default duration was explicitly set. 
 			if(defaultDurationDeviation > 0){
 				//Add random deviation to default duration
-				long deviation = ((int) Math.signum(rand.nextInt()))*(Math.abs(rand.nextLong()) % ((long) (defaultActivityDuration.getValue()*defaultDurationDeviation)));
+				long deviation = ((int) Math.signum(rand.nextInt()))*(Math.abs(rand.nextLong()) % ((long) Math.ceil(defaultActivityDuration.getValue()*defaultDurationDeviation)));
 				return new TimeValue(defaultActivityDuration.getValue() + deviation, defaultActivityDuration.getScale());
 			} else {
 				//Return default delay
@@ -295,7 +295,7 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 				//Delay deviation was explicitly set
 				//-> Add random deviation to adjusted delay
 				TimeValue delay = activityDelays.get(activity);
-				long deviation = ((int) Math.signum(rand.nextInt()))*(Math.abs(rand.nextLong()) % ((long) (delay.getValue()*delayDeviations.get(activity))));
+				long deviation = ((int) Math.signum(rand.nextInt()))*(Math.abs(rand.nextLong()) % ((long) Math.ceil(delay.getValue()*delayDeviations.get(activity))));
 				return new TimeValue(delay.getValue() + deviation, delay.getScale());
 			} else {
 				//Delay deviation was not explicitly set
@@ -314,7 +314,7 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 			//Else check if deviation for default delay was explicitly set. 
 			if(defaultDelayDeviation > 0){
 				//Add random deviation to default delay
-				long deviation = ((int) Math.signum(rand.nextInt()))*(Math.abs(rand.nextLong()) % ((long) (defaultActivityDelay.getValue()*defaultDelayDeviation)));
+				long deviation = ((int) Math.signum(rand.nextInt()))*(Math.abs(rand.nextLong()) % ((long) Math.ceil(defaultActivityDelay.getValue()*defaultDelayDeviation)));
 				return new TimeValue(defaultActivityDelay.getValue() + deviation, defaultActivityDelay.getScale());
 			} else {
 				//Return default delay

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -31,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
@@ -51,7 +53,6 @@ import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeGeneratorFactory;
@@ -60,6 +61,7 @@ import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationExcepti
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.EntryGenerationType;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.EventHandling;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 
 
@@ -74,6 +76,10 @@ public class SimulationDialog extends JDialog {
 	private JComboBox comboDataContainer;
 	private JComboBox comboLogFormat;
 	private JComboBox comboTimeGenerator;
+	private JComboBox comboEventType;
+	
+	private JRadioButton rdbtnOneEvent;
+	private JRadioButton rdbtnBothEvents;
 	
 	private JButton btnAddTimeGenerator;
 	private JButton btnAddContext;
@@ -87,6 +93,8 @@ public class SimulationDialog extends JDialog {
 	private JButton btnEditDataContainer;
 	private JButton btnEditSimulationRun;
 	
+	private JButton btnShowActivities;
+	
 	private JList listSimulationRuns;
 	private DefaultListModel listSimulationRunsModel = new DefaultListModel();
 	private JTextField txtLogName;
@@ -99,7 +107,6 @@ public class SimulationDialog extends JDialog {
 	private JTextField txtName;
 	
 	private boolean editMode = false;
-	private JButton btnShowActivities;
 	
 	/**
 	 * @throws ParameterException 
@@ -118,7 +125,7 @@ public class SimulationDialog extends JDialog {
 	}
 	
 	private void setUpGUI(Window owner){
-		setBounds(100, 100, 505, 586);
+		setBounds(100, 100, 506, 677);
 		setModal(true);
 		setLocationRelativeTo(owner);
 		setResizable(false);
@@ -152,12 +159,33 @@ public class SimulationDialog extends JDialog {
 		contentPanel.add(getAddDataContainerButton());
 		contentPanel.add(getEditDataContainerButton());
 		
+		comboEventType = new JComboBox();
+		comboEventType.setModel(new DefaultComboBoxModel(new String[] {"start", "complete"}));
+		comboEventType.setSelectedIndex(1);
+		comboEventType.setBounds(191, 312, 116, 27);
+		contentPanel.add(comboEventType);
+		
+		rdbtnOneEvent = new JRadioButton("Generate only event");
+		rdbtnOneEvent.setBounds(23, 312, 156, 23);
+		rdbtnOneEvent.setSelected(true);
+		contentPanel.add(rdbtnOneEvent);
+		
+		rdbtnBothEvents = new JRadioButton("Generate both, start and complete events");
+		rdbtnBothEvents.setBounds(23, 347, 291, 23);
+		contentPanel.add(rdbtnBothEvents);
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(rdbtnOneEvent);
+		group.add(rdbtnBothEvents);
+		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(23, 333, 456, 149);
+		scrollPane.setBounds(23, 422, 456, 149);
 		scrollPane.setViewportView(getSimulationRunList());
 		contentPanel.add(scrollPane);
 		contentPanel.add(getAddSimulationRunButton());
 		contentPanel.add(getEditSimulationRunButton());
+		
+		contentPanel.add(getButtonShowActivities());
 		
 		// Add button panel (bottom).
 		JPanel buttonPane = new JPanel();
@@ -205,13 +233,24 @@ public class SimulationDialog extends JDialog {
 		contentPanel.add(lblCaseDataContainer);
 		
 		JLabel lblSimulationRuns = new JLabel("Simulation runs:");
-		lblSimulationRuns.setBounds(23, 312, 116, 16);
+		lblSimulationRuns.setBounds(23, 401, 116, 16);
 		contentPanel.add(lblSimulationRuns);
 		
 		JLabel lblLogFormat = new JLabel("Log format:");
 		lblLogFormat.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblLogFormat.setBounds(6, 84, 116, 16);
 		contentPanel.add(lblLogFormat);
+		
+		txtName = new JTextField();
+		txtName.setText("NewSimulation");
+		txtName.setColumns(10);
+		txtName.setBounds(134, 16, 230, 28);
+		contentPanel.add(txtName);
+		
+		JLabel lblName = new JLabel("Name:");
+		lblName.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblName.setBounds(6, 22, 116, 16);
+		contentPanel.add(lblName);
 		
 	}
 	
@@ -225,17 +264,9 @@ public class SimulationDialog extends JDialog {
 		separator3.setBounds(6, 119, 482, 12);
 		contentPanel.add(separator3);
 		
-		txtName = new JTextField();
-		txtName.setText("NewSimulation");
-		txtName.setColumns(10);
-		txtName.setBounds(134, 16, 230, 28);
-		contentPanel.add(txtName);
-		
-		JLabel lblName = new JLabel("Name:");
-		lblName.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblName.setBounds(6, 22, 116, 16);
-		contentPanel.add(lblName);
-		contentPanel.add(getButtonShowActivities());
+		JSeparator separator = new JSeparator();
+		separator.setBounds(6, 377, 482, 12);
+		contentPanel.add(separator);
 	}
 	
 	
@@ -615,7 +646,7 @@ public class SimulationDialog extends JDialog {
 					updateVisibility();
 				}
 			});
-			btnAddSimulationRun.setBounds(23, 486, 60, 29);
+			btnAddSimulationRun.setBounds(23, 575, 60, 29);
 		}
 		return btnAddSimulationRun; 
 	}
@@ -623,7 +654,7 @@ public class SimulationDialog extends JDialog {
 	private JButton getEditSimulationRunButton(){
 		if(btnEditSimulationRun == null){
 			btnEditSimulationRun = new JButton("Edit");
-			btnEditSimulationRun.setBounds(84, 486, 60, 29);
+			btnEditSimulationRun.setBounds(84, 575, 60, 29);
 			btnEditSimulationRun.addActionListener(new ActionListener() {
 				
 				@Override
@@ -845,17 +876,11 @@ public class SimulationDialog extends JDialog {
 						JOptionPane.showMessageDialog(SimulationDialog.this, "Affected value: File name.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-						
-//					String logPath = txtLogPath.getText();
-//					if(logPath == null || logPath.isEmpty()){
-//						JOptionPane.showMessageDialog(SimulationDialog.this, "Affected value: Log path.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-//						return;
-//					}
 					
 					LogFormat logFormat = LogFormatFactory.getFormat(getLogFormatType());
 					
 					// Create log generator
-					LogGenerator logGenerator = null;
+					TraceLogGenerator logGenerator = null;
 					try {
 						logGenerator = new TraceLogGenerator(logFormat, GeneralProperties.getInstance().getSimulationDirectory(), fileName);
 					} catch (Exception e1) {
@@ -870,6 +895,17 @@ public class SimulationDialog extends JDialog {
 					} catch (ParameterException e1) {
 						JOptionPane.showMessageDialog(SimulationDialog.this, "Internal exception while setting log generator.\nReason: "+e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 						return;
+					}
+					if(rdbtnOneEvent.isSelected()){
+						// Event handling: only one event
+						if(comboEventType.getSelectedItem().equals("start")){
+							logGenerator.setEventHandling(EventHandling.START);
+						} else {
+							logGenerator.setEventHandling(EventHandling.END);
+						}
+					} else {
+						// Event handling: both events
+						logGenerator.setEventHandling(EventHandling.BOTH);
 					}
 					
 					//Get entry generation type and create entry generator accordingly.
@@ -1223,7 +1259,7 @@ public class SimulationDialog extends JDialog {
 					new StringDialog(SimulationDialog.this, builder.toString());
 				}
 			});
-			btnShowActivities.setBounds(147, 486, 138, 29);
+			btnShowActivities.setBounds(147, 575, 138, 29);
 		}
 		return btnShowActivities;
 	}
@@ -1237,5 +1273,4 @@ public class SimulationDialog extends JDialog {
 			e.printStackTrace();
 		}
 	}
-	
 }

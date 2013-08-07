@@ -120,7 +120,11 @@ public class TimeGeneratorDialog extends JDialog {
 		setResizable(false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
-		setTitle("New Case Time Generator");
+		if(editMode){
+			setTitle("Edit Case Time Generator");
+		} else {
+			setTitle("New Case Time Generator");
+		}
 		
 		addWindowListener(new WindowListener() {
 			

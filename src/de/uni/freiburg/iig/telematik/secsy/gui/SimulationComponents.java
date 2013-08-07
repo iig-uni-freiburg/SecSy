@@ -102,6 +102,9 @@ public class SimulationComponents {
 	//------- Load simulation components --------------------------------------------------------------------------------------
 	
 	private void loadSimulationComponents() throws ParameterException, IOException, PropertyException {
+		MessageDialog.getInstance().addMessage("Accessing Simulation Directory:");
+		MessageDialog.getInstance().addMessage(GeneralProperties.getInstance().getSimulationDirectory());
+		MessageDialog.getInstance().newLine();
 		MessageDialog.getInstance().addMessage("Loading simulation components.");
 		
 		//1. Load access control models
@@ -114,7 +117,7 @@ public class SimulationComponents {
 			throw new IOException("Cannot access access control model directory.");
 		}
 		for(String acFile: acFiles){
-			MessageDialog.getInstance().addMessage("Loading access control model: " + acFile + "...   ");
+			MessageDialog.getInstance().addMessage("Loading access control model: " + acFile.substring(acFile.lastIndexOf('/') + 1) + "...   ");
 			try{
 				addACModel(loadACModel(acFile), false);
 				MessageDialog.getInstance().addMessage("Done.");
