@@ -328,7 +328,6 @@ public class DataContainerDialog extends JDialog {
 		btnOK = new JButton("OK");
 		btnOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(attValueGenerator);
 				Map<String, ValueGenerator<?>> valueGeneratorMap = attValueGenerator.getValueGenerators();
 				for(String attributeName: valueGeneratorMap.keySet()){
 					ValueGenerator<?> valueGenerator = valueGeneratorMap.get(attributeName);
@@ -337,8 +336,6 @@ public class DataContainerDialog extends JDialog {
 							JOptionPane.showMessageDialog(DataContainerDialog.this, "Value generator for attribute \""+attributeName+"\" in invalid state.\nProbabilities must sum up to 1", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						System.out.println(valueGenerator);
-						System.out.println("valid!");
 					} else {
 						//Don't care about empty value generators
 					}

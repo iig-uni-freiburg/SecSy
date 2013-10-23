@@ -7,6 +7,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -718,7 +720,9 @@ public class ContextDialog extends JDialog {
 	private void updateActivityList(boolean setSelection){
 		activityListModel.clear();
 		if(context != null){
-			for(String activity: context.getActivities()){
+			List<String> activities = new ArrayList<String>(context.getActivities());
+			Collections.sort(activities);
+			for(String activity: activities){
 				activityListModel.addElement(activity);
 			}
 		}
@@ -729,7 +733,9 @@ public class ContextDialog extends JDialog {
 	private void updateSubjectList(boolean setSelection){
 		subjectListModel.clear();
 		if(context != null){
-			for(String subject: context.getSubjects()){
+			List<String> subjects = new ArrayList<String>(context.getSubjects());
+			Collections.sort(subjects);
+			for(String subject: subjects){
 				subjectListModel.addElement(subject);
 			}
 		}
@@ -740,7 +746,9 @@ public class ContextDialog extends JDialog {
 	private void updateAttributeList(boolean setSelection){
 		attributeListModel.clear();
 		if(context != null){
-			for(String attribute: context.getAttributes()){
+			List<String> attributes = new ArrayList<String>(context.getAttributes());
+			Collections.sort(attributes);
+			for(String attribute: attributes){
 				attributeListModel.addElement(attribute);
 			}
 		}
