@@ -81,6 +81,7 @@ public class TimeGeneratorFactory {
 		}
 		
 		// Set general properties for all timegenerators
+		timeGenerator.removeSkipDays();
 		for(Weekday weekday: properties.getSkipDays()){
 			timeGenerator.skipDay(weekday);
 		}

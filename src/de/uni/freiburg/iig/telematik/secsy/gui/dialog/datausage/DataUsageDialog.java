@@ -7,6 +7,8 @@ import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -102,17 +104,7 @@ public class DataUsageDialog extends JDialog {
 			JButton btnRemove = new JButton("Remove");
 			btnRemove.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(dataUsageTable.getSelectedRow() >= 0){
-						String attribute = dataUsageTable.getModel().getValueAt(dataUsageTable.getSelectedRow(), 0).toString();
-						dataUsageTable.getModel().removeElement(attribute);
-						try {
-							DataUsageDialog.this.context.removeDataUsageFor(activityList.getSelectedValue().toString(), attribute);
-						} catch (CompatibilityException e1) {
-							e1.printStackTrace();
-						} catch (ParameterException e1) {
-							e1.printStackTrace();
-						}
-					}
+					removeSelectedDataUsages();
 				}
 			});
 			btnRemove.setBounds(265, 250, 80, 29);
@@ -129,6 +121,20 @@ public class DataUsageDialog extends JDialog {
 			contentPanel.add(btnDone);
 		}
 		setVisible(true);
+	}
+	
+	private void removeSelectedDataUsages(){
+		if(dataUsageTable.getSelectedRow() >= 0){
+			String attribute = dataUsageTable.getModel().getValueAt(dataUsageTable.getSelectedRow(), 0).toString();
+			dataUsageTable.getModel().removeElement(attribute);
+			try {
+				DataUsageDialog.this.context.removeDataUsageFor(activityList.getSelectedValue().toString(), attribute);
+			} catch (CompatibilityException e1) {
+				e1.printStackTrace();
+			} catch (ParameterException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 	
 	private JList getActivityList(){
@@ -156,6 +162,21 @@ public class DataUsageDialog extends JDialog {
 	        			}
 	        		}
 	        );
+			activityList.addKeyListener(new KeyListener() {
+				
+				@Override
+				public void keyTyped(KeyEvent e) {}
+				
+				@Override
+				public void keyReleased(KeyEvent e) {
+					if(e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+						removeSelectedDataUsages();
+					}
+				}
+				
+				@Override
+				public void keyPressed(KeyEvent e) {}
+			});
 		}
 		return activityList;
 	}

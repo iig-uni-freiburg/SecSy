@@ -312,7 +312,7 @@ public class RoleLatticeDialog extends JDialog implements EdgeAddedListener{
 
 				@Override
 				public void keyPressed(KeyEvent e) {
-					if(e.getKeyCode() == KeyEvent.VK_DELETE){
+					if(e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
 						if(roleList.getSelectedValues().length > 0){
 						for(Object selectedRole: roleList.getSelectedValues()){
 							roleListModel.removeElement(selectedRole);

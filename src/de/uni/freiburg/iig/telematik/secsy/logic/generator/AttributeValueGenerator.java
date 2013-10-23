@@ -121,12 +121,27 @@ public class AttributeValueGenerator {
 		result.setDefaultValue(defaultValue);
 		try{
 			for(String attribute: getAttributes()){
-				result.setValueGeneration(attribute, getValueGenerator(attribute));
+				result.setValueGeneration(attribute, getValueGenerator(attribute).clone());
 			}
 		}catch(ParameterException e){
 			return null;
 		}
 		return result;
+	}
+	
+	@Override
+	public String toString(){
+		StringBuilder builder = new StringBuilder();
+		builder.append("AttributeValueGenerator:");
+		builder.append('\n');
+		for(String attribute: getAttributes()){
+			builder.append("attribute: " + attribute);
+			builder.append('\n');
+			try {
+				builder.append(getValueGenerator(attribute));
+			} catch (ParameterException e) {}
+		}
+		return builder.toString();
 	}
 
 }

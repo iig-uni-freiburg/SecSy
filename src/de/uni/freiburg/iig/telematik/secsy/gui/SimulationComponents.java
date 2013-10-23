@@ -44,10 +44,13 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.Abst
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.TransformerFactory;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.exception.MissingRequirementException;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.AbstractTraceTransformer;
-import de.uni.freiburg.iig.telematik.sepia.export.PNMLExporter;
-import de.uni.freiburg.iig.telematik.sepia.parser.PNMLParser;
+import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.RandomPTTraverser;
+import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
+import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
+import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.RBACModel;
@@ -136,7 +139,7 @@ public class SimulationComponents {
 			throw new IOException("Cannot access context directory.");
 		}
 		for(String contextFile: contextFiles){
-			MessageDialog.getInstance().addMessage("Loading context: " + contextFile + "...   ");
+			MessageDialog.getInstance().addMessage("Loading context: " + contextFile.substring(contextFile.lastIndexOf('/') + 1) + "...   ");
 			try{
 				addContext(loadContext(contextFile), false);
 				MessageDialog.getInstance().addMessage("Done.");
@@ -155,12 +158,18 @@ public class SimulationComponents {
 			throw new IOException("Cannot access Petri net directory.");
 		}
 		for(String netFile: netFiles){
-			MessageDialog.getInstance().addMessage("Loading Petri net: " + netFile + "...   ");
+			MessageDialog.getInstance().addMessage("Loading Petri net: " + netFile.substring(netFile.lastIndexOf('/') + 1) + "...   ");
 			try{
-				addPetriNet(PNMLParser.parsePNML(netFile, true), false);
+				AbstractPetriNet<?, ?, ?, ?, ?> loadedNet = null;
+				loadedNet = new PNMLParser().parse(netFile, false, false).getPetriNet();
+				
+				if(!(loadedNet instanceof PTNet))
+					throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Loaded Petri net is not a P/T Net");
+				addPetriNet((PTNet) loadedNet, false);
 				MessageDialog.getInstance().addMessage("Done.");
 			} catch(Exception e){
 				MessageDialog.getInstance().addMessage("Error: "+e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		MessageDialog.getInstance().newLine();
@@ -174,7 +183,7 @@ public class SimulationComponents {
 			throw new IOException("Cannot access time generator directory.");
 		}
 		for(String propertiesFile: timePropertiesFiles){
-			MessageDialog.getInstance().addMessage("Loading time generator: " + propertiesFile + "...   ");
+			MessageDialog.getInstance().addMessage("Loading time generator: " + propertiesFile.substring(propertiesFile.lastIndexOf('/') + 1) + "...   ");
 			try{
 //				TimeProperties newTimeProperties = new TimeProperties();
 //				newTimeProperties.load(propertiesFile);
@@ -196,7 +205,7 @@ public class SimulationComponents {
 			throw new IOException("Cannot access data container directory.");
 		}
 		for(String containerFile: containerFiles){
-			MessageDialog.getInstance().addMessage("Loading data container: " + containerFile + "...   ");
+			MessageDialog.getInstance().addMessage("Loading data container: " + containerFile.substring(containerFile.lastIndexOf('/') + 1) + "...   ");
 			try{
 				addCaseDataContainer(loadDataContainer(containerFile), false);
 				MessageDialog.getInstance().addMessage("Done.");
@@ -215,7 +224,7 @@ public class SimulationComponents {
 			throw new IOException("Cannot access transformer directory.");
 		}
 		for(String transformerFile: transformerFiles){
-			MessageDialog.getInstance().addMessage("Loading transformer: " + transformerFile + "...   ");
+			MessageDialog.getInstance().addMessage("Loading transformer: " + transformerFile.substring(transformerFile.lastIndexOf('/') + 1) + "...   ");
 			try{
 				addTransformer((AbstractTraceTransformer) TransformerFactory.loadTransformer(transformerFile), false);
 				MessageDialog.getInstance().addMessage("Done.");
@@ -234,7 +243,7 @@ public class SimulationComponents {
 			throw new IOException("Cannot access simulation directory.");
 		}
 		for(String simulationFile: simulationFiles){
-			MessageDialog.getInstance().addMessage("Loading simulation: " + simulationFile + "...   ");
+			MessageDialog.getInstance().addMessage("Loading simulation: " + simulationFile.substring(simulationFile.lastIndexOf('/') + 1) + "...   ");
 			try{
 //				SimulationProperties newSimulationProperties = new SimulationProperties();
 //				newSimulationProperties.load(simulationFile);
@@ -318,7 +327,6 @@ public class SimulationComponents {
 //			throw new PropertyException(CaseDataContainerProperty.CONTEXT_NAME, referencedContext, "Unknown context.");
 
 		AttributeValueGenerator valueGenerator = properties.getAttributeValueGenerator();
-//		CaseDataContainer result = new CaseDataContainer(referencedContext, valueGenerator);
 		CaseDataContainer result = new CaseDataContainer(valueGenerator);
 		result.setName(properties.getName());
 		
@@ -659,7 +667,7 @@ public class SimulationComponents {
 	 * @throws PropertyException if the procedure of property extraction fails.
 	 * @throws IOException if the property-representation of the new net cannot be stored.
 	 */
-	public void addPetriNet(PTNet petriNet) throws ParameterException, IOException, PropertyException{
+	public void addPetriNet(PTNet petriNet) throws ParameterException, IOException, SerializationException, PropertyException{
 		addPetriNet(petriNet, true);
 	}
 	
@@ -672,12 +680,12 @@ public class SimulationComponents {
 	 * @throws PropertyException if the net cannot be stored due to a property error on extracting path from general properties.
 	 * @throws IOException if the net cannot be stored due to an I/O Error.
 	 */
-	public void addPetriNet(PTNet petriNet, boolean storeToFile) throws ParameterException, IOException, PropertyException{
+	public void addPetriNet(PTNet petriNet, boolean storeToFile) throws ParameterException, IOException, SerializationException, PropertyException{
 		Validate.notNull(petriNet);
 		Validate.notNull(storeToFile);
 		petriNets.put(petriNet.getName(), petriNet);
 		if(storeToFile){
-			PNMLExporter.export(petriNet, GeneralProperties.getInstance().getPathForPetriNets(), petriNet.getName());
+			PNSerialization.serialize(petriNet, PNSerializationFormat.PNML, petriNet.getName(), GeneralProperties.getInstance().getPathForPetriNets());
 		}
 	}
 	
@@ -896,7 +904,8 @@ public class SimulationComponents {
 	 */
 	public void storeCaseTimeGenerator(CaseTimeGenerator timeGenerator) throws ParameterException, IOException, PropertyException{
 		Validate.notNull(timeGenerator);
-		timeGenerator.getProperties().store(GeneralProperties.getInstance().getPathForTimeGenerators()+timeGenerator.getName());
+		String generatorName = GeneralProperties.getInstance().getPathForTimeGenerators()+timeGenerator.getName();
+		timeGenerator.getProperties().store(generatorName);
 	}
 	
 	/**

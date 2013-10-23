@@ -179,9 +179,9 @@ public class DataContainerDialog extends JDialog {
 						return;
 					}
 					String attribute = listAttributes.getSelectedValue().toString();
-					StochasticValueGenerator valueGenerator = null;
+					StochasticValueGenerator<?> valueGenerator = null;
 					try {
-						valueGenerator = (StochasticValueGenerator) attValueGenerator.getValueGenerator(attribute);
+						valueGenerator = (StochasticValueGenerator<?>) attValueGenerator.getValueGenerator(attribute);
 					} catch (ParameterException e2) {
 						JOptionPane.showMessageDialog(DataContainerDialog.this, "Cannot extract value generator for attribute \""+attribute+"\"", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 						return;
@@ -229,6 +229,7 @@ public class DataContainerDialog extends JDialog {
 			JButton btnDone = new JButton("Cancel");
 			btnDone.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					dataContainer = null;
 					DataContainerDialog.this.dispose();
 				}
 			});
@@ -327,7 +328,8 @@ public class DataContainerDialog extends JDialog {
 		btnOK = new JButton("OK");
 		btnOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Map<String, ValueGenerator<?>> valueGeneratorMap = dataContainer.getAttributeValueGenerator().getValueGenerators();
+				System.out.println(attValueGenerator);
+				Map<String, ValueGenerator<?>> valueGeneratorMap = attValueGenerator.getValueGenerators();
 				for(String attributeName: valueGeneratorMap.keySet()){
 					ValueGenerator<?> valueGenerator = valueGeneratorMap.get(attributeName);
 					if(!valueGenerator.isEmpty()){
@@ -335,10 +337,14 @@ public class DataContainerDialog extends JDialog {
 							JOptionPane.showMessageDialog(DataContainerDialog.this, "Value generator for attribute \""+attributeName+"\" in invalid state.\nProbabilities must sum up to 1", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
+						System.out.println(valueGenerator);
+						System.out.println("valid!");
 					} else {
 						//Don't care about empty value generators
 					}
 				}
+				
+				
 				
 				String containerName = txtName.getText();
 				if(containerName == null || containerName.isEmpty()){
@@ -462,46 +468,44 @@ public class DataContainerDialog extends JDialog {
 		return null;
 	}
 	
-	private JList getAttributeList(){
-		if(listAttributes == null){
+	private JList getAttributeList() {
+		if (listAttributes == null) {
 			listAttributes = new JList(listAttributesModel);
 			listAttributes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			listAttributes.setFixedCellHeight(20);
 			listAttributes.setVisibleRowCount(10);
 			listAttributes.setBorder(null);
 			listAttributes.setSelectedIndex(0);
-			
-			listAttributes.addListSelectionListener(
-	        		new ListSelectionListener(){
-	        			public void valueChanged(ListSelectionEvent e) {
-	        				if(!listAttributes.getValueIsAdjusting()){
-	        			    if ((e.getValueIsAdjusting() == false) && (listAttributes.getSelectedValue() != null)) {
-	        			    	StochasticValueGenerator<?> valueGenerator = null;
-	        			    	try {
-									valueGenerator = (StochasticValueGenerator<?>) dataContainer.getAttributeValueGenerator().getValueGenerator(listAttributes.getSelectedValue().toString());
-								} catch (ParameterException e1) {
-									JOptionPane.showMessageDialog(DataContainerDialog.this, "Cannot extract value generator for attribute \""+listAttributes.getSelectedValue().toString()+"\".", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+
+			listAttributes.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent e) {
+					if (!listAttributes.getValueIsAdjusting()) {
+						if ((e.getValueIsAdjusting() == false) && (listAttributes.getSelectedValue() != null)) {
+							StochasticValueGenerator<?> valueGenerator = null;
+							try {
+								valueGenerator = (StochasticValueGenerator<?>) attValueGenerator.getValueGenerator(listAttributes.getSelectedValue().toString());
+							} catch (ParameterException e1) {
+								JOptionPane.showMessageDialog(DataContainerDialog.this, "Cannot extract value generator for attribute \"" + listAttributes.getSelectedValue().toString() + "\".", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+							}
+							if (valueGenerator != null && !valueGenerator.getElements().isEmpty()) {
+								try {
+									dontComplainAboutTypeChange = true;
+									comboValueType.setSelectedItem(valueGenerator.getValueClass().getSimpleName());
+									dontComplainAboutTypeChange = false;
+								} catch (InconsistencyException e1) {
+									JOptionPane.showMessageDialog(DataContainerDialog.this, "Cannot extract value type for attribute \"" + listAttributes.getSelectedValue().toString() + "\".", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 								}
-	        			    	if(valueGenerator != null && !valueGenerator.getElements().isEmpty()){
-	        			    		try {
-	        			    			dontComplainAboutTypeChange = true;
-	        			    			comboValueType.setSelectedItem(valueGenerator.getValueClass().getSimpleName());
-	        			    			dontComplainAboutTypeChange = false;
-	        			    		} catch (InconsistencyException e1) {
-	        			    			JOptionPane.showMessageDialog(DataContainerDialog.this, "Cannot extract value type for attribute \""+listAttributes.getSelectedValue().toString()+"\".", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-	        			    		}
-	        			    	} else {
-	        			    		dontComplainAboutTypeChange = true;
-	        			    		comboValueType.setSelectedItem("String");
-	        			    		dontComplainAboutTypeChange = false;
-	        			    	}
-	     
-	        			    	updateValueList();
-	        			    }
-	        				}
-	        			}
-	        		}
-	        );
+							} else {
+								dontComplainAboutTypeChange = true;
+								comboValueType.setSelectedItem("String");
+								dontComplainAboutTypeChange = false;
+							}
+
+							updateValueList();
+						}
+					}
+				}
+			});
 		}
 		return listAttributes;
 	}
@@ -522,15 +526,13 @@ public class DataContainerDialog extends JDialog {
 				
 				@Override
 				public void keyReleased(KeyEvent e) {
-					if(e.getKeyCode() == KeyEvent.VK_DELETE){
+					if(e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
 						removeSelectedValues();
 					}
 				}
 
 				@Override
-				public void keyPressed(KeyEvent e) {
-					removeSelectedValues();
-				}
+				public void keyPressed(KeyEvent e) {}
 			});
 		}
 		return listValues;
@@ -541,14 +543,20 @@ public class DataContainerDialog extends JDialog {
 			for(Object selectedObject: listValues.getSelectedValues()){
 				String valueString = selectedObject.toString().substring(0, selectedObject.toString().indexOf(':'));
 				try {
-					((StochasticValueGenerator<?>) dataContainer.getAttributeValueGenerator().getValueGenerator(getAttribute())).removeElement(getValue(valueString));
+					StochasticValueGenerator<?> valueGenerator = (StochasticValueGenerator<?>) attValueGenerator.getValueGenerator(getAttribute());
+					if(valueGenerator != null){
+						valueGenerator.removeElement(getValue(valueString));
+						System.out.println(attValueGenerator);
+					} else {
+						listValueModel.removeElement(selectedObject);
+					}
 				} catch (ParameterException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				updateValueList();
 				if(listValueModel.isEmpty()){
-					dataContainer.getAttributeValueGenerator().removeValueGenerator(getAttribute());
+					attValueGenerator.removeValueGenerator(getAttribute());
 				}
 			}
 		}
@@ -557,15 +565,12 @@ public class DataContainerDialog extends JDialog {
 	private void updateValueList(){
 		listValueModel.clear();
 		if(listAttributes.getSelectedValue() != null){
-			String attribute = listAttributes.getSelectedValue().toString();
 			StochasticValueGenerator<?> valueGenerator = null;
 			try {
-				valueGenerator = (StochasticValueGenerator<?>) attValueGenerator.getValueGenerator(attribute);
+				valueGenerator = (StochasticValueGenerator<?>) attValueGenerator.getValueGenerator(getAttribute());
 			} catch (ParameterException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (Exception e){
-				//TODO
 			}
 			if(valueGenerator != null){
 				for(Object element: valueGenerator.getElements()){

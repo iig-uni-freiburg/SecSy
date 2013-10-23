@@ -39,8 +39,9 @@ import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.SimulationRunProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerManager;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.AbstractTraceTransformer;
-import de.uni.freiburg.iig.telematik.sepia.parser.PNMLFilter;
-import de.uni.freiburg.iig.telematik.sepia.parser.PNMLParser;
+import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLFilter;
+import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.RandomPTTraverser;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
@@ -220,8 +221,10 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 				
 				@Override
 				public void keyReleased(KeyEvent e) {
-					removeSelectedTransformers();
-					updateListTransformers();
+					if(e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+						removeSelectedTransformers();
+						updateListTransformers();
+					}
 				}
 				
 				@Override
@@ -454,13 +457,19 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 			            File file = fc.getSelectedFile();
 			            
 			            //Try to import the Petri net.
-			            PTNet petriNet = null;
-			            try{
-			            	petriNet = PNMLParser.parsePNML(file.getAbsolutePath(), true);
-			            } catch(Exception ex){
-			            	JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot parse Petri net.\nReason: " + ex.getMessage(), "Parsing Exeption", JOptionPane.ERROR_MESSAGE);
-			        		return;
-			            }
+			            AbstractPetriNet<?, ?, ?, ?, ?> loadedNet = null;
+						try {
+							loadedNet = new PNMLParser().parse(file.getAbsolutePath(), false, false).getPetriNet();
+						} catch (Exception ex) {
+							JOptionPane.showMessageDialog(SimulationRunDialog.this,"Cannot parse Petri net.\nReason: " + ex.getMessage(), "Parsing Exeption", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						if(!(loadedNet instanceof PTNet)){
+							JOptionPane.showMessageDialog(SimulationRunDialog.this,"Loaded Petri net is not a P/T Net, cannot proceed","Unexpected Petri net type", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						PTNet petriNet = (PTNet) loadedNet;
+						
 			            String netName = petriNet.getName();
 			            try {
 			            	while(netName == null || SimulationComponents.getInstance().getPetriNet(netName) != null){

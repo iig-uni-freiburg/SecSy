@@ -87,7 +87,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 		for(String valueGeneratorName: getValueGeneratorNames()){
 			String attribute = null;
 			try{
-				attribute = valueGeneratorName.substring(1, valueGeneratorName.lastIndexOf('_')-1);
+				attribute = valueGeneratorName.substring(CaseDataContainerProperty.VALUE_GENERATOR.toString().length()+1, valueGeneratorName.length());
 			} catch(Exception e) {
 				throw new PropertyException(CaseDataContainerProperty.VALUE_GENERATOR, valueGeneratorName, "Invalid property value, cannot extract attribute name.");
 			}
@@ -180,6 +180,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 		} catch(Exception e) {
 			throw new PropertyException(CaseDataContainerProperty.VALUE_GENERATOR, propertyValue, "Invalid property value, cannot extract attribute and class name.");
 		}
+		
 		Class valueClass = null;
 		try {
 			valueClass = Class.forName(className);

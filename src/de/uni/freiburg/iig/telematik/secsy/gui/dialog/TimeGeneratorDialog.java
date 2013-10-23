@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
@@ -48,8 +50,6 @@ import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeGeneratorFactory;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties.CaseStartPrecision;
-
-import javax.swing.ScrollPaneConstants;
 
 public class TimeGeneratorDialog extends JDialog {
 
@@ -191,7 +191,7 @@ public class TimeGeneratorDialog extends JDialog {
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_DELETE){
+				if(e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
 					for(Object selectedValue: listOfficeDays.getSelectedValues())
 						officeDayListModel.removeElement(selectedValue);
 				}
@@ -216,6 +216,7 @@ public class TimeGeneratorDialog extends JDialog {
 							if(chckbxSkipWeekend.isSelected() && (newWeekday.equals("Saturday") || newWeekday.equals("Sunday")))
 								continue;
 							officeDayListModel.addElement(newWeekday);
+							sortOfficeDays();
 						}
 					}
 				}
@@ -240,6 +241,7 @@ public class TimeGeneratorDialog extends JDialog {
 					if(!officeDayListModel.contains("Sunday"))
 						officeDayListModel.addElement("Sunday");
 				}
+				sortOfficeDays();
 			}
 		});
 		contentPanel.add(chckbxSkipWeekend);
@@ -328,6 +330,18 @@ public class TimeGeneratorDialog extends JDialog {
 		initializeFields();
 		
 		setVisible(true);
+	}
+	
+	private void sortOfficeDays(){
+		List<Weekday> officeDays = new ArrayList<Weekday>();
+		for(Enumeration<Object> enumerator = (Enumeration<Object>) officeDayListModel.elements(); enumerator.hasMoreElements();){
+			officeDays.add(Weekday.valueOf(enumerator.nextElement().toString().toUpperCase()));
+		}
+		Collections.sort(officeDays);
+		officeDayListModel.clear();
+		for(Weekday officeDay: officeDays){
+			officeDayListModel.addElement(officeDay.toString());
+		}
 	}
 	
 	private void addLabels(){
@@ -507,6 +521,7 @@ public class TimeGeneratorDialog extends JDialog {
 					List<String> allWeekdays = Weekday.stringValues();
 					for(Enumeration<?> officeDays = officeDayListModel.elements(); officeDays.hasMoreElements();)
 						allWeekdays.remove(officeDays.nextElement());
+					
 					List<Weekday> skipDays = new ArrayList<Weekday>();
 					for(String remainingWeekday: allWeekdays)
 						skipDays.add(Weekday.valueOf(remainingWeekday.toUpperCase()));
@@ -516,7 +531,6 @@ public class TimeGeneratorDialog extends JDialog {
 						JOptionPane.showMessageDialog(TimeGeneratorDialog.this, "Error on setting value for: Days to skip\nReason: " + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					
 					//Check if it is possible to create a time generator
 					try {
 						TimeGeneratorFactory.createCaseTimeGenerator(TimeGeneratorDialog.this.timeProperties);
@@ -524,7 +538,6 @@ public class TimeGeneratorDialog extends JDialog {
 						JOptionPane.showMessageDialog(TimeGeneratorDialog.this, "Exception on creating case time generator.\nReason: " + e1.getMessage(), "Parameter Exception", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					
 					dispose();
 				}
 			});
@@ -639,6 +652,7 @@ public class TimeGeneratorDialog extends JDialog {
 			workingDays.removeAll(skipDays);
 			chckbxSkipWeekend.setSelected(!workingDays.contains(Weekday.SATURDAY) && !workingDays.contains(Weekday.SUNDAY));
 			officeDayListModel.clear();
+			Collections.sort(workingDays);
 			for(Weekday workingDay: workingDays)
 				officeDayListModel.addElement(workingDay.toString());
 			

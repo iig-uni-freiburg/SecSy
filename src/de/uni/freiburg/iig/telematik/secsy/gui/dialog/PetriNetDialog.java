@@ -25,13 +25,16 @@ import javax.swing.event.ListSelectionListener;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
-import de.uni.freiburg.iig.telematik.sepia.parser.PNMLFilter;
-import de.uni.freiburg.iig.telematik.sepia.parser.PNMLParser;
+import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLFilter;
+import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 
 
 
 public class PetriNetDialog extends JDialog {
+
+	static final long serialVersionUID = -1556400321094068143L;
 
 	private final JPanel contentPanel = new JPanel();
 	
@@ -86,13 +89,19 @@ public class PetriNetDialog extends JDialog {
 							File file = fc.getSelectedFile();
 
 							// Try to import the Petri net.
-							PTNet petriNet = null;
+							AbstractPetriNet<?, ?, ?, ?, ?> loadedNet = null;
 							try {
-								petriNet = PNMLParser.parsePNML(file.getAbsolutePath(), true);
+								loadedNet = new PNMLParser().parse(file.getAbsolutePath(), false, false).getPetriNet();
 							} catch (Exception ex) {
 								JOptionPane.showMessageDialog(PetriNetDialog.this,"Cannot parse Petri net.\nReason: " + ex.getMessage(), "Parsing Exeption", JOptionPane.ERROR_MESSAGE);
 								return;
 							}
+							if(!(loadedNet instanceof PTNet)){
+								JOptionPane.showMessageDialog(PetriNetDialog.this,"Loaded Petri net is not a P/T Net, cannot proceed","Unexpected Petri net type", JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+							PTNet petriNet = (PTNet) loadedNet;
+							
 							String netName = petriNet.getName();
 							try {
 								while (netName == null || SimulationComponents.getInstance().getPetriNet(netName) != null) {

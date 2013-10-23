@@ -548,7 +548,7 @@ public class ContextDialog extends JDialog {
 				
 				@Override
 				public void keyReleased(KeyEvent e) {
-					if(e.getKeyCode() == KeyEvent.VK_DELETE){
+					if(e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
 						if(activityList.getSelectedValues() != null){
 							boolean propagateDeletion = false;
 							if(acModelAssigned){
@@ -602,7 +602,7 @@ public class ContextDialog extends JDialog {
 				
 				@Override
 				public void keyReleased(KeyEvent e) {
-					if(e.getKeyCode() == KeyEvent.VK_DELETE){
+					if(e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
 						if(subjectList.getSelectedValues() != null){
 							boolean propagateDeletion = false;
 							if(acModelAssigned){
@@ -656,7 +656,7 @@ public class ContextDialog extends JDialog {
 				
 				@Override
 				public void keyReleased(KeyEvent e) {
-					if(e.getKeyCode() == KeyEvent.VK_DELETE){
+					if(e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
 						if(attributeList.getSelectedValues() != null){
 							boolean propagateDeletion = false;
 							if(acModelAssigned){

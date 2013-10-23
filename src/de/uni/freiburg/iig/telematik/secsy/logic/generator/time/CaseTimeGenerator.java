@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -118,6 +119,8 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 */
 	protected CaseStartPrecision caseStartingTimePrecision = TimeProperties.defaultCaseStarttimePrecision;
 	
+	protected Map<Integer, Map<String, Long>> activityStartTimes = new HashMap<Integer, Map<String, Long>>();
+			
 	
 	/**
 	 * Defines the number of cases to be generated for the actual day.
@@ -296,6 +299,10 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 			skipDays.remove(Calendar.SATURDAY);
 			skipDays.remove(Calendar.SUNDAY);
 		}
+	}
+	
+	public void removeSkipDays(){
+		skipDays.clear();
 	}
 	
 	/**
@@ -639,14 +646,15 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 		Calendar cal = new GregorianCalendar(Calendar.getInstance().getTimeZone());
 		cal.set(2012, Calendar.JANUARY, 1);
 		CaseTimeGenerator time = new CaseTimeGenerator(cal.getTimeInMillis(), 10);
-		time.setCaseStartingTimePrecision(CaseStartPrecision.HOUR);
-		for(int i=1; i<20; i++){
-			time.traceStarted(i);
-		}
-		time.setMaxCasesPerDay(20);
-		for(int i=21; i<70; i++){
-			time.traceStarted(i);
-		}
+//		time.setCaseStartingTimePrecision(CaseStartPrecision.HOUR);
+//		for(int i=1; i<20; i++){
+//			time.traceStarted(i);
+//		}
+//		time.setMaxCasesPerDay(20);
+//		for(int i=21; i<70; i++){
+//			time.traceStarted(i);
+//		}
+		System.out.println(time.getSkipDays());
 	}
 
 }

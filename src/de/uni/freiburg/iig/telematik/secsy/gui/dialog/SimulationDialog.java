@@ -782,6 +782,7 @@ public class SimulationDialog extends JDialog {
 					}
 
 					if(editedTimeGenerator != null){
+						
 						if(!editedTimeGenerator.getName().equals(oldTimeGeneratorName)){
 							//Time generator name changed
 							//-> Remove old time generator from simulation components and add it again under the new name.
@@ -1074,11 +1075,13 @@ public class SimulationDialog extends JDialog {
 				
 				@Override
 				public void keyReleased(KeyEvent e) {
-					if(listSimulationRuns.getSelectedValues() != null){
-						for(Object selectedObject: listSimulationRuns.getSelectedValues()){
-							simulationRuns.remove(((SimulationRun) selectedObject).getName());
+					if (e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+						if (listSimulationRuns.getSelectedValues() != null) {
+							for (Object selectedObject : listSimulationRuns.getSelectedValues()) {
+								simulationRuns.remove(((SimulationRun) selectedObject).getName());
+							}
+							updateSimulationRunList();
 						}
-						updateSimulationRunList();
 					}
 				}
 				
