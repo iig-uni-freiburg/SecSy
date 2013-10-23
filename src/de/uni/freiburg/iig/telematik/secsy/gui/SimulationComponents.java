@@ -685,7 +685,7 @@ public class SimulationComponents {
 		Validate.notNull(storeToFile);
 		petriNets.put(petriNet.getName(), petriNet);
 		if(storeToFile){
-			PNSerialization.serialize(petriNet, PNSerializationFormat.PNML, petriNet.getName(), GeneralProperties.getInstance().getPathForPetriNets());
+			PNSerialization.serialize(petriNet, PNSerializationFormat.PNML, GeneralProperties.getInstance().getPathForPetriNets(), petriNet.getName());
 		}
 	}
 	
