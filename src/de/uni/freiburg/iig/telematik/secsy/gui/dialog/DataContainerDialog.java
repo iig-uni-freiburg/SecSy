@@ -543,7 +543,6 @@ public class DataContainerDialog extends JDialog {
 					StochasticValueGenerator<?> valueGenerator = (StochasticValueGenerator<?>) attValueGenerator.getValueGenerator(getAttribute());
 					if(valueGenerator != null){
 						valueGenerator.removeElement(getValue(valueString));
-						System.out.println(attValueGenerator);
 					} else {
 						listValueModel.removeElement(selectedObject);
 					}

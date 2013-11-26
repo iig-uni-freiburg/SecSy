@@ -566,7 +566,6 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 			} else {
 				setDialogObject(new SimulationRun(petriNet, new RandomPTTraverser(petriNet), passes, transformerManager));
 			}
-			System.out.println(getDialogObject().getTraceTransformerManager().getTraceTransformers().size());
 		} catch (ParameterException e) {
 			JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot create simulation run.\nReason: "+e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
     		return;

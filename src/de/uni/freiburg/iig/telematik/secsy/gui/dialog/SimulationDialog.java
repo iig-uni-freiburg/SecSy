@@ -640,7 +640,7 @@ public class SimulationDialog extends JDialog {
 						SimulationRunDialog.showDialog(SimulationDialog.this, newSimulationRun);
 					}
 					SimulationDialog.this.simulationRuns.put(newSimulationRun.getName(), newSimulationRun);
-					
+
 					updateSimulationRunList();
 					listSimulationRuns.setSelectedValue(newSimulationRun.getName(), true);
 					updateVisibility();

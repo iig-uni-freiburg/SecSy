@@ -130,10 +130,12 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 		// Check if the value type of routing constraints is compatible with the type of generated values for attributes.
 				for(String activity: context.getActivities()){
 					if(context.hasRoutingConstraints(activity)){
+						System.out.println("step 1");
 						for(AbstractConstraint<?> constraint: context.getRoutingConstraints(activity)){
 							Type t1 = constraint.getParameterType();
 							Class t2 = attributeValueGenerator.getValueGenerator(constraint.getElement()).getValueClass();
 							if(!((Class) t1).isAssignableFrom(t2)){
+								System.out.println("error");
 								throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Type of generated attribute values is in conflict with constraint type.");
 							}
 						}
