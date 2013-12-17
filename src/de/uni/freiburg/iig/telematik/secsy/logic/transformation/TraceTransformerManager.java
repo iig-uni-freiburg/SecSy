@@ -14,7 +14,7 @@ import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.exception.MissingRequirementException;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.AbstractTraceTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
 
 
 public class TraceTransformerManager {
@@ -45,7 +45,7 @@ public class TraceTransformerManager {
 		Validate.notNull(source);
 		try{
 			for (AbstractTraceTransformer transformer : traceTransformers) {
-				for (EntryField contextType : transformer.requiredContextInformation()) {
+				for (EntryField contextType : transformer.requiredEntryFields()) {
 					if (!source.providesLogInformation(contextType))
 						throw new MissingRequirementException(contextType);
 				}
@@ -76,7 +76,7 @@ public class TraceTransformerManager {
 		Validate.notNull(traceTransformer);
 		try{
 			if(source!=null)
-				for(EntryField contextType: traceTransformer.requiredContextInformation())
+				for(EntryField contextType: traceTransformer.requiredEntryFields())
 					if(!source.providesLogInformation(contextType))
 						throw new MissingRequirementException(contextType);
 		} catch(ParameterException e){

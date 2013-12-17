@@ -708,38 +708,5 @@ public class ContextProperties extends AbstractProperties {
 		}
 		return result;
 	}
-	
-	// Startup/Test
-	
-	public static void main(String[] args) throws Exception{
-		ContextProperties p = new ContextProperties();
-		NumberConstraint n1 = NumberConstraint.parse("alf < 50.0");
-		NumberConstraint n2 = NumberConstraint.parse("alf == 100");
-		NumberConstraint n3 = NumberConstraint.parse("alf == 100");
-		p.addRoutingConstraint("act1", n1);
-		p.addRoutingConstraint("act1", n2);
-		p.addRoutingConstraint("act2", n3);
-		p.store("TELEFON");
-		System.out.println("act1: " + p.getRoutingConstraints("act1"));
-		System.out.println("act2: " + p.getRoutingConstraints("act2"));
-//		System.out.println("remove all constraints for activity act1");
-//		p.removeRoutingConstraint("act1", n1);
-//		p.removeRoutingConstraint("act1", n2);
-//		System.out.println("act1" + p.getRoutingConstraints("act1"));
-//		System.out.println("act2" + p.getRoutingConstraints("act2"));
-		
-		
-		Map<String, Set<DataUsage>> usage = new HashMap<String, Set<DataUsage>>();
-		Set<DataUsage> modes = new HashSet<DataUsage>(Arrays.asList(DataUsage.READ, DataUsage.WRITE));
-		usage.put("attribute1", modes);
-		p.setDataUsage("act1", usage);
-		p.store("TELEFON");
-		
-		System.out.println(p.getDataUsageFor("act1"));
-		
-		Set<String> activities = new HashSet<String>(Arrays.asList("act1", "act2"));
-		Context c = new Context("c1", activities);
-//		c.getD
-	}
 
 }

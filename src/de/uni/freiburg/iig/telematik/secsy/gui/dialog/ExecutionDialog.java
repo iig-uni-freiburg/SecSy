@@ -186,7 +186,7 @@ public class ExecutionDialog extends JDialog implements SimulationListener {
 		try {
 			fileWriter.writeLine(message);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Unable to write simulation message to file.
 			e.printStackTrace();
 		}
 	}

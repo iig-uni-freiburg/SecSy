@@ -1,5 +1,12 @@
 package de.uni.freiburg.iig.telematik.secsy.gui;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,6 +26,16 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
 import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatFactory;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
+import de.uni.freiburg.iig.telematik.secsy.gui.dialog.MessageDialog;
+import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.AbstractTransformerPanel;
+import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.TransformerType;
+import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.panel.BoDPropertyTransformerPanel;
+import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.panel.DayDelayTransformerPanel;
+import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.panel.IncompleteLoggingTransformerPanel;
+import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.panel.ObfuscationTransformerPanel;
+import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.panel.SkipActivitiesTransformerPanel;
+import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.panel.SoDPropertyTransformerPanel;
+import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.panel.UnauthorizedExecutionTransformerPanel;
 import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.AttributeValueGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
@@ -40,10 +57,17 @@ import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.Simulatio
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.SimulationRunProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.SimulationRunProperty;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerManager;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.AbstractTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.TransformerFactory;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.exception.MissingRequirementException;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.AbstractTraceTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.BoDPropertyTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.DayDelayTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.IncompleteLoggingTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.ObfuscationTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.SkipActivitiesTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.SoDPropertyTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.UnauthorizedExecutionTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
@@ -51,16 +75,20 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.RandomPTTraverser;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.RBACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACLModelProperties;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACMValidationException;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelProperties;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelType;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.RBACModelProperties;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
 
 
 public class SimulationComponents {
+	
+	public static final String CUSTOM_TRANSFORMER_PANEL_PACKAGE = "de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.panel.custom.";
+	public static final String CUSTOM_TRANSFORMER_PACKAGE = "de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.custom.";
 	
 	private static SimulationComponents instance = null;
 	
@@ -71,9 +99,18 @@ public class SimulationComponents {
 	private Map<String, AbstractTraceTransformer> transformers = new HashMap<String, AbstractTraceTransformer>();
 	private Map<String, CaseTimeGenerator> caseTimeGenerators = new HashMap<String, CaseTimeGenerator>();
 	private Map<String, Simulation> simulations = new HashMap<String, Simulation>();
+	private static Set<TransformerType> transformerTypes = new HashSet<TransformerType>();
+	static {
+		transformerTypes.add(new TransformerType(DayDelayTransformer.class, DayDelayTransformerPanel.class));
+		transformerTypes.add(new TransformerType(IncompleteLoggingTransformer.class, IncompleteLoggingTransformerPanel.class));
+		transformerTypes.add(new TransformerType(SkipActivitiesTransformer.class, SkipActivitiesTransformerPanel.class));
+		transformerTypes.add(new TransformerType(ObfuscationTransformer.class, ObfuscationTransformerPanel.class));
+		transformerTypes.add(new TransformerType(UnauthorizedExecutionTransformer.class, UnauthorizedExecutionTransformerPanel.class));
+		transformerTypes.add(new TransformerType(SoDPropertyTransformer.class, SoDPropertyTransformerPanel.class));
+		transformerTypes.add(new TransformerType(BoDPropertyTransformer.class, BoDPropertyTransformerPanel.class));
+	}
+	private Set<TransformerType> customTransformerTypes = new HashSet<TransformerType>();
 	
-//	private Map<String, TimeProperties> caseTimeGeneratorProperties = new HashMap<String, TimeProperties>();
-//	private Map<String, SimulationProperties> simulationProperties = new HashMap<String, SimulationProperties>();
 	
 	private SimulationComponents(){
 		try {
@@ -109,10 +146,11 @@ public class SimulationComponents {
 		MessageDialog.getInstance().addMessage(GeneralProperties.getInstance().getSimulationDirectory());
 		MessageDialog.getInstance().newLine();
 		MessageDialog.getInstance().addMessage("Loading simulation components.");
+		int loadingStep = 1;
 		
-		//1. Load access control models
+		// Load access control models
 		//   -> Contexts require access control models, thus they have to be loaded first.
-		MessageDialog.getInstance().addMessage("1. Searching for access control models:");
+		MessageDialog.getInstance().addMessage(loadingStep++ + ". Searching for access control models:");
 		List<String> acFiles = null;
 		try {
 			acFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForACModels(), true);
@@ -130,8 +168,8 @@ public class SimulationComponents {
 		}
 		MessageDialog.getInstance().newLine();
 		
-		//2. Load contexts
-		MessageDialog.getInstance().addMessage("2. Searching for contexts:");
+		// Load contexts
+		MessageDialog.getInstance().addMessage(loadingStep++ + ". Searching for contexts:");
 		List<String> contextFiles = null;
 		try {
 			contextFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForContexts(), true);
@@ -149,8 +187,8 @@ public class SimulationComponents {
 		}
 		MessageDialog.getInstance().newLine();
 		
-		//3. Load Petri nets
-		MessageDialog.getInstance().addMessage("3. Searching for Petri nets:");
+		// Load Petri nets
+		MessageDialog.getInstance().addMessage(loadingStep++ + ". Searching for Petri nets:");
 		List<String> netFiles = null;
 		try {
 			netFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForPetriNets(), true);
@@ -174,8 +212,8 @@ public class SimulationComponents {
 		}
 		MessageDialog.getInstance().newLine();
 		
-		//4. Load time generator properties
-		MessageDialog.getInstance().addMessage("4. Searching for time generators:");
+		// Load time generator properties
+		MessageDialog.getInstance().addMessage(loadingStep++ + ". Searching for time generators:");
 		List<String> timePropertiesFiles = null;
 		try {
 			timePropertiesFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForTimeGenerators(), true);
@@ -196,8 +234,8 @@ public class SimulationComponents {
 		}
 		MessageDialog.getInstance().newLine();
 		
-		//5. Load data containers
-		MessageDialog.getInstance().addMessage("5. Searching for data containers:");
+		// Load data containers
+		MessageDialog.getInstance().addMessage(loadingStep++ + ". Searching for data containers:");
 		List<String> containerFiles = null;
 		try {
 			containerFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForDataContainers(), true);
@@ -215,8 +253,57 @@ public class SimulationComponents {
 		}
 		MessageDialog.getInstance().newLine();
 		
-		//6. Load transformers
-		MessageDialog.getInstance().addMessage("6. Searching for transformers:");
+		// Load custom transformer types
+		MessageDialog.getInstance().addMessage(loadingStep++ + ". Searching for custom transformer types:");
+		if(new File(GeneralProperties.getInstance().getPathForCustomTransformerTypes()).exists()){
+			List<File> transformerTypeDirectories = null;
+			try {
+				transformerTypeDirectories = FileUtils.getSubdirectories(GeneralProperties.getInstance().getPathForCustomTransformerTypes());
+			} catch (IOException e1) {
+				throw new IOException("Cannot access custom transformer type directory.");
+			}
+			for(File transformerTypeDirectory: transformerTypeDirectories){
+				MessageDialog.getInstance().addMessage("Loading transformer type: " + transformerTypeDirectory.getName());
+				try{
+					loadCustomTransformerType(transformerTypeDirectory);
+					MessageDialog.getInstance().addMessage("Done.");
+				} catch(Exception e){
+					MessageDialog.getInstance().addMessage("Error: "+e.getMessage());
+				}
+			}
+			MessageDialog.getInstance().newLine();
+			
+			
+			// Load custom transformers
+			MessageDialog.getInstance().addMessage(loadingStep++ + ". Searching for custom transformers:");
+			if (new File(GeneralProperties.getInstance().getPathForCustomTransformers()).exists()) {
+				List<String> customTransformerFiles = null;
+				try {
+					customTransformerFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForCustomTransformers(), true);
+				} catch (IOException e1) {
+					throw new IOException("Cannot access custom transformer directory.");
+				}
+				for (String customTransformerFile : customTransformerFiles) {
+					MessageDialog.getInstance().addMessage("Loading custom transformer: " + customTransformerFile.substring(customTransformerFile.lastIndexOf('/') + 1) + "...   ");
+					try {
+						addTransformer((AbstractTraceTransformer) TransformerFactory.loadCustomTransformer(customTransformerFile), false);
+						MessageDialog.getInstance().addMessage("Done.");
+					} catch (Exception e) {
+						MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
+					}
+				}
+				MessageDialog.getInstance().newLine();
+			} else {
+				MessageDialog.getInstance().addMessage("No custom transformers found.");
+				MessageDialog.getInstance().newLine();
+			}
+		} else {
+			MessageDialog.getInstance().addMessage("No custom transformer types found.");
+			MessageDialog.getInstance().newLine();
+		}
+		
+		// Load transformers
+		MessageDialog.getInstance().addMessage(loadingStep++ + ". Searching for transformers:");
 		List<String> transformerFiles = null;
 		try {
 			transformerFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForTransformers(), true);
@@ -234,8 +321,8 @@ public class SimulationComponents {
 		}
 		MessageDialog.getInstance().newLine();
 		
-		//7. Load Simulations
-		MessageDialog.getInstance().addMessage("7. Searching for simulations:");
+		// Load Simulations
+		MessageDialog.getInstance().addMessage(loadingStep++ + ". Searching for simulations:");
 		List<String> simulationFiles= null;
 		try {
 			simulationFiles = FileUtils.getFileNamesInDirectory(GeneralProperties.getInstance().getPathForSimulations(), true);
@@ -264,15 +351,22 @@ public class SimulationComponents {
 			testProperties.load(acFile);
 
 			// Check ACModel type
+			ACModel newModel = null;
 			if (testProperties.getType().equals(ACModelType.ACL)) {
 				ACLModelProperties aclProperties = new ACLModelProperties();
 				aclProperties.load(acFile);
-				return new ACLModel(aclProperties);
+				newModel = new ACLModel(aclProperties);
 			} else {
 				RBACModelProperties rbacProperties = new RBACModelProperties();
 				rbacProperties.load(acFile);
-				return new RBACModel(rbacProperties);
+				newModel = new RBACModel(rbacProperties);
 			}
+			try {
+				newModel.checkValidity();
+			} catch (ACMValidationException e) {
+				throw new ParameterException(e.getMessage());
+			}
+			return newModel;
 		} catch(IOException e){
 			throw new IOException("Cannot load properties file: " + acFile + ".");
 		}
@@ -309,6 +403,83 @@ public class SimulationComponents {
 			}
 		}
 		return result;
+	}
+	
+	private void loadCustomTransformerType(File transformerTypeDirectory) throws ParameterException, IOException{
+		
+		String transformerName = transformerTypeDirectory.getName();
+		// Check if all necessary files are there
+		List<File> classFiles = null;
+		classFiles = FileUtils.getFilesInDirectory(transformerTypeDirectory.getAbsolutePath(), "class");
+
+		if(classFiles.size() != 2)
+			throw new ParameterException("Required files missing for custom transformer type\""+transformerName+"\"");
+		
+		// Try to load the class files
+		// 1. Check if there is a transformer class
+		File transformerClassFile = null;
+		File transformerPanelClassFile = null;
+		if(FileUtils.getName(classFiles.get(0)).equals(transformerName)){
+			transformerClassFile = classFiles.get(0);
+			transformerPanelClassFile = classFiles.get(1);
+		} else if(FileUtils.getName(classFiles.get(1)).equals(transformerName)){
+			transformerClassFile = classFiles.get(1);
+			transformerPanelClassFile = classFiles.get(0);
+		}
+		if(transformerClassFile == null)
+			throw new ParameterException("Cannot find transformer class file.");
+		
+		
+		// 2. Try to load the transformer class
+
+		// Prepare class loader
+		ClassLoader loader = null;
+		try {
+		    URL url = transformerTypeDirectory.toURI().toURL();
+		    URL[] urls = new URL[]{url};
+		    loader = new URLClassLoader(urls);
+		} catch (MalformedURLException e) {
+			throw new ParameterException("Error while preparing class loader: " + e.getMessage());
+		}
+		
+		// Load transformer class
+		Class<?> transformerClass = null;
+		try {
+			transformerClass = loader.loadClass(CUSTOM_TRANSFORMER_PACKAGE+FileUtils.getName(transformerClassFile));
+		}catch(NoClassDefFoundError e) {
+			throw new ParameterException("Class loader exception, cannot find class: " + e.getMessage());
+		}catch (ClassNotFoundException e) {
+			throw new ParameterException("Class loader exception, cannot load class: " + e.getMessage());
+		}catch(Exception e){
+			throw new ParameterException("Class loader exception: " + e.getMessage());
+		}
+		if(!AbstractTraceTransformer.class.isAssignableFrom(transformerClass))
+			throw new ParameterException("Wrong type of loaded transformer class: " + transformerClass.getName());
+		// Try if class can be instantiated
+		try{
+			transformerClass.newInstance();
+		} catch(Exception e){
+			throw new ParameterException("Transformer class cannot be instantiated: " + transformerClass.getName());
+		}
+		
+		// Load transformer panel class
+		Class<?> transformerPanelClass = null;
+		try {
+			transformerPanelClass = loader.loadClass(CUSTOM_TRANSFORMER_PANEL_PACKAGE+FileUtils.getName(transformerPanelClassFile));
+		}catch(NoClassDefFoundError e) {
+			throw new ParameterException("Class loader exception, cannot find class: " + e.getMessage());
+		}catch (ClassNotFoundException e) {
+			throw new ParameterException("Class loader exception, cannot load class: " + e.getMessage());
+		}catch(Exception e){
+			throw new ParameterException("Class loader exception: " + e.getMessage());
+		}
+		if (!AbstractTransformerPanel.class.isAssignableFrom(transformerPanelClass))
+			throw new ParameterException("Wrong type of loaded transformer panel class: " + transformerPanelClass.getName());
+
+		customTransformerTypes.add(new TransformerType(transformerClass, transformerPanelClass));
+
+		// Dateiname = Kassenname
+		// Statische Methode gibt die Bezeichnung des Transformers zurück
 	}
 	
 	
@@ -398,27 +569,21 @@ public class SimulationComponents {
 	
 	public void updateFiles() throws ParameterException, IOException, PropertyException{
 		for(ACModel acModel: acModels.values()){
-//			System.out.println(acModel.getName());
 			storeACModel(acModel);
 		}
 		for(Context context: contexts.values()){
-//			System.out.println(context.getName());
 			storeContext(context);
 		}
 		for(CaseDataContainer dataContainer: caseDataContainers.values()){
-//			System.out.println(dataContainer.getName());
 			storeCaseDataContainer(dataContainer);
 		}
-		for(AbstractTransformer transformer: transformers.values()){
-//			System.out.println(transformer.getName());
+		for(AbstractTraceTransformer transformer: transformers.values()){
 			storeTransformer(transformer);
 		}
 		for(CaseTimeGenerator timeGenerator: caseTimeGenerators.values()){
-//			System.out.println(timeGenerator.getName());
 			storeCaseTimeGenerator(timeGenerator);
 		}
 		for(Simulation simulation: simulations.values()){
-//			System.out.println(simulation.getName());
 			storeSimulation(simulation);
 		}
 	}
@@ -967,102 +1132,34 @@ public class SimulationComponents {
 		}
 	}
 	
-
-//	/**
-//	 * Adds new case time generator properties.<br>
-//	 * The properties are also stored as property-file in the simulation directory.
-//	 * @param timeProperties The time properties to add.
-//	 * @throws ParameterException if the given properties are <code>null</code>.
-//	 * @throws PropertyException if the procedure of property extraction fails.
-//	 * @throws IOException if the new time properties cannot be stored.
-//	 */
-//	public void addCaseTimeGeneratorProperties(TimeProperties timeProperties) throws ParameterException, PropertyException, IOException{
-//		addCaseTimeGeneratorProperties(timeProperties, true);
-//	}
-//	
-//	/**
-//	 * Adds new case time generator properties.<br>
-//	 * Depending on the value of the store-parameter, the properties are also stored as property-file in the simulation directory.
-//	 * @param timeProperties The time properties to add.
-//	 * @param storeToFile Indicates if the properties should be stored on disk.
-//	 * @throws ParameterException if any parameter is invalid.
-//	 * @throws PropertyException if an error occurs during property extraction (e.g. properties name).
-//	 * @throws IOException if the generator cannot be stored due to an I/O Error.
-//	 */
-//	public void addCaseTimeGeneratorProperties(TimeProperties timeProperties, boolean storeToFile) throws ParameterException, IOException, PropertyException{
-//		Validate.notNull(timeProperties);
-//		Validate.notNull(storeToFile);
-//		caseTimeGeneratorProperties.put(timeProperties.getName(), timeProperties);
-//		if(storeToFile){
-//			storeCaseTimeGeneratorProperties(timeProperties);
-//		}
-//	}
-//	
-//	/**
-//	 * Stores the given time properties in the simulation directory.<br>
-//	 * The time properties name will be used as file name.
-//	 * @param timeProperties The time properties to store.
-//	 * @throws ParameterException if the given time properties are <code>null</code> or invalid.
-//	 * @throws IOException if the time properties cannot be stored due to an I/O Error.
-//	 * @throws PropertyException if the properties cannot be stored due to property extraction error (e.g. name field).
-//	 */
-//	public void storeCaseTimeGeneratorProperties(TimeProperties timeProperties) throws ParameterException, IOException, PropertyException{
-//		Validate.notNull(timeProperties);
-//		timeProperties.store(GeneralProperties.getInstance().getPathForTimeGenerators()+timeProperties.getName());
-//	}
-//	
-//	/**
-//	 * Checks, if there are time properties.
-//	 * @return <code>true</code> if there is at least one time properties instance;<br>
-//	 * <code>false</code> otherwise.
-//	 */
-//	public boolean containsCaseTimeGeneratorProperties(){
-//		return !caseTimeGeneratorProperties.isEmpty();
-//	}
-//	
-//	/**
-//	 * Checks, if there is a time properties instance with the given name.
-//	 * @return <code>true</code> if there is such an instance;<br>
-//	 * <code>false</code> otherwise.
-//	 */
-//	public boolean containsCaseTimeGeneratorProperties(String name){
-//		return caseTimeGeneratorProperties.get(name) != null;
-//	}
-//	
-//	/**
-//	 * Returns all time generator properties, i.e. properties stored in the simulation directory.
-//	 * @return A set containing all time properties.
-//	 */
-//	public Collection<TimeProperties> getCaseTimeGeneratorProperties(){
-//		return Collections.unmodifiableCollection(caseTimeGeneratorProperties.values());
-//	}
-//	
-//	/**
-//	 * Returns the time properties instance with the given name, if there is one.
-//	 * @param name The name of the desired time properties.
-//	 * @return The time properties instance with the given name, or <code>null</code> if there is no such instance.
-//	 * @throws ParameterException if the given name is <code>null</code>.
-//	 */
-//	public TimeProperties getCaseTimeGeneratorProperties(String name){
-//		return caseTimeGeneratorProperties.get(name);
-//	}
-//
-//	/**
-//	 * Removes the time properties instance with the given name from the simulation components<br>
-//	 * and also deletes the corresponding property-file in the simulation directory.
-//	 * @param name The name of the time properties to remove.
-//	 * @throws PropertyException if the path for the simulation directory cannot be extracted from the general properties file.
-//	 * @throws ParameterException if there is an internal parameter misconfiguration.
-//	 * @throws IOException if the corresponding property file for the time properties cannot be deleted.
-//	 */
-//	public void removeCaseTimeGeneratorProperties(String name) throws PropertyException, IOException, ParameterException{
-//		if(caseTimeGeneratorProperties.remove(name) != null){
-//			FileUtils.deleteFile(GeneralProperties.getInstance().getPathForTimeGenerators()+name);
-//		}
-//	}
-//	
 	
 	//------- Adding and removing transformers -------------------------------------------------------------------------
+	
+	public Set<TransformerType> getTransformerTypes(){
+		return Collections.unmodifiableSet(transformerTypes);
+	}
+	
+	public Set<TransformerType> getCustomTransformerTypes(){
+		return Collections.unmodifiableSet(customTransformerTypes);
+	}
+	
+	public List<TransformerType> getAllTransformerTypes(){
+		List<TransformerType> result = new ArrayList<TransformerType>();
+		result.addAll(getTransformerTypes());
+		result.addAll(getCustomTransformerTypes());
+		Collections.sort(result);
+		return result;
+	}
+	
+	public boolean isCustomTransformer(AbstractTraceTransformer transformer){
+		for(TransformerType customTransformerType: customTransformerTypes){
+			if(customTransformerType.getTransformerClass().isAssignableFrom(transformer.getClass())){
+				return true;
+			}
+		}
+		return false;
+		//TODO: Correct?
+	}
 	
 	/**
 	 * Adds a new transformer.<br>
@@ -1095,16 +1192,25 @@ public class SimulationComponents {
 	}
 	
 	/**
-	 * Stores the given transformer in form of a property-file in the simulation directory.<br>
+	 * Stores the given transformer.<br>
+	 * Customized transformers are serialized into the directory for customized transformers.<br>
+	 * Built-In transformers are stored in form of a property-file in the simulation directory.<br>
 	 * The transformer name will be used as file name.
 	 * @param transformer The transformer to store.
 	 * @throws ParameterException if the given transformer is <code>null</code> or invalid.
 	 * @throws IOException if the transformer cannot be stored due to an I/O Error.
 	 * @throws PropertyException if the transformer cannot be stored due to an error during property extraction.
 	 */
-	public void storeTransformer(AbstractTransformer transformer) throws ParameterException, IOException, PropertyException{
+	public void storeTransformer(AbstractTraceTransformer transformer) throws ParameterException, IOException, PropertyException{
 		Validate.notNull(transformer);
-		transformer.getProperties().store(GeneralProperties.getInstance().getPathForTransformers()+transformer.getName());
+		if(isCustomTransformer(transformer)){
+			String outFileString = GeneralProperties.getInstance().getPathForCustomTransformers()+transformer.getName();
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outFileString));
+			out.writeObject(transformer);
+			out.close();
+		} else {
+			((PropertyAwareTransformer) transformer).getProperties().store(GeneralProperties.getInstance().getPathForTransformers()+transformer.getName());
+		}
 	}
 	
 	/**
@@ -1161,8 +1267,13 @@ public class SimulationComponents {
 	 * @throws IOException if the corresponding property file for the transformer cannot be deleted.
 	 */
 	public void removeTransformer(String name) throws PropertyException, IOException, ParameterException{
+		AbstractTraceTransformer removedTransformer = getTransformer(name);
 		if(transformers.remove(name) != null){
-			FileUtils.deleteFile(GeneralProperties.getInstance().getPathForTransformers()+name);
+			if(isCustomTransformer(removedTransformer)){
+				FileUtils.deleteFile(GeneralProperties.getInstance().getPathForCustomTransformers()+name);
+			} else {
+				FileUtils.deleteFile(GeneralProperties.getInstance().getPathForTransformers()+name);
+			}
 		}
 	}
 	
@@ -1271,97 +1382,7 @@ public class SimulationComponents {
 		}
 	}
 	
-//	/**
-//	 * Adds new simulation properties.<br>
-//	 * The simulation properties are also stored as property-file in the simulation directory.
-//	 * @param properties The simulation properties to add.
-//	 * @throws ParameterException if the given simulation properties are <code>null</code>.
-//	 * @throws PropertyException if the procedure of property extraction fails.
-//	 * @throws IOException if the property-representation of the new simulation properties cannot be stored.
-//	 */
-//	public void addSimulationProperties(SimulationProperties properties) throws ParameterException, IOException, PropertyException{
-//		addSimulationProperties(properties, true);
-//	}
-//	
-//	/**
-//	 * Adds new simulation properties.<br>
-//	 * Depending on the value of the store-parameter, the properties are also stored as property-file in the simulation directory.
-//	 * @param properties The new simulation to add.
-//	 * @param storeToFile Indicates if the simulation should be stored on disk.
-//	 * @throws ParameterException if any parameter is invalid.
-//	 * @throws PropertyException if the simulation properties cannot be stored due to an error during property extraction.
-//	 * @throws IOException if the simulation properties cannot be stored due to an I/O Error.
-//	 */
-//	public void addSimulationProperties(SimulationProperties properties, boolean storeToFile) throws ParameterException, IOException, PropertyException{
-//		Validate.notNull(properties);
-//		Validate.notNull(storeToFile);
-//		simulationProperties.put(properties.getName(), properties);
-//		if(storeToFile){
-//			storeSimulationProperties(properties);
-//		}
-//	}
-//	
-//	/**
-//	 * Stores the given simulation in form of a property-file in the simulation directory.<br>
-//	 * The simulation properties name will be used as file name.
-//	 * @param properties The simulation properties to store.
-//	 * @throws ParameterException if the given simulation properties are <code>null</code> or invalid.
-//	 * @throws IOException if the simulation properties cannot be stored due to an I/O Error.
-//	 * @throws PropertyException if the simulation properties cannot be stored due to an error during property extraction.
-//	 */
-//	public void storeSimulationProperties(SimulationProperties properties) throws ParameterException, IOException, PropertyException{
-//		Validate.notNull(properties);
-//		properties.store(GeneralProperties.getInstance().getPathForSimulations()+properties.getName());
-//	}
-//	
-//	/**
-//	 * Checks, if there are simulation properties.
-//	 * @return <code>true</code> if there is at least one simulation properties instance;<br>
-//	 * <code>false</code> otherwise.
-//	 */
-//	public boolean containsSimulationProperties(){
-//		return !simulationProperties.isEmpty();
-//	}
-//	
-//	/**
-//	 * Checks, if there is a simulation properties instance with the given name.
-//	 * @return <code>true</code> if there is such an instance;<br>
-//	 * <code>false</code> otherwise.
-//	 */
-//	public boolean containsSimulationProperties(String name){
-//		return simulationProperties.get(name) != null;
-//	}
-//	
-//	/**
-//	 * Returns all simulation properties, i.e. simulation properties stored in the simulation directory.
-//	 * @return A set containing all simulation properties.
-//	 */
-//	public Collection<SimulationProperties> getSimulationProperties(){
-//		return Collections.unmodifiableCollection(simulationProperties.values());
-//	}
-//	
-//	/**
-//	 * Returns the simulation property instance with the given name, if there is one.
-//	 * @param name The name of the desired simulation properties instance.
-//	 * @return The simulation properties instance with the given name, or <code>null</code> if there is no such instance.
-//	 * @throws ParameterException if the given name is <code>null</code>.
-//	 */
-//	public SimulationProperties getSimulationProperties(String name) throws ParameterException{
-//		Validate.notNull(name);
-//		return simulationProperties.get(name);
-//	}
-//	
-//	/**
-//	 * Removes the simulation properties with the given name from the simulation components<br>
-//	 * and also deletes the corresponding property-file in the simulation directory.
-//	 * @param name The name of the simulation properties to remove.
-//	 * @throws PropertyException if the path for the simulation directory cannot be extracted from the general properties file.
-//	 * @throws ParameterException if there is an internal parameter misconfiguration.
-//	 * @throws IOException if the corresponding property file for the simulation properties cannot be deleted.
-//	 */
-//	public void removeSimulationProperties(String name) throws PropertyException, IOException, ParameterException{
-//		if(simulationProperties.remove(name) != null){
-//			FileUtils.deleteFile(GeneralProperties.getInstance().getPathForSimulations()+name);
-//		}
-//	}
+	public static void main(String[] args) {
+		SimulationComponents.getInstance();
+	}
 }

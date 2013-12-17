@@ -24,9 +24,9 @@ import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.properties.ContextProperties;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.RBACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
 
 /**
  * This class provides context information for process execution.<br>
@@ -76,7 +76,7 @@ public class Context {
 	 */
 	protected Map<String, Set<AbstractConstraint<?>>> routingConstraints = new HashMap<String, Set<AbstractConstraint<?>>>();
 	
-	protected Set<DataUsage> validUsageModes = new HashSet<DataUsage>(Arrays.asList(DataUsage.values()));
+	protected List<DataUsage> validUsageModes = new ArrayList<DataUsage>(Arrays.asList(DataUsage.values()));
 	
 	
 	//------- Constructors ------------------------------------------------------------------
@@ -103,7 +103,7 @@ public class Context {
 	 * @see {@link #getNameListFromTransitions(Collection)}
 	 */
 	public Context(String name, Collection<AbstractTransition<?,?>> transitions) throws ParameterException {
-		this(name, PNUtils.getLabelSetFromTransitions(transitions));
+		this(name, PNUtils.getLabelSetFromTransitions(transitions, false));
 	}
 	
 	
@@ -364,8 +364,8 @@ public class Context {
 		} 
 	}
 	
-	public Set<DataUsage> getValidUsageModes(){
-		return Collections.unmodifiableSet(validUsageModes);
+	public List<DataUsage> getValidUsageModes(){
+		return Collections.unmodifiableList(validUsageModes);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -374,7 +374,7 @@ public class Context {
 		Validate.notEmpty(validUsageModes);
 		Validate.noNullElements(validUsageModes);
 		if(acModel != null){
-			if(!SetUtils.containSameElements(new HashSet<DataUsage>(validUsageModes), acModel.getValidUsageModes()))
+			if(!SetUtils.containSameElements(new HashSet<DataUsage>(validUsageModes), new HashSet<DataUsage>(acModel.getValidUsageModes())))
 				throw new ParameterException(ErrorCode.INCONSISTENCY, "Existing object permissions are in conflict with new set of valid usage modes.");
 		}
 		if(!activityDataUsage.isEmpty()){
@@ -801,7 +801,7 @@ public class Context {
 								 Collection<String> subjects, 
 								 Collection<String> activities, 
 								 Collection<String> attributes, 
-								 Set<DataUsage> dataUsageModes) throws ParameterException, InconsistencyException{
+								 List<DataUsage> dataUsageModes) throws ParameterException, InconsistencyException{
 		Validate.notNull(acModel);
 		if(!acModel.getSubjects().containsAll(subjects))
 			throw new InconsistencyException("Incompatible access control model: Missing subjects.");
@@ -809,7 +809,7 @@ public class Context {
 			throw new InconsistencyException("Incompatible access control model: Missing activities.");
 		if(!acModel.getObjects().containsAll(attributes))
 			throw new InconsistencyException("Incompatible access control model: Missing attributes.");
-		if(!SetUtils.containSameElements(dataUsageModes, acModel.getValidUsageModes()))
+		if(!SetUtils.containSameElements(new HashSet<DataUsage>(dataUsageModes), new HashSet<DataUsage>(acModel.getValidUsageModes())))
 			throw new InconsistencyException("Incompatible access control model: Different set of valid data usage modes.");
 	}
 	
@@ -836,7 +836,7 @@ public class Context {
 	 * @throws Exception 
 	 */
 	public static Context createRandomContext(Collection<AbstractTransition<?,?>> transitions, int originatorCount, List<String> roles) throws ParameterException {
-		return createRandomContext(PNUtils.getLabelSetFromTransitions(transitions), originatorCount, roles);
+		return createRandomContext(PNUtils.getLabelSetFromTransitions(transitions, false), originatorCount, roles);
 	}
 	
 	/**
@@ -1136,7 +1136,7 @@ public class Context {
 			}
 		
 		} catch(Exception e){
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 

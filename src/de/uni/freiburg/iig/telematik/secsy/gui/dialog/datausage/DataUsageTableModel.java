@@ -10,11 +10,11 @@ import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
 import de.invation.code.toval.types.DataUsage;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemEvent;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemListener;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionListenerSupport;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionPanel;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemListener;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionListenerSupport;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionPanel;
 
 
 
@@ -22,19 +22,40 @@ public class DataUsageTableModel extends AbstractTableModel implements ObjectPer
 	
 	private static final long serialVersionUID = -145830408957650293L;
 	
+	private static final int MIN_HEADER_WIDTH_ATTRIBUTE = 140;
+	private static final int MIN_HEADER_WIDTH_ACCESSMODE = 150;
+	
 	private List<ObjectPermissionPanel> dataUsagePanels = new ArrayList<ObjectPermissionPanel>();
 	private List<String> attributes = new ArrayList<String>();
 	private ObjectPermissionListenerSupport permissionListenerSupport = new ObjectPermissionListenerSupport();
 	private Context context = null;
+	private String[] columnNames = {"Attribute","Access Mode (R,W,C,D)"};
 	
 	public DataUsageTableModel(Context context){
 		this.context = context;
 	}
 	
+	public boolean isEmpty(){
+		return attributes.isEmpty();
+	}
+	
+	@Override
+	public String getColumnName(int column) {
+		return columnNames[column];
+	}
+
 	public void addElements(Collection<String> attributes){
 		for(String activity: attributes){
 			addElement(activity);
 		}
+	}
+	
+	public int getMinHeaderWidth(int column){
+		if(column == 0)
+			return MIN_HEADER_WIDTH_ATTRIBUTE;
+		if(column == 1)
+			return MIN_HEADER_WIDTH_ACCESSMODE;
+		return 0;
 	}
 	
 	public Dimension preferredCellSize(){

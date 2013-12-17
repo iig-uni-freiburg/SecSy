@@ -36,13 +36,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 
+import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.time.TimeScale;
 import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
-import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties;
 
 
@@ -512,7 +512,7 @@ public class ActivityDDAllDialog extends JDialog {
 	private JList getValueList(){
 		if(valueList == null){
 			valueList = new JList(valueListModel);
-			valueList.setCellRenderer(new CustomListRenderer());
+			valueList.setCellRenderer(new AlternatingRowColorListCellRenderer());
 			valueList.setFixedCellHeight(20);
 			valueList.setVisibleRowCount(10);
 			valueList.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);

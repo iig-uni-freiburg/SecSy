@@ -232,31 +232,6 @@ public class CaseDataContainerProperties extends AbstractProperties {
 		}
 		return valueGenerator;
 	}
-	
-	public static void main(String[] args) throws Exception{
-		CaseDataContainerProperties p = new CaseDataContainerProperties();
 
-		
-		p.setName("Testname");
-//		p.setContextName("Context5");
-		
-		AttributeValueGenerator gen = new AttributeValueGenerator();
-		gen.setDefaultValue(true);
-		StochasticValueGenerator<Integer> gen1 = new StochasticValueGenerator<Integer>();
-		gen1.addProbability(10, 0.5);
-		gen1.addProbability(20, 0.5);
-		gen.setValueGeneration("att1", gen1);
-		StochasticValueGenerator<String> gen2 = new StochasticValueGenerator<String>();
-		gen2.addProbability("fiti", 0.5);
-		gen2.addProbability("poto", 0.5);
-		gen.setValueGeneration("att2", gen2);
-		p.setAttributeValueGenerator(gen);
-		p.store("container");
-		
-		p.getAttributeValueGenerator();
-		Object defaultValueRec = p.getDefaultValue();
-		System.out.println(defaultValueRec);
-		p.getValueGenerator("VALUE_GENERATOR_att1");
-	}
 	
 }

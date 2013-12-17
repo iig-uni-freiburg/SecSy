@@ -42,6 +42,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import de.invation.code.toval.graphic.dialog.ValueChooserDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.time.Weekday;
 import de.invation.code.toval.validate.ParameterException;
@@ -210,7 +211,12 @@ public class TimeGeneratorDialog extends JDialog {
 					weekdays.remove(elements.nextElement().toString());
 				}
 				if(!weekdays.isEmpty()){
-					List<String> newWeekdays = ValueChooserDialog.showDialog(TimeGeneratorDialog.this, "Add weekdays", weekdays, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+					List<String> newWeekdays = null;
+					try {
+						newWeekdays = ValueChooserDialog.showDialog(TimeGeneratorDialog.this, "Add weekdays", weekdays, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(TimeGeneratorDialog.this, "<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e1.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					}
 					if(newWeekdays != null && !newWeekdays.isEmpty()){
 						for(String newWeekday: newWeekdays){
 							if(chckbxSkipWeekend.isSelected() && (newWeekday.equals("Saturday") || newWeekday.equals("Sunday")))
@@ -332,6 +338,7 @@ public class TimeGeneratorDialog extends JDialog {
 		setVisible(true);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void sortOfficeDays(){
 		List<Weekday> officeDays = new ArrayList<Weekday>();
 		for(Enumeration<Object> enumerator = (Enumeration<Object>) officeDayListModel.elements(); enumerator.hasMoreElements();){

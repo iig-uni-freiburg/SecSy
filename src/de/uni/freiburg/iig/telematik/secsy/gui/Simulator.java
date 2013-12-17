@@ -1,5 +1,7 @@
 package de.uni.freiburg.iig.telematik.secsy.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -24,28 +29,32 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.secsy.gui.action.CloseAction;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.ExecutionDialog;
+import de.uni.freiburg.iig.telematik.secsy.gui.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.SimulationDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.SimulationDirectoryDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.TimeFrameDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
-import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLFilter;
-import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.parser.graphic.ParserDialog;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-
-
 
 public class Simulator extends JFrame {
 
 	private static final long serialVersionUID = -8445477529677450528L;
+	
+	private static final Dimension PREFERRED_SIZE = new Dimension(500,500);
 	
 	private final CloseAction closeAction = new CloseAction();
 	
@@ -55,14 +64,9 @@ public class Simulator extends JFrame {
 	private JButton btnEditSimulation;
 	private JComboBox comboSimulation;
 	private JTextArea areaSimulation;
-	
-//	private FileWriter fileWriter = null;
+	private JPanel contentPanel = new JPanel(new BorderLayout());
 
-	/**
-	 * Create the application.
-	 */
 	public Simulator() {
-		setResizable(false);
 		//Check if there is a path to a simulation directory.
 		if(!checkSimulationDirectory()){
 			//There is no path and it is either not possible to set a path or the user aborted the corresponding dialog.
@@ -71,7 +75,13 @@ public class Simulator extends JFrame {
 		//Trigger the loading of simulation components
 		SimulationComponents.getInstance();
 		
+		setPreferredSize(PREFERRED_SIZE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		setUpGUI();
+		pack();
+		
+		setLocationRelativeTo(null);
 	}
 	
 	private boolean checkSimulationDirectory(){
@@ -100,7 +110,12 @@ public class Simulator extends JFrame {
 	}
 	
 	private boolean chooseSimulationDirectory(){
-		String simulationDirectory = SimulationDirectoryDialog.showDialog(Simulator.this);
+		String simulationDirectory = null;
+		try {
+			simulationDirectory = SimulationDirectoryDialog.showDialog(null);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "<html>Cannot start simulation directory dialog.<br>Reason: "+e.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+		}
 		if(simulationDirectory == null)
 			return false;
 		try {
@@ -119,35 +134,38 @@ public class Simulator extends JFrame {
 	}
 	
 	private void setUpGUI() {
-		
-		setBounds(100, 100, 540, 545);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		setJMenuBar(getMenu());
+		setContentPane(contentPanel);
 		
-		getContentPane().add(getButtonNewSimulation());
+		JPanel topPanel = new JPanel();
+		BoxLayout topPanelLayout = new BoxLayout(topPanel, BoxLayout.LINE_AXIS);
+		topPanel.setLayout(topPanelLayout);
+		topPanel.add(new JLabel("Simulation:"));
+		topPanel.add(getComboSimulation());
+		topPanel.add(getButtonNewSimulation());
+		topPanel.add(getButtonEditSimulation());
+		topPanel.add(Box.createHorizontalGlue());
+		topPanel.setBorder(BorderFactory.createEmptyBorder(15, 10, 5, 10));
+		contentPanel.add(topPanel, BorderLayout.PAGE_START);
 		
-		getContentPane().add(getComboSimulation());
-		
-		JLabel lblNewLabel = new JLabel("Simulation:");
-		lblNewLabel.setBounds(20, 20, 76, 16);
-		getContentPane().add(lblNewLabel);
-		
+		JPanel midPanel = new JPanel(new BorderLayout());
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(20, 55, 500, 400);
-		getContentPane().add(scrollPane);
-		
 		areaSimulation = new JTextArea();
 		areaSimulation.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		scrollPane.setViewportView(areaSimulation);
+		midPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+		midPanel.add(scrollPane, BorderLayout.CENTER);
+		contentPanel.add(midPanel, BorderLayout.CENTER);
 		updateSimulationArea();
 		
-		getContentPane().add(getButtonRun());
-		
-		getContentPane().add(getButtonTimeFrame());
-
-		getContentPane().add(getButtonEditSimulation());
+		JPanel bottomPanel = new JPanel();
+		BoxLayout bottomPanelLayout = new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS);
+		bottomPanel.setLayout(bottomPanelLayout);
+		bottomPanel.add(Box.createHorizontalGlue());
+		bottomPanel.add(getButtonTimeFrame());
+		bottomPanel.add(getButtonRun());
+		bottomPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		contentPanel.add(bottomPanel, BorderLayout.PAGE_END);
 		
 		addWindowListener(new WindowListener() {
 			
@@ -200,7 +218,12 @@ public class Simulator extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String simulationDirectory = SimulationDirectoryDialog.showDialog(Simulator.this);
+				String simulationDirectory = null;
+				try {
+					simulationDirectory = SimulationDirectoryDialog.showDialog(Simulator.this);
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(Simulator.this, "<html>Cannot start simulation directory dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				}
 				if(simulationDirectory == null){
 					return;
 				}
@@ -232,29 +255,15 @@ public class Simulator extends JFrame {
 		mntmPetriNetpnml.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, 0));
 		mntmPetriNetpnml.addActionListener(new ActionListener() {
 			
+			@SuppressWarnings({ "rawtypes"})
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(Simulator.this,
-											  "Transitions with names starting with \"_\" will be interpreted as silent transitions.\n"
-											  + "(Their firing will not result in the generation of s log event.)\n\n"
-											  + "Transition labels (not names/IDs!) will be interpreted as process activities.\n"
-											  + "This way, it is possible to consider duplicated activities in processes.",
-											  "Petri net import",
-											  JOptionPane.INFORMATION_MESSAGE);
-
-				JFileChooser fc = new JFileChooser();
-				fc.setAcceptAllFileFilterUsed(false);
-				fc.addChoosableFileFilter(new PNMLFilter());
-				int returnValue = fc.showOpenDialog(Simulator.this);
-				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-
-					// Try to import the Petri net.
-					AbstractPetriNet<?, ?, ?, ?, ?> loadedNet = null;
-					try {
-						loadedNet = new PNMLParser().parse(file.getAbsolutePath(), false, false).getPetriNet();
-					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(Simulator.this,"Cannot parse Petri net.\nReason: " + ex.getMessage(), "Parsing Exeption", JOptionPane.ERROR_MESSAGE);
+				AbstractGraphicalPN importedNet = ParserDialog.showPetriNetDialog(Simulator.this);
+				if(importedNet != null){
+					
+		            AbstractPetriNet loadedNet = importedNet.getPetriNet();
+					if(!(loadedNet instanceof PTNet)){
+						JOptionPane.showMessageDialog(Simulator.this,"Loaded Petri net is not a P/T Net, cannot proceed","Unexpected Petri net type", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					if(!(loadedNet instanceof PTNet)){
@@ -266,7 +275,7 @@ public class Simulator extends JFrame {
 					String netName = petriNet.getName();
 					try {
 						while (netName == null || SimulationComponents.getInstance().getPetriNet(netName) != null) {
-							netName = JOptionPane.showInputDialog(Simulator.this, "Name for the Petri net:", file.getName().substring(0, file.getName().lastIndexOf(".")));
+							netName = JOptionPane.showInputDialog(Simulator.this, "Name for the Petri net:", "");
 						}
 					} catch (ParameterException e1) {
 						JOptionPane.showMessageDialog(Simulator.this, "Cannot check if net name is already in use.\nReason: " + e1.getMessage(), "Internal Exeption", JOptionPane.ERROR_MESSAGE);
@@ -341,8 +350,8 @@ public class Simulator extends JFrame {
 					Simulation editedSimulation = null;
 					try {
 						editedSimulation = SimulationDialog.showSimulationDialog(Simulator.this, simulation);
-					} catch (ParameterException e2) {
-						JOptionPane.showMessageDialog(Simulator.this, "Cannot launch simulation dialog.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(Simulator.this, "<html>Cannot launch simulation dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					if(editedSimulation != null){
@@ -379,7 +388,6 @@ public class Simulator extends JFrame {
 					}
 				}
 			});
-			btnEditSimulation.setBounds(452, 16, 68, 29);
 		}
 		return btnEditSimulation;
 	}
@@ -393,8 +401,8 @@ public class Simulator extends JFrame {
 					Simulation newSimulation = null;
 					try {
 						newSimulation = SimulationDialog.showSimulationDialog(Simulator.this);
-					} catch (ParameterException e1) {
-						JOptionPane.showMessageDialog(null, "Internal exception: Cannot launch simulation dialog.\nReason: " + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(null, "<html>Cannot launch simulation dialog.<br>Reason: " + e1.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					if(newSimulation != null){
@@ -410,7 +418,6 @@ public class Simulator extends JFrame {
 					
 				}
 			});
-			btnNewSimulation.setBounds(382, 16, 70, 29);
 		}
 		return btnNewSimulation;
 	}
@@ -438,14 +445,12 @@ public class Simulator extends JFrame {
 							try {
 								new ExecutionDialog(Simulator.this, simulation);
 							} catch (ParameterException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
+								JOptionPane.showMessageDialog(Simulator.this, "<html>Cannot launch execution dialog dialog.<br>Reason: " + e1.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 							}
 						}
 					}
 				}
 			});
-			btnRun.setBounds(405, 460, 115, 29);
 		}
 		return btnRun;
 	}
@@ -467,7 +472,6 @@ public class Simulator extends JFrame {
 	private JButton getButtonTimeFrame(){
 		if(btnTimeFrame == null){
 			btnTimeFrame = new JButton("Time Frame");
-			btnTimeFrame.setBounds(290, 460, 115, 29);
 			btnTimeFrame.addActionListener(new ActionListener() {
 				
 				@Override
@@ -475,7 +479,11 @@ public class Simulator extends JFrame {
 					Simulation simulation = getSimulation();
 					if(simulation == null)
 						return;
-					new TimeFrameDialog(Simulator.this, simulation);
+					try {
+						new TimeFrameDialog(Simulator.this, simulation);
+					} catch (ConfigurationException e1) {
+						JOptionPane.showMessageDialog(Simulator.this, "<html>Cannot launch time frame dialog dialog.<br>Reason: " + e1.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			});
 		}
@@ -485,7 +493,6 @@ public class Simulator extends JFrame {
 	private JComboBox getComboSimulation(){
 		if(comboSimulation == null){
 			comboSimulation = new JComboBox();
-			comboSimulation.setBounds(100, 16, 279, 27);
 			comboSimulation.addItemListener(new ItemListener() {
 				
 				@Override
@@ -528,89 +535,5 @@ public class Simulator extends JFrame {
 			return null;
 		}
 	}
-	
-	public static void main(String[] args) {
-		new Simulator();
-	}
-	
-	
-	
-	
-//	private class SimulationThread implements Runnable,TraceStartListener {
-//		
-//		private Simulation simulation = null;
-//
-//		public SimulationThread(Simulation simulation) {
-//			this.simulation = simulation;
-//		}
-//
-//		public void run() {
-////			try {
-////				simulation.getLogGenerator().registerTraceStartListener(this);
-////			} catch (ParameterException e2) {
-////				JOptionPane.showMessageDialog(Simulator.this, "Cannot register simulator as trace start listener at log generator.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-////				return;
-////			}
-//			try {
-//				if(fileWriter != null){
-//					fileWriter.closeFile();
-//				}
-//				fileWriter = new FileWriter(simulation.getLogGenerator().getLogPath(), simulation.getLogGenerator().getFileNameShort());
-//				fileWriter.setFileExtension("log");
-//			} catch (ParameterException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			
-//			simulation.addSimulationListener(Simulator.this);
-//			
-//			try {
-//				MessageDialog.getInstance().addMessage("Starting simulation: " + simulation.getName() + "...");
-//				long startTime = System.currentTimeMillis();
-//				simulation.executeSimulation();
-//				long endTime = System.currentTimeMillis();
-//				MessageDialog.getInstance().addMessage("                     Completed.");
-//				MessageDialog.getInstance().addMessage("                     Simulation time: " + (endTime - startTime) / 1000.0 + " s");
-//				MessageDialog.getInstance().addMessage("                     Log file size: " + simulation.getLogGenerator().getLogFileSize());
-//			} catch (ConfigurationException e1) {
-//				JOptionPane.showMessageDialog(Simulator.this,"Simulation components are not connected properly.\nReason: " + e1.getMessage(), "Configuration Exception",JOptionPane.ERROR_MESSAGE);
-//				return;
-//			} catch (SimulationException e1) {
-//				JOptionPane.showMessageDialog(Simulator.this,"Exception during process simulation.\nReason: " + e1.getMessage(), "Simulation Exception",JOptionPane.ERROR_MESSAGE);
-//				return;
-//			} catch (IOException e1) {
-//				JOptionPane.showMessageDialog(Simulator.this,"I/O Exception during process simulation.\nReason: " + e1.getMessage(), "Simulation Exception", JOptionPane.ERROR_MESSAGE);
-//				return;
-//			}
-//			
-//			try {
-//				fileWriter.closeFile();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		@Override
-//		public void traceStarted(int caseNumber) throws ParameterException {
-//			if (caseNumber == 1) {
-//				MessageDialog.getInstance().addMessage("                     Starting trace " + caseNumber);
-//			} else {
-//				MessageDialog.getInstance().addMessageOverride("                     Starting trace " + caseNumber);
-//			}
-//		}
-//	}
 
-//	@Override
-//	public void simulationMessage(String message) {
-//		try {
-//			fileWriter.writeLine(message);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
 }

@@ -341,8 +341,6 @@ public class DataContainerDialog extends JDialog {
 					}
 				}
 				
-				
-				
 				String containerName = txtName.getText();
 				if(containerName == null || containerName.isEmpty()){
 					JOptionPane.showMessageDialog(DataContainerDialog.this, "Affected field: Container name.\nReason: Null or empty value.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
@@ -359,25 +357,20 @@ public class DataContainerDialog extends JDialog {
 				
 				String defaultValueString = txtDefaultValue.getText();
 				Object defaultValue = null;
-				Class defaultValueClass = null;
 				if(defaultValueString == null || defaultValueString.isEmpty()){
 					JOptionPane.showMessageDialog(DataContainerDialog.this, "Affected field: Default value.\nReason: Empty value.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				if(defaultValueString.equals("null")){
 					defaultValue = null;
-					defaultValueClass = Object.class;
 				} else {
 					try{
 					if(comboDefaultValueType.getSelectedItem().toString().equals("String")){
 						defaultValue = defaultValueString;
-						defaultValueClass = String.class;
 					} else if(comboDefaultValueType.getSelectedItem().toString().equals("Integer")){
 						defaultValue = Integer.parseInt(defaultValueString);
-						defaultValueClass = Integer.class;
 					} else if(comboDefaultValueType.getSelectedItem().toString().equals("Double")){
 						defaultValue = Double.valueOf(defaultValueString);
-						defaultValueClass = Double.class;
 					}
 					}catch(Exception e1){
 						JOptionPane.showMessageDialog(DataContainerDialog.this, "Affected field: Default value or default value type.\nReason: "+e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
@@ -423,6 +416,7 @@ public class DataContainerDialog extends JDialog {
 		return listAttributes.getSelectedValue().toString();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private Object getValue(String valueString){
 		Class valueType = getValueType();
 		if(valueType.equals(String.class)){
@@ -437,6 +431,7 @@ public class DataContainerDialog extends JDialog {
 		return null;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private Class getValueType(){
 		String typeString = comboValueType.getSelectedItem().toString();
 		if(typeString.equals("String")){
@@ -547,8 +542,8 @@ public class DataContainerDialog extends JDialog {
 						listValueModel.removeElement(selectedObject);
 					}
 				} catch (ParameterException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(DataContainerDialog.this, "<html>Cannot remove selected value.<br>Reason: " + e1.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					return;
 				}
 				updateValueList();
 				if(listValueModel.isEmpty()){
@@ -565,8 +560,8 @@ public class DataContainerDialog extends JDialog {
 			try {
 				valueGenerator = (StochasticValueGenerator<?>) attValueGenerator.getValueGenerator(getAttribute());
 			} catch (ParameterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(DataContainerDialog.this, "<html>Cannot extrat value generator for attribute \""+getAttribute()+"\".<br>Reason: " + e.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				
 			}
 			if(valueGenerator != null){
 				for(Object element: valueGenerator.getElements()){

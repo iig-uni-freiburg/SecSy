@@ -1,5 +1,8 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.simulation;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceCompletionListener;
@@ -7,11 +10,12 @@ import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.Simulatio
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformerManager;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerManager;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.entry.AbstractEntryTransformer;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.AbstractTraceTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.traversal.PNTraverser;
 import de.uni.freiburg.iig.telematik.sepia.traversal.RandomPNTraverser;
+import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 
 /**
  * Simple class for simulation runs.
@@ -192,6 +196,18 @@ public class SimulationRun implements TraceCompletionListener{
 	
 	public int getGeneratedTraces(){
 		return generatedTraces;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Set<String> getActivities() throws ParameterException{
+		Set<String> activities = new HashSet<String>();
+		AbstractPetriNet ptNet = getPetriNet();
+		if(ptNet == null)
+			throw new ParameterException("Cannot extract activities: Petri net not set.");
+		else{
+			activities.addAll(PNUtils.getLabelSetFromTransitions(ptNet.getTransitions(), false));
+			return activities;
+		}
 	}
 
 	@Override

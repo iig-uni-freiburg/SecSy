@@ -24,15 +24,12 @@ import de.uni.freiburg.iig.telematik.jawl.writer.LogWriter;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
+import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException.ErrorCode;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationListener;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationListenerSupport;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
-import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException.ErrorCode;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TransformerListener;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.TransformerType;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.AbstractTraceTransformer;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.multiple.SkipActivitiesTransformer;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.multiple.UnauthorizedExecutionTransformer;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 
 
@@ -310,8 +307,7 @@ public abstract class LogGenerator implements TransformerListener{
 		try {
 			prepareLogWriter(logFormat, logPath, fileName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SimulationException("Cannot prepare log writer: " + e.getMessage());
 		}
 	}
 	
@@ -351,24 +347,24 @@ public abstract class LogGenerator implements TransformerListener{
 	
 	private void checkTransformerRequirements(SimulationRun run) throws ConfigurationException{
 		for(AbstractTraceTransformer traceTransformer: run.getTraceTransformerManager().getTraceTransformers()){
-			if(traceTransformer.getType().equals(TransformerType.UNAUTHORIZED_EXECUTION)){
+			if(traceTransformer.requiresContext()){
 				if(getLogEntryGenerator() instanceof DetailedLogEntryGenerator){
 					Context context = ((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext();
 					try {
-						((UnauthorizedExecutionTransformer) traceTransformer).setContext(context);
+						traceTransformer.setContext(context);
 					} catch (ParameterException e) {
-						throw new ConfigurationException(ErrorCode.NO_CONTEXT, "Cannot set context for UnauthorizedExecution-transformer: " + context);
+						throw new ConfigurationException(ErrorCode.NO_CONTEXT, "Cannot set context for transformer \""+traceTransformer.getName()+"\":" + context);
 					}
 				} else {
 					throw new ConfigurationException(ErrorCode.TRANSFORMER_MISCONFIGURATION, "Incompatible Transformer: UnauthorizedExecution-transformer requires a context.");
 				}
 			}
-			if(traceTransformer.getType().equals(TransformerType.SKIP_ACTIVITIES)){
+			if(traceTransformer.requiresTimeGenerator()){
 				CaseTimeGenerator timeGenerator = getCaseTimeGenerator();
 				try {
-					((SkipActivitiesTransformer) traceTransformer).setTimeGenerator(timeGenerator);
+					traceTransformer.setTimeGenerator(timeGenerator);
 				} catch (ParameterException e) {
-					throw new ConfigurationException(ErrorCode.NO_TIMEGENERATOR, "Cannot set time generator for SkipActivities-transformer: " + timeGenerator);
+					throw new ConfigurationException(ErrorCode.NO_TIMEGENERATOR, "Cannot set time generator for transformer \""+traceTransformer.getName()+"\": " + timeGenerator);
 				}
 			}
 		}

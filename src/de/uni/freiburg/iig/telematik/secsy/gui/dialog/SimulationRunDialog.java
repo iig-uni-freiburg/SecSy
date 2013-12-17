@@ -1,26 +1,29 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
 
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
@@ -29,18 +32,23 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 
+import de.invation.code.toval.graphic.dialog.AbstractDialog;
+import de.invation.code.toval.graphic.dialog.ValueChooserDialog;
+import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.secsy.gui.GUIProperties;
 import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.TransformerDialog;
-import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.SimulationRunProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerManager;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.AbstractTraceTransformer;
-import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLFilter;
-import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.parser.graphic.ParserDialog;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.RandomPTTraverser;
@@ -48,37 +56,36 @@ import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 
 
 
-public class SimulationRunDialog extends AbstractSimulationDialog {
+public class SimulationRunDialog extends AbstractDialog {
 
 	private static final long serialVersionUID = 5957764226864259142L;
 	
-	private JButton btnAddTransformer = null;
-	private JButton btnNewTransformer = null;
-	private JButton btnEditTransformer = null;
-	private JButton btnTransformerUp = null;
-	private JButton btnTransformerDown = null;
-	private JButton btnImportNet = null;
-	private JTextField txtName = null;
+	public static final Dimension PREFERRED_SIZE = new Dimension(420, 460);
 	
-	private JComboBox comboNet = null;
+	private JButton btnAddTransformer;
+	private JButton btnNewTransformer;
+	private JButton btnEditTransformer;
+	private JButton btnTransformerUp;
+	private JButton btnTransformerDown;
+	private JButton btnImportNet;
+	private JTextField txtName;
 	
-	private JSpinner spinPasses = null;
+	private JComboBox comboNet;
 	
-	private JList listTransformers = null;
-	private DefaultListModel listTransformersModel = null;
+	private JSpinner spinPasses;
+	
+	private JList listTransformers;
+	private DefaultListModel listTransformersModel;
 	
 	//---------------------------------------------------
 	
-	private List<AbstractTraceTransformer> transformers = null;
+	private List<AbstractTraceTransformer> transformers;
 	
-	/**
-	 * @wbp.parser.constructor
-	 */
-	public SimulationRunDialog(Window owner) {
+	public SimulationRunDialog(Window owner) throws Exception {
 		super(owner);
 	}
 	
-	public SimulationRunDialog(Window owner, SimulationRun simulationRun) {
+	public SimulationRunDialog(Window owner, SimulationRun simulationRun) throws Exception {
 		super(owner, true, new Object[]{simulationRun});
 	}
 	
@@ -92,8 +99,8 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 	}
 	
 	@Override
-	protected void setBounds() {
-		setBounds(100, 100, 420, 460);
+	public Dimension getPreferredSize() {
+		return PREFERRED_SIZE;
 	}
 	
 	@Override
@@ -104,12 +111,9 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 			setTitle("Edit Simulation Run");
 		}
 	}
-	
-	
 
 	@Override
 	protected void prepareEditing() {
-		// TODO Auto-generated method stub
 		txtName.setText(getDialogObject().getName());
 		comboNet.setSelectedItem(getDialogObject().getPetriNet().getName());
 		spinPasses.setValue(getDialogObject().getPasses());
@@ -121,72 +125,96 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 
 	@Override
 	protected void addComponents() {
-		
-		mainPanel().add(getComboNet());
-		
-		JLabel lblName = new JLabel("Name:");
-		lblName.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblName.setBounds(19, 20, 61, 27);
-		mainPanel().add(lblName);
-		
-		JLabel lblPetriNet = new JLabel("Petri net:");
-		lblPetriNet.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblPetriNet.setBounds(19, 54, 61, 27);
-		mainPanel().add(lblPetriNet);
-		
-		JLabel lblTraverser = new JLabel("Traverser:");
-		lblTraverser.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblTraverser.setBounds(6, 85, 74, 27);
-		mainPanel().add(lblTraverser);
-
-		JLabel lblPasses = new JLabel("Passes:");
-		lblPasses.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblPasses.setBounds(6, 118, 74, 27);
-		mainPanel().add(lblPasses);
-		
-		txtName = new JTextField();
-		txtName.setText(SimulationRunProperties.defaultName);
-		txtName.setBounds(92,20,218,27);
-		mainPanel().add(txtName);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"RANDOM TRAVERSAL"}));
-		comboBox.setBounds(92, 85, 218, 27);
-		comboBox.setToolTipText(Hints.hintRandomTraversal);
-		mainPanel().add(comboBox);
-		
-		spinPasses = new JSpinner();
-		spinPasses.setBounds(92, 118, 118, 27);
-		SpinnerModel model = new SpinnerNumberModel(1000, 1, 1000000, 10); 
-		spinPasses.setModel(model);
-		mainPanel().add(spinPasses);
-		
-		JSeparator separator = new JSeparator();
-		separator.setBounds(19, 155, 382, 12);
-		mainPanel().add(separator);
-		
-		JLabel lblTransformer = new JLabel("Trace Transformer:");
-		lblTransformer.setBounds(19, 174, 74, 16);
-		mainPanel().add(lblTransformer);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(19, 194, 382, 155);
-		mainPanel().add(scrollPane);
-		scrollPane.setViewportView(getListTransformers());
-		
-		mainPanel().add(getButtonAddTransformer());
-		mainPanel().add(getButtonNewTransformer());
-		mainPanel().add(getButtonEditTransformer());
-		mainPanel().add(getButtonTransformerUp());
-		mainPanel().add(getButtonTransformerDown());
-		
-		mainPanel().add(getButtonImportNet());
+		mainPanel().setBorder(GUIProperties.DEFAULT_DIALOG_BORDER);
+		BoxLayout layout = new BoxLayout(mainPanel(), BoxLayout.PAGE_AXIS);
+		mainPanel().setLayout(layout);
+		mainPanel().add(getParameterPanel());
+		mainPanel().add(Box.createVerticalStrut(5));
+		mainPanel().add(new JSeparator(SwingConstants.HORIZONTAL));
+		mainPanel().add(Box.createVerticalStrut(5));
+		mainPanel().add(getTransformerPanel());
+		setResizable(true);
 	}
 	
+	private JPanel getTransformerPanel() {
+		JPanel transformerPanel = new JPanel(new BorderLayout());
+		
+		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JLabel lblTransformer = new JLabel("Trace Transformer:");
+		topPanel.add(lblTransformer);
+		transformerPanel.add(topPanel, BorderLayout.PAGE_START);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(getListTransformers());
+		transformerPanel.add(scrollPane, BorderLayout.CENTER);
+		
+		JPanel buttonPanel = new JPanel();
+		BoxLayout layout = new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS);
+		buttonPanel.setLayout(layout);
+		buttonPanel.add(getButtonAddTransformer());
+		buttonPanel.add(getButtonNewTransformer());
+		buttonPanel.add(getButtonEditTransformer());
+		buttonPanel.add(Box.createHorizontalGlue());
+		buttonPanel.add(getButtonTransformerUp());
+		buttonPanel.add(getButtonTransformerDown());
+		transformerPanel.add(buttonPanel, BorderLayout.PAGE_END);
+		
+		return transformerPanel;
+	}
+
+	private JPanel getParameterPanel() {
+		JPanel parameterPanel = new JPanel();
+		BoxLayout layout = new BoxLayout(parameterPanel, BoxLayout.PAGE_AXIS);
+		parameterPanel.setLayout(layout);
+		
+		int labelWidth = 120;
+		JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JLabel lblName = new JLabel("Name:");
+		lblName.setPreferredSize(new Dimension(labelWidth, GUIProperties.DEFAULT_LABEL_HEIGHT));
+		lblName.setHorizontalAlignment(SwingConstants.TRAILING);
+		namePanel.add(lblName);
+		txtName = new JTextField();
+		txtName.setText(SimulationRunProperties.defaultName);
+		namePanel.add(txtName);
+		parameterPanel.add(namePanel);
+		
+		JPanel netPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JLabel lblPetriNet = new JLabel("Petri net:");
+		lblPetriNet.setPreferredSize(new Dimension(labelWidth, GUIProperties.DEFAULT_LABEL_HEIGHT));
+		lblPetriNet.setHorizontalAlignment(SwingConstants.TRAILING);
+		netPanel.add(lblPetriNet);
+		netPanel.add(getComboNet());
+		netPanel.add(getButtonImportNet());
+		parameterPanel.add(netPanel);
+		
+		JPanel traverserPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JLabel lblTraverser = new JLabel("Traverser:");
+		lblTraverser.setPreferredSize(new Dimension(labelWidth, GUIProperties.DEFAULT_LABEL_HEIGHT));
+		lblTraverser.setHorizontalAlignment(SwingConstants.TRAILING);
+		traverserPanel.add(lblTraverser);
+		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"RANDOM TRAVERSAL"}));
+		comboBox.setToolTipText(Hints.hintRandomTraversal);
+		traverserPanel.add(comboBox);
+		parameterPanel.add(traverserPanel);
+		
+		JPanel passesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JLabel lblPasses = new JLabel("Passes:");
+		lblPasses.setPreferredSize(new Dimension(labelWidth, GUIProperties.DEFAULT_LABEL_HEIGHT));
+		lblPasses.setHorizontalAlignment(SwingConstants.TRAILING);
+		passesPanel.add(lblPasses);
+		spinPasses = new JSpinner();
+		SpinnerModel model = new SpinnerNumberModel(1000, 1, 1000000, 10); 
+		spinPasses.setModel(model);
+		passesPanel.add(spinPasses);
+		parameterPanel.add(passesPanel);
+		
+		return parameterPanel;
+	}
+
 	private JComboBox getComboNet(){
 		if(comboNet == null){
 			comboNet = new JComboBox();
-			comboNet.setBounds(92, 54, 218, 27);
 			updateComboNet();
 		}
 		return comboNet;
@@ -208,7 +236,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		if(listTransformers == null){
 			listTransformers = new JList(listTransformersModel);
 			listTransformers.setToolTipText(Hints.hintTransformerList);
-			listTransformers.setCellRenderer(new CustomListRenderer());
+			listTransformers.setCellRenderer(new AlternatingRowColorListCellRenderer());
 			listTransformers.setFixedCellHeight(20);
 			listTransformers.setVisibleRowCount(10);
 			listTransformers.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -251,22 +279,22 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		}
 	}
 	
-	private Set<String> getTransformerNames(){
-		Set<String> transformerNames = new HashSet<String>();
-		for(AbstractTraceTransformer transformer: transformers){
-			transformerNames.add(transformer.getName());
-		}
-		return transformerNames;
-	}
-	
-	private AbstractTraceTransformer getTransformer(String transformerName){
-		for(AbstractTraceTransformer transformer: transformers){
-			if(transformer.getName().equals(transformerName)){
-				return transformer;
-			}
-		}
-		return null;
-	}
+//	private Set<String> getTransformerNames(){
+//		Set<String> transformerNames = new HashSet<String>();
+//		for(AbstractTraceTransformer transformer: transformers){
+//			transformerNames.add(transformer.getName());
+//		}
+//		return transformerNames;
+//	}
+//	
+//	private AbstractTraceTransformer getTransformer(String transformerName){
+//		for(AbstractTraceTransformer transformer: transformers){
+//			if(transformer.getName().equals(transformerName)){
+//				return transformer;
+//			}
+//		}
+//		return null;
+//	}
 	
 	private JButton getButtonAddTransformer(){
 		if(btnAddTransformer == null){
@@ -276,7 +304,12 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 					if(SimulationComponents.getInstance().containsTransformers()){
 						List<String> transformerNames = new ArrayList<String>(SimulationComponents.getInstance().getTransformerNames());
 						Collections.sort(transformerNames);
-						List<String> chosenTransformers = ValueChooserDialog.showDialog(SimulationRunDialog.this, "Choose Existing Transformer", transformerNames, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+						List<String> chosenTransformers = null;
+						try {
+							chosenTransformers = ValueChooserDialog.showDialog(SimulationRunDialog.this, "Choose Existing Transformer", transformerNames, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+						} catch (Exception e2) {
+							JOptionPane.showMessageDialog(SimulationRunDialog.this, "<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						}
 						if(chosenTransformers != null){
 							for(String transformerName: chosenTransformers){
 								try {
@@ -294,7 +327,6 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 					}
 				}
 			});
-			btnAddTransformer.setBounds(20, 353, 80, 29);
 		}
 		return btnAddTransformer;
 	}
@@ -309,12 +341,12 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		        		return;
 					}
 					
-					Set<String> activities = getActivities();
-					if(activities == null){
-						return;
+					AbstractTraceTransformer newTransformer = null;
+					try {
+						newTransformer = TransformerDialog.showDialog(SimulationRunDialog.this, getActivities());
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(SimulationRunDialog.this, "<html>Cannot launch transformer dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 					}
-					
-					AbstractTraceTransformer newTransformer = TransformerDialog.showDialog(SimulationRunDialog.this, activities);
 					if(newTransformer == null){
 						//User cancelled transformer dialog.
 						return;
@@ -323,39 +355,16 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 					try {
 						SimulationComponents.getInstance().addTransformer(newTransformer);
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot add new transformer \""+newTransformer.getName()+"\" to simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SimulationRunDialog.this, "<html>Cannot add new transformer \""+newTransformer.getName()+"\" to simulation components.<br>Reason: "+ e1.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 		        		return;
 					}
+					
 					transformers.add(newTransformer);
 					updateListTransformers();
 				}
 			});
-			btnNewTransformer.setBounds(100, 353, 80, 29);
 		}
 		return btnNewTransformer;
-	}
-	
-	private Set<String> getActivities(){
-		PTNet ptNet = null;
-		try {
-			ptNet = SimulationComponents.getInstance().getPetriNet(comboNet.getSelectedItem().toString());
-		} catch (ParameterException e1) {
-			JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot extract Petri net \""+comboNet.getSelectedItem().toString()+"\" from simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-    		return null;
-		}
-		if(ptNet == null){
-			JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot extract Petri net \""+comboNet.getSelectedItem().toString()+"\" from simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-    		return null;
-		}
-		
-		Set<String> activities = null;
-		try {
-			activities = PNUtils.getLabelSetFromTransitions(ptNet.getTransitions());
-		} catch (ParameterException e1) {
-			JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot extract activity names from Petri net \""+comboNet.getSelectedItem().toString()+"\".", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-    		return null;
-		}
-		return activities;
 	}
 	
 	private JButton getButtonEditTransformer(){
@@ -368,13 +377,13 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 					}
 					AbstractTraceTransformer selectedTransformer = (AbstractTraceTransformer) listTransformers.getSelectedValue();
 					
-					Set<String> activities = getActivities();
-					if(activities == null){
-						return;
-					}
-					
 					String oldTransformerName = selectedTransformer.getName();
-					AbstractTraceTransformer adjustedTransformer = TransformerDialog.showDialog(SimulationRunDialog.this, activities, selectedTransformer);
+					AbstractTraceTransformer adjustedTransformer = null;
+					try {
+						adjustedTransformer = TransformerDialog.showDialog(SimulationRunDialog.this, getActivities(), selectedTransformer);
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(SimulationRunDialog.this, "<html>Cannot launch transformer dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					}
 					if(adjustedTransformer == null){
 						//User cancelled the transformer dialog
 						return;
@@ -391,7 +400,6 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 					updateListTransformers();
 				}
 			});
-			btnEditTransformer.setBounds(180, 353, 80, 29);
 		}
 		return btnEditTransformer;
 	}
@@ -411,7 +419,6 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 					}
 				}
 			});
-			btnTransformerUp.setBounds(280, 353, 60, 29);
 		}
 		return btnTransformerUp;
 	}
@@ -431,7 +438,6 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 					}
 				}
 			});
-			btnTransformerDown.setBounds(340, 353, 60, 29);
 		}
 		return btnTransformerDown;
 	}
@@ -441,29 +447,14 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 			btnImportNet = new JButton("Import...");
 			btnImportNet.addActionListener(new ActionListener() {
 				
+				@SuppressWarnings("rawtypes")
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
-					JOptionPane.showMessageDialog(SimulationRunDialog.this, "Transitions with names starting with \"_\" will be interpreted as silent transitions.\n" +
-																			"(Their firing will not result in the generation of s log event.)\n\n" +
-																			"Transition labels (not names/IDs!) will be interpreted as process activities.\n" +
-																			"This way, it is possible to consider duplicated activities in processes.", "Petri net import", JOptionPane.INFORMATION_MESSAGE);
-					
-					JFileChooser fc = new JFileChooser();
-					fc.setAcceptAllFileFilterUsed(false);
-					fc.addChoosableFileFilter(new PNMLFilter());
-					int returnValue = fc.showOpenDialog(SimulationRunDialog.this);
-					if (returnValue == JFileChooser.APPROVE_OPTION) {
-			            File file = fc.getSelectedFile();
-			            
-			            //Try to import the Petri net.
-			            AbstractPetriNet<?, ?, ?, ?, ?> loadedNet = null;
-						try {
-							loadedNet = new PNMLParser().parse(file.getAbsolutePath(), false, false).getPetriNet();
-						} catch (Exception ex) {
-							JOptionPane.showMessageDialog(SimulationRunDialog.this,"Cannot parse Petri net.\nReason: " + ex.getMessage(), "Parsing Exeption", JOptionPane.ERROR_MESSAGE);
-							return;
-						}
+					AbstractGraphicalPN importedNet = ParserDialog.showPetriNetDialog(SimulationRunDialog.this);
+					if(importedNet != null){
+						
+			            AbstractPetriNet loadedNet = importedNet.getPetriNet();
 						if(!(loadedNet instanceof PTNet)){
 							JOptionPane.showMessageDialog(SimulationRunDialog.this,"Loaded Petri net is not a P/T Net, cannot proceed","Unexpected Petri net type", JOptionPane.ERROR_MESSAGE);
 							return;
@@ -473,7 +464,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 			            String netName = petriNet.getName();
 			            try {
 			            	while(netName == null || SimulationComponents.getInstance().getPetriNet(netName) != null){
-			            		netName = JOptionPane.showInputDialog(SimulationRunDialog.this, "Name for the Petri net:", file.getName().substring(0, file.getName().lastIndexOf(".")));
+			            		netName = JOptionPane.showInputDialog(SimulationRunDialog.this, "Name for the Petri net:", "");
 			            	}
 			            } catch (ParameterException e1) {
 			            	JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot check if net name is already in use.\nReason: " + e1.getMessage(), "Internal Exeption", JOptionPane.ERROR_MESSAGE);
@@ -499,30 +490,58 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 			        }
 				}
 			});
-			btnImportNet.setBounds(311, 54, 90, 27);
 		}
 		return btnImportNet;
 	}
 	
-	@Override
-	protected void okProcedure() {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Set<String> getActivities(){
+		AbstractPetriNet ptNet = null;
+		try {
+			ptNet = getPetriNet();
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), "Cannot extract Petri net from simulation run.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+    		return null;
+		}
+		if(ptNet == null){
+			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), "Petri net reference in simulation run is null.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+    		return null;
+		}
 		
+		Set<String> activities = null;
+		try {
+			activities = PNUtils.getLabelSetFromTransitions(ptNet.getTransitions(), false);
+		} catch (ParameterException e1) {
+			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), "Cannot extract activity names from Petri net \""+ptNet.getName()+"\".", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+    		return null;
+		}
+		return activities;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	protected AbstractPetriNet getPetriNet(){
 		//Get Petri net
-		if(comboNet.getSelectedItem() == null){
+		if (comboNet.getSelectedItem() == null) {
 			JOptionPane.showMessageDialog(SimulationRunDialog.this, "No Petri net chosen.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-    		return;
+			return null;
 		}
 		PTNet petriNet = null;
 		try {
 			petriNet = SimulationComponents.getInstance().getPetriNet(comboNet.getSelectedItem().toString());
-		} catch(Exception ex){
+		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot extract Petri net from simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-    		return;
+			return null;
 		}
-		if(petriNet == null){
+		if (petriNet == null) {
 			JOptionPane.showMessageDialog(SimulationRunDialog.this, "Cannot extract Petri net from simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-    		return;
+			return null;
 		}
+		return petriNet;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	protected void okProcedure() {
 		
 		//Validate transformer name
 		String runName = txtName.getText();
@@ -552,6 +571,7 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 			}
 		}
 		
+		AbstractPetriNet petriNet = getPetriNet();
 		try {
 			if(editMode){
 				try {
@@ -573,33 +593,25 @@ public class SimulationRunDialog extends AbstractSimulationDialog {
 		
 		super.okProcedure();
 	}
-	
-	
 
 	@Override
 	protected SimulationRun getDialogObject() {
 		return (SimulationRun) super.getDialogObject();
 	}
 	
-	public static SimulationRun showDialog(Window owner){
+	public static SimulationRun showDialog(Window owner) throws Exception{
 		SimulationRunDialog dialog = new SimulationRunDialog(owner);
 		return dialog.getDialogObject();
 	}
 	
-	public static SimulationRun showDialog(Window owner, SimulationRun simulationRun){
+	public static SimulationRun showDialog(Window owner, SimulationRun simulationRun) throws Exception{
 		SimulationRunDialog dialog = new SimulationRunDialog(owner, simulationRun);
 		return dialog.getDialogObject();
 	}
-	
-	public static void main(String[] args) throws Exception{
-		PTNet ptNet = new PTNet();
-		ptNet.setName("net 1");
-		SimulationRun run1 = new SimulationRun(ptNet, 100);
-		System.out.println(run1.getPetriNet().getName());
-		System.out.println(run1.getPasses());
-		new SimulationRunDialog(null, run1);
-		System.out.println(run1.getPetriNet().getName());
-		System.out.println(run1.getPasses());
+
+	@Override
+	protected Border getBorder() {
+		return GUIProperties.DEFAULT_DIALOG_BORDER;
 	}
 
 	

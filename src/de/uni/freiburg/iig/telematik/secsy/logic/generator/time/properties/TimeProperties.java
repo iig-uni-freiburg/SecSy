@@ -1045,47 +1045,4 @@ public class TimeProperties extends AbstractProperties{
 		store("time_generators/"+getName());
 	}
 
-	public static void main(String[] args) throws Exception{
-		TimeProperties tp = new TimeProperties();
-		tp.setDefaultActivityDuration(new TimeValue(400, TimeScale.MILLISECONDS));
-		tp.setWorkingHours(7, 18);
-		tp.setActivityDuration("Act01", 20, TimeScale.MINUTES, 0.1);
-		tp.setActivityDelay("Act03", 10, TimeScale.MINUTES, 0.2);
-		tp.setDefaultActivityDelayBounds(10, TimeScale.MINUTES, 20, TimeScale.MINUTES);
-		tp.setDayCasesDeviation(0.3);
-		tp.setStartTime(System.currentTimeMillis());
-		tp.setCasesPerDay(2000);
-		CaseTimeGenerator gen = TimeGeneratorFactory.createCaseTimeGenerator(tp);
-		System.out.println(tp.getCasesPerDay());
-		System.out.println(gen.getMaxCasesPerDay());
-		tp.store("test.properties");
-		
-		System.out.println(tp.getDefaultActivityDuration());
-		TimeProperties tp2 = tp.clone();
-		System.out.println(tp2.getDefaultActivityDuration());
-		tp.setDefaultActivityDuration(new TimeValue(500, TimeScale.MILLISECONDS));
-		System.out.println(tp.getDefaultActivityDuration());
-		System.out.println(tp2.getDefaultActivityDuration());
-		
-//		TimeProperties tp = new TimeProperties("test.properties");
-//		System.out.println(tp.getSkipDays());
-//		System.out.println(tp.getDefaultActivityDuration());
-//		System.out.println(tp.getDefaultActivityDelay());
-//		System.out.println(tp.getOfficeHoursStart());
-//		System.out.println(tp.getOfficeHoursEnd());
-//		System.out.println(tp.getCasesPerDay());
-//		System.out.println(tp.getCaseStarttimePrecision());
-//		System.out.println(tp.getIndividualActivityDuration("Act01"));
-//		System.out.println(tp.getIndividualActivityDelay("Act0z3"));
-//		System.out.println(tp.getActivitiesWithIndividualDelay());
-//		System.out.println(tp.getActivitiesWithIndividualDelayDeviation());
-//		System.out.println(tp.getActivitiesWithIndividualDuration());
-//		System.out.println(tp.getActivitiesWithIndividualDurationDeviation());
-//		System.out.println(tp.getIndividualActivityDurationDeviation("Act01"));
-//		System.out.println(tp.getIndividualActivityDelayDeviation("Act03"));
-//		System.out.println(tp.existDefaultActivityDelayBounds());
-//		System.out.println(tp.getDefaultActivityMinDelay());
-//		System.out.println(tp.getDefaultActivityMaxDelay());
-//		System.out.println(tp.getCasesPerDayDeviation());
-	}
 }

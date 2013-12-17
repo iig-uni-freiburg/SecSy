@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -149,7 +150,9 @@ public class Simulation implements SimulationListener{
 			if(((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext() == null){
 				throw new ConfigurationException(ErrorCode.NO_CONTEXT, "Cannot add simulation runs without context.");
 			}
-			if(!((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext().getActivities().containsAll(PNUtils.getLabelSetFromTransitions(simulationRun.getPetriNet().getTransitions()))){
+			Set<String> labelSet = PNUtils.getLabelSetFromTransitions(simulationRun.getPetriNet().getTransitions(), false);
+			Set<String> contextActivities = ((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext().getActivities();
+			if(!contextActivities.containsAll(labelSet)){
 				//At least one activity of the simulation run is not contained in the context
 				//-> Abort adding the simulation run to avoid inconsistencies.
 				throw new ConfigurationException(ErrorCode.CONTEXT_INCONSISTENCY, "The simulation run contains unknown activities which are not contained in the context.");

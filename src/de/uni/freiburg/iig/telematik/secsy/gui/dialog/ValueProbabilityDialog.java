@@ -18,7 +18,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import de.invation.code.toval.misc.valuegeneration.StochasticValueGenerator;
-import de.invation.code.toval.misc.valuegeneration.ValueGenerator;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
@@ -28,17 +27,17 @@ public class ValueProbabilityDialog extends JDialog {
 	private static final long serialVersionUID = -4615306286690321678L;
 	
 	private final JPanel contentPanel = new JPanel();
-	private JButton btnAddDataUsage = null;
 	
 	private JTextField txtValue;
 	private JTextField txtProbability;
 	
+	@SuppressWarnings("rawtypes")
 	private StochasticValueGenerator valueGenerator = null;
+	@SuppressWarnings("rawtypes")
 	private Class valueType = null;
 	
-	/**
-	 * @wbp.parser.constructor
-	 */
+
+	@SuppressWarnings("rawtypes")
 	public ValueProbabilityDialog(Window owner, StochasticValueGenerator valueGenerator, Class valueType) throws ParameterException {
 		super(owner);
 		Validate.notNull(valueGenerator);
@@ -48,6 +47,7 @@ public class ValueProbabilityDialog extends JDialog {
 		setUpGUI(owner);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public ValueProbabilityDialog(Window owner, Class valueType) throws ParameterException {
 		super(owner);
 		Validate.notNull(valueType);
@@ -111,6 +111,7 @@ public class ValueProbabilityDialog extends JDialog {
 			JButton btnDone = new JButton("OK");
 			getRootPane().setDefaultButton(btnDone);
 			btnDone.addActionListener(new ActionListener() {
+				@SuppressWarnings("unchecked")
 				public void actionPerformed(ActionEvent e) {
 					if(txtValue.getText() == null || txtValue.getText().isEmpty()){
 						JOptionPane.showMessageDialog(ValueProbabilityDialog.this, "Value field is empty.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
@@ -191,33 +192,15 @@ public class ValueProbabilityDialog extends JDialog {
 		return valueGenerator;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static void showDialog(Window owner, StochasticValueGenerator valueGenerator, Class valueType) throws ParameterException{
 		new ValueProbabilityDialog(owner, valueGenerator, valueType);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static StochasticValueGenerator<?> showDialog(Window owner, Class valueType) throws ParameterException{
 		ValueProbabilityDialog dialog = new ValueProbabilityDialog(owner, valueType);
 		return dialog.getValueGenerator();
 	}
-	
-//	public class ValueProbability<V extends Object>{
-//		private V value = null;
-//		private Double probability = null;
-//
-//		public ValueProbability(V value, Double probability) throws ParameterException{
-//			Validate.notNull(value);
-//			Validate.notNull(probability);
-//			this.value = value;
-//			this.probability = probability;
-//		}
-//		
-//		public Double getProbability() {
-//			return probability;
-//		}
-//
-//		public V getValue(V value) {
-//			return value;
-//		}
-//	}
 	
 }

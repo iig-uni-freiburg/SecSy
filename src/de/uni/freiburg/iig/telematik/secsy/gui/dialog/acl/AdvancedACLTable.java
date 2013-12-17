@@ -14,14 +14,14 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import de.invation.code.toval.graphic.renderer.VerticalTableHeaderCellRenderer;
 import de.invation.code.toval.types.DataUsage;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.secsy.gui.misc.VerticalTableHeaderCellRenderer;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemEvent;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemListener;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemListener;
 
 
 

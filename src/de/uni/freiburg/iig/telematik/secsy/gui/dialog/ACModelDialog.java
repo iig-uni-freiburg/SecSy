@@ -29,18 +29,20 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
+import de.invation.code.toval.graphic.dialog.ValueEditingDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl.ACLDialog;
-import de.uni.freiburg.iig.telematik.secsy.gui.dialog.rbac.RoleLatticeDialog;
-import de.uni.freiburg.iig.telematik.secsy.gui.dialog.rbac.RoleMembershipDialog;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.RBACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.RoleLattice;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACMValidationException;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.lattice.RoleLattice;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.lattice.graphic.RoleLatticeDialog;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.lattice.graphic.RoleMembershipDialog;
 
 
 
@@ -206,8 +208,8 @@ public class ACModelDialog extends JDialog {
 							acModel = null;
 						}
 					} catch (ParameterException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(ACModelDialog.this, "Cannot update view.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						return;
 					} 
 					updateTextArea();
 				}
@@ -233,8 +235,8 @@ public class ACModelDialog extends JDialog {
 						} else {
 							ACLDialog.showDialog(ACModelDialog.this, "Edit role permissions", ((RBACModel) acModel).getRolePermissions(), ACModelDialog.this.context);
 						}
-					}catch(ParameterException ex){
-						ex.printStackTrace();
+					}catch(Exception ex){
+						JOptionPane.showMessageDialog(ACModelDialog.this, "<html>Cannot launch permission dialog.<br>Reason: "+ex.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 					}
 					updateTextArea();
 				}
@@ -250,9 +252,9 @@ public class ACModelDialog extends JDialog {
 			btnEditRoleLattice.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						new RoleLatticeDialog(ACModelDialog.this, ACModelDialog.this.context, ((RBACModel) acModel).getRoleLattice());
-					} catch (ParameterException e1) {
-						JOptionPane.showMessageDialog(ACModelDialog.this, "Cannot enter edit mode for role lattice:\n"+e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+						new RoleLatticeDialog(ACModelDialog.this, ((RBACModel) acModel).getRoleLattice());
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(ACModelDialog.this, "<html>Cannot launch role lattice dialog:<br>Reason: "+e1.getMessage()+"</html>", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 					}
 					updateTextArea();
 				}
@@ -305,16 +307,16 @@ public class ACModelDialog extends JDialog {
 						return;
 					}
 					try {
+						acModel.checkValidity();
+					} catch (ACMValidationException e2) {
+						JOptionPane.showMessageDialog(ACModelDialog.this, "<html>Chosen Access Control Model is not valid.<br>Reason: "+e2.getMessage()+"</html>", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					try {
 						SimulationComponents.getInstance().storeACModel(acModel);
-					} catch (ParameterException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (PropertyException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(ACModelDialog.this, "<html>Access Control Model cannot be stored to disk.<br>Reason: "+e1.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						return;
 					}
 					ACModelDialog.this.dispose();
 				}
@@ -343,7 +345,12 @@ public class ACModelDialog extends JDialog {
 			btnSubjects = new JButton("Subjects...");
 			btnSubjects.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Set<String> editedSubjects = ValueEditingDialog.showDialog(ACModelDialog.this, "AC Model Subjects", acModel.getSubjects());
+					Set<String> editedSubjects = null;
+					try {
+						editedSubjects = ValueEditingDialog.showDialog(ACModelDialog.this, "AC Model Subjects", acModel.getSubjects());
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(ACModelDialog.this, "<html>Cannot launch value editing dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					}
 					if(editedSubjects != null){
 						if(editedSubjects.isEmpty()){
 							JOptionPane.showMessageDialog(ACModelDialog.this, "Cannot remove all subjects from access control model.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
@@ -403,7 +410,12 @@ public class ACModelDialog extends JDialog {
 			btnActivities = new JButton("Activities...");
 			btnActivities.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Set<String> editedActivities = ValueEditingDialog.showDialog(ACModelDialog.this, "AC Model Activities", acModel.getTransactions());
+					Set<String> editedActivities = null;
+					try {
+						editedActivities = ValueEditingDialog.showDialog(ACModelDialog.this, "AC Model Activities", acModel.getTransactions());
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(ACModelDialog.this, "<html>Cannot launch value editing dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					}
 					if(editedActivities != null){
 						if(editedActivities.isEmpty()){
 							JOptionPane.showMessageDialog(ACModelDialog.this, "Cannot remove all activities from access control model.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
@@ -463,7 +475,12 @@ public class ACModelDialog extends JDialog {
 			btnAttributes = new JButton("Attributes...");
 			btnAttributes.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Set<String> editedAttributes = ValueEditingDialog.showDialog(ACModelDialog.this, "AC Model Attributes", acModel.getObjects());
+					Set<String> editedAttributes = null;
+					try {
+						editedAttributes = ValueEditingDialog.showDialog(ACModelDialog.this, "AC Model Attributes", acModel.getObjects());
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(ACModelDialog.this, "<html>Cannot launch value editing dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					}
 					if(editedAttributes != null){
 						if(editedAttributes.isEmpty()){
 							JOptionPane.showMessageDialog(ACModelDialog.this, "Cannot remove all attributes from access control model.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
@@ -530,7 +547,12 @@ public class ACModelDialog extends JDialog {
 	}
 	
 	private void addNewRBACModel(String name) throws ParameterException, IOException, PropertyException {
-		RoleLattice roleLattice = RoleLatticeDialog.showDialog(ACModelDialog.this, ACModelDialog.this.context);
+		RoleLattice roleLattice = null;
+		try {
+			roleLattice = RoleLatticeDialog.showDialog(ACModelDialog.this);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(ACModelDialog.this, "<html>Cannot launch role lattice dialog:<br>Reason: "+e.getMessage()+"</html>", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+		}
 		if(roleLattice != null){
 			RBACModel newRBACModel = new RBACModel(name, roleLattice, ACModelDialog.this.context.getSubjects());
 			if(ACModelDialog.this.context.hasAttributes()){
@@ -556,8 +578,8 @@ public class ACModelDialog extends JDialog {
 			try {
 				acModel = SimulationComponents.getInstance().getACModel((String) comboACModel.getSelectedItem());
 			} catch (ParameterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(ACModelDialog.this, "Cannot extract ac model from simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				return;
 			}
 			updateVisibility();
 		}
@@ -577,6 +599,7 @@ public class ACModelDialog extends JDialog {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private void updateACModelComboBox(String modelName){
 		
 		DefaultComboBoxModel theModel = (DefaultComboBoxModel) comboACModel.getModel();

@@ -14,26 +14,38 @@ import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryUtils;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.AbstractTransformerResult;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.TransformerType;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.BoDTransformerProperties;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.SoDBoDPropertyTransformer;
 
 
-public class BoDPropertyTransformer extends SoDBoDPropertyTransformer {
+public class BoDPropertyTransformer extends SoDBoDPropertyTransformer implements PropertyAwareTransformer{
+	
+	private static final long serialVersionUID = -6002102952666641628L;
 	
 	protected final String ERRORF_NO_SHARED_ORIGINATORS = "no shared originator candidates for group %s.";
 	protected final String ERRORF_FIXED_DIFFERENT_ORIGINATORS = "originators are different and not alterable for group %s.";
 	
+	public static final String hint = "<p>This transformer enforces or violates binding of duties constraints" +
+									  "on a process trace.A binding of duties constraint is specified" +
+									  "for a set of activities. Originators are not required to execute" +
+									  "all activities in the set as soon as they execute one of them.</p>" +
+									  "<p>Instead of an activation probability, the transformer is" +
+									  "parameterized with a violation probability." +
+									  "A probability of 0 lets the transformer enforce the property.</p>" +
+									  "<p>The transformer fails, if originators cannot be chosen adequately.</p>";
+
 	public BoDPropertyTransformer(BoDTransformerProperties properties) throws ParameterException, PropertyException{
 		super(properties);
 	}
 	
-	public BoDPropertyTransformer(Set<String>... bindings) throws ParameterException {
-		this(0.0, bindings);
+	public BoDPropertyTransformer(Double violationProbability) throws ParameterException {
+		super(violationProbability);
 	}
 	
-	public BoDPropertyTransformer(double violationProbability, Set<String>... bindings) throws ParameterException {
-		super(TransformerType.BOD, violationProbability, bindings);
+	public BoDPropertyTransformer() throws ParameterException {
+		super();
 	}
 
 	@Override
@@ -184,7 +196,6 @@ public class BoDPropertyTransformer extends SoDBoDPropertyTransformer {
 			return trivialResult;
 		//All originator sets for the different activities contain the same elements
 		//-> To violate the property an arbitrary number of originators has to be altered.
-		System.out.println("nontrivial");
 		
 		//Check the locking settings for the field ORIGINATOR of all entries.
 		List<LogEntry> entriesWithNoAlternativeOriginator = EntryUtils.getEntriesWithNoAlternativeOriginator(entries);
@@ -234,6 +245,21 @@ public class BoDPropertyTransformer extends SoDBoDPropertyTransformer {
 		BoDTransformerProperties properties = new BoDTransformerProperties();
 		fillProperties(properties);
 		return properties;
+	}
+
+	@Override
+	public String getHint() {
+		return hint;
+	}
+
+	@Override
+	public boolean requiresTimeGenerator() {
+		return false;
+	}
+
+	@Override
+	public boolean requiresContext() {
+		return false;
 	}
 
 }

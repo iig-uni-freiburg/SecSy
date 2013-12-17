@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import de.invation.code.toval.constraint.AbstractConstraint;
@@ -36,6 +37,7 @@ import de.invation.code.toval.constraint.Operator;
 import de.invation.code.toval.constraint.OperatorFormats;
 import de.invation.code.toval.constraint.StringConstraint;
 import de.invation.code.toval.constraint.StringOperator;
+import de.invation.code.toval.graphic.dialog.ValueChooserDialog;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 
@@ -179,7 +181,12 @@ public class ConstraintDialog extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				List<String> chosenAttribute = ValueChooserDialog.showDialog(ConstraintDialog.this, "Constraint attribute", context.getAttributes());
+				List<String> chosenAttribute = null;
+				try {
+					chosenAttribute = ValueChooserDialog.showDialog(ConstraintDialog.this, "Constraint attribute", context.getAttributes());
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(ConstraintDialog.this), "<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e1.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				}
 				if(chosenAttribute != null && !chosenAttribute.isEmpty()){
 					ConstraintDialog.this.attribute = chosenAttribute.get(0);
 					txtAttributeName.setText(chosenAttribute.get(0));
@@ -404,12 +411,5 @@ public class ConstraintDialog extends JDialog {
 		}
 
 	}
-	
-	public static void main(String[] args) throws ParameterException {
-		NumberConstraint nc = new NumberConstraint("contract", NumberOperator.EQUAL, 12);
-		StringConstraint sc = new StringConstraint("contract", StringOperator.EQUAL, "gerd");
-		System.out.println(sc);
-		new ConstraintDialog(null, sc);
-		System.out.println(sc);
-	}
+
 }

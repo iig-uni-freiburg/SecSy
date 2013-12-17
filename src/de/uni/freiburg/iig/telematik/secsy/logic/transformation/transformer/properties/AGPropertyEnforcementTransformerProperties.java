@@ -14,7 +14,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.ActivityGroupPropertyEnforcementTransformer.TransformerAction;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.ActivityGroupPropertyEnforcementTransformer.TransformerAction;
 
 
 public abstract class AGPropertyEnforcementTransformerProperties extends AbstractTransformerProperties {

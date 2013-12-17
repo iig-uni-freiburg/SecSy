@@ -12,9 +12,10 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryUtils;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.AbstractTransformerResult;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.TransformerType;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.SoDTransformerProperties;
+import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.SoDBoDPropertyTransformer;
 
 
 /**
@@ -28,18 +29,31 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.prop
  * 
  * @author Thomas Stocker
  */
-public class SoDPropertyTransformer extends SoDBoDPropertyTransformer {
+public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements PropertyAwareTransformer{
+
+	private static final long serialVersionUID = -7453618992847180261L;
+	
+	public static final String hint = "<html><p>This transformer enforces or violates separation of duties" +
+									  "constraints on a process trace. A separation of duties" +
+									  "constraint is specified for a set of activities. Originators" +
+									  "are not allowed to execute more than one of the activities" +
+									  "in the set.</p>" +
+									  "<p>Instead of an activation probability, the transformer is" +
+									  "parameterized with a violation probability. A probability of " +
+									  "0 lets the transformer enforce the property.</p>" +
+									  "<p>The transformer fails, if originators cannot be chosen adequately.</p></html>";
+
 	
 	public SoDPropertyTransformer(SoDTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
 	}
-
-	public SoDPropertyTransformer(Set<String>... bindings) throws ParameterException {
-		this(0.0, bindings);
+	
+	public SoDPropertyTransformer(Double violationProbability) throws ParameterException {
+		super(violationProbability);
 	}
 	
-	public SoDPropertyTransformer(double violationProbability, Set<String>... bindings) throws ParameterException {
-		super(TransformerType.SOD, violationProbability, bindings);
+	public SoDPropertyTransformer() throws ParameterException {
+		super();
 	}
 
 	@Override
@@ -160,6 +174,21 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer {
 		SoDTransformerProperties properties = new SoDTransformerProperties();
 		fillProperties(properties);
 		return properties;
+	}
+
+	@Override
+	public String getHint() {
+		return hint;
+	}
+
+	@Override
+	public boolean requiresTimeGenerator() {
+		return false;
+	}
+
+	@Override
+	public boolean requiresContext() {
+		return false;
 	}
 
 }

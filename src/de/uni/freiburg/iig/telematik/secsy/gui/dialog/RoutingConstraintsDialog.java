@@ -25,9 +25,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import de.invation.code.toval.constraint.AbstractConstraint;
+import de.invation.code.toval.graphic.dialog.ValueChooserDialog;
+import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 
 public class RoutingConstraintsDialog extends JDialog {
@@ -101,7 +102,12 @@ public class RoutingConstraintsDialog extends JDialog {
 						JOptionPane.showMessageDialog(RoutingConstraintsDialog.this, "Cannot extract data usage information for activity \"" + activity + "\".", "Internal Error", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					List<String> chosenAttributes = ValueChooserDialog.showDialog(RoutingConstraintsDialog.this, "Choose attribute for new constraint", activityAttributes);
+					List<String> chosenAttributes = null;
+					try {
+						chosenAttributes = ValueChooserDialog.showDialog(RoutingConstraintsDialog.this, "Choose attribute for new constraint", activityAttributes);
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(RoutingConstraintsDialog.this, "<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					}
 					if(chosenAttributes != null && !chosenAttributes.isEmpty()){
 						AbstractConstraint<?> newConstraint = ConstraintDialog.showDialog(RoutingConstraintsDialog.this, chosenAttributes.get(0), false);
 						if(newConstraint != null){
@@ -182,7 +188,7 @@ public class RoutingConstraintsDialog extends JDialog {
 		if(activityList == null){
 			activityList = new JList(activityListModel);
 			activityList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			activityList.setCellRenderer(new CustomListRenderer());
+			activityList.setCellRenderer(new AlternatingRowColorListCellRenderer());
 			activityList.setFixedCellHeight(20);
 			activityList.setVisibleRowCount(10);
 			activityList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -211,7 +217,7 @@ public class RoutingConstraintsDialog extends JDialog {
 		if(constraintList == null){
 			constraintList = new JList(constraintListModel);
 			constraintList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			constraintList.setCellRenderer(new CustomListRenderer());
+			constraintList.setCellRenderer(new AlternatingRowColorListCellRenderer());
 			constraintList.setFixedCellHeight(20);
 			constraintList.setVisibleRowCount(10);
 			constraintList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

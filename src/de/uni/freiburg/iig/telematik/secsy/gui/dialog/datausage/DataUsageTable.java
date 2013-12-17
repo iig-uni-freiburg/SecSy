@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.secsy.gui.dialog.datausage;
 
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,15 +17,17 @@ import javax.swing.table.TableCellRenderer;
 import de.invation.code.toval.types.DataUsage;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemEvent;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemListener;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionPanel;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemListener;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionPanel;
 
 
 public class DataUsageTable extends JTable implements ObjectPermissionItemListener{
 
 	private static final long serialVersionUID = -1935993027476998583L;
+	
+	private final int HEADER_HEIGHT = 40;
 
 	private Context context = null;
 	private String activity = null;
@@ -33,32 +36,41 @@ public class DataUsageTable extends JTable implements ObjectPermissionItemListen
 		super(new DataUsageTableModel(context));
 		this.context = context;
 		getModel().addPermissionItemListener(this);
-		
 		initialize();
 	}
-	
 	
 	protected void initialize(){
 		setRowHeight(getModel().preferredCellSize().height);
 		
 		getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer());
-		getColumnModel().getColumn(0).setWidth(100);
-		getColumnModel().getColumn(0).setMinWidth(100);
-		getColumnModel().getColumn(0).setMaxWidth(100);
+		int minWidthAttributeColumn = getModel().getMinHeaderWidth(0);
+		getColumnModel().getColumn(0).setWidth(minWidthAttributeColumn);
+		getColumnModel().getColumn(0).setMinWidth(minWidthAttributeColumn);
 		
 		getColumnModel().getColumn(1).setCellEditor(new UsagTableCellEditor(new JCheckBox()));
 		getColumnModel().getColumn(1).setCellRenderer(new UsageTableCellRenderer());
-		getColumnModel().getColumn(1).setWidth(getModel().preferredCellSize().width);
-		getColumnModel().getColumn(1).setMinWidth(getModel().preferredCellSize().width);
-		getColumnModel().getColumn(1).setMaxWidth(getModel().preferredCellSize().width);
+		int minWidthDUcolumn = Math.max(getModel().preferredCellSize().width, getModel().getMinHeaderWidth(1));
+		getColumnModel().getColumn(1).setWidth(minWidthDUcolumn);
+		getColumnModel().getColumn(1).setMinWidth(minWidthDUcolumn);
 		
+		int minHeight = HEADER_HEIGHT + getModel().getRowCount()*getRowHeight();
+		setPreferredSize(new Dimension(minWidthAttributeColumn + minWidthDUcolumn, minHeight));
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		setShowHorizontalLines(true);
-		setTableHeader(null);
 	}
-
-
+	
+	
+	
+	@Override
+	public Dimension getPreferredScrollableViewportSize() {
+		return getPreferredSize();
+	}
+	
+	@Override
+	public Dimension getMinimumSize(){
+		return getPreferredSize();
+	}
 
 	@Override
 	public DataUsageTableModel getModel(){

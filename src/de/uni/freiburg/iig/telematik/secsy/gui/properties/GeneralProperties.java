@@ -30,6 +30,8 @@ public class GeneralProperties extends AbstractProperties{
 	protected static final String pathACModels = "ac_models/";
 	protected static final String pathPetriNets = "nets/";
 	protected static final String pathTransformers = "transformers/";
+	protected static final String pathCustomTransformers = pathTransformers+"customTransformers/";
+	protected static final String pathCustomTransformerTypes = pathCustomTransformers+"types/";
 	
 	protected static final String propertyFileName = "GeneralProperties/";
 	
@@ -171,6 +173,14 @@ public class GeneralProperties extends AbstractProperties{
 		return getSimulationDirectory().concat(pathTransformers);
 	}
 	
+	public String getPathForCustomTransformers() throws PropertyException, ParameterException{
+		return getSimulationDirectory().concat(pathCustomTransformers);
+	}
+	
+	public String getPathForCustomTransformerTypes() throws PropertyException, ParameterException{
+		return getSimulationDirectory().concat(pathCustomTransformerTypes);
+	}
+	
 	//------- Validation -------------------------------------------------------------------
 	
 	public static void validateStringValue(String value) throws ParameterException{
@@ -194,6 +204,8 @@ public class GeneralProperties extends AbstractProperties{
 		checkSubDirectory(directory, pathACModels, createSubdirectories);
 		checkSubDirectory(directory, pathPetriNets, createSubdirectories);
 		checkSubDirectory(directory, pathTransformers, createSubdirectories);
+//		checkSubDirectory(directory, pathCustomTransformers, createSubdirectories);
+//		checkSubDirectory(directory, pathCustomTransformerTypes, createSubdirectories);
 	}
 	
 	private static void checkSubDirectory(String simulationDirectory, String subDirectoryName, boolean ensureSubdirectory) throws ParameterException{

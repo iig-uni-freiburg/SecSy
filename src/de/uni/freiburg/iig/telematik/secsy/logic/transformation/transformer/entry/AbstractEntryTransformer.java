@@ -6,7 +6,6 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.AbstractTransformer;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.TransformerType;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
 
 
@@ -16,8 +15,8 @@ public abstract class AbstractEntryTransformer extends AbstractTransformer {
 		super(properties);
 	}
 
-	public AbstractEntryTransformer(TransformerType transformerType, double activationProbability) throws ParameterException{
-		super(transformerType, activationProbability);
+	public AbstractEntryTransformer(double activationProbability) throws ParameterException{
+		super(activationProbability);
 	}
 	
 	public EntryTransformerResult transformLogEntry(EntryTransformerEvent event) throws ParameterException{

@@ -22,9 +22,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
-import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLFilter;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
@@ -43,10 +43,7 @@ public class PetriNetDialog extends JDialog {
 	
 	private PTNet petriNet = null;
 
-	/**
-	 * Create the dialog.
-	 */
-	public PetriNetDialog(Window owner) {
+	public PetriNetDialog(Window owner) throws ParameterException {
 		super(owner);
 		setBounds(100, 100, 312, 241);
 		setModal(true);
@@ -125,7 +122,11 @@ public class PetriNetDialog extends JDialog {
 								JOptionPane.showMessageDialog(PetriNetDialog.this,"Cannot add imported net to simulation components.\nReason: "	+ e1.getMessage(),"Internal Exeption",JOptionPane.ERROR_MESSAGE);
 								return;
 							}
-							updateNetList();
+							try {
+								updateNetList();
+							} catch (ParameterException e1) {
+								JOptionPane.showMessageDialog(PetriNetDialog.this, "Cannot extract Petri net from simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+							}
 							netList.setSelectedValue(netName, true);
 						} else {
 							// User aborted the dialog.
@@ -149,13 +150,14 @@ public class PetriNetDialog extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		updateNetList();
 		setVisible(true);
 	}
 	
-	private JList getNetList(){
+	private JList getNetList() {
 		if(netList == null){
 			netList = new JList(netListModel);
-			netList.setCellRenderer(new CustomListRenderer());
+			netList.setCellRenderer(new AlternatingRowColorListCellRenderer());
 			netList.setFixedCellHeight(20);
 			netList.setVisibleRowCount(10);
 			netList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -169,31 +171,24 @@ public class PetriNetDialog extends JDialog {
 	        			    	try {
 									petriNet = SimulationComponents.getInstance().getPetriNet(netList.getSelectedValue().toString());
 								} catch (ParameterException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+									JOptionPane.showMessageDialog(PetriNetDialog.this, "Cannot extract Petri net from simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 								}
 	        			    }
 	        			}
 	        		}
 	        );
-			updateNetList();
 		}
 		return netList;
 	}
 	
-	private void updateNetList(){
+	private void updateNetList() throws ParameterException{
 		netListModel.clear();
 		if(SimulationComponents.getInstance().hasPetriNets()){
 			for(PTNet ptNet: SimulationComponents.getInstance().getPetriNets()){
 				netListModel.addElement(ptNet.getName());
 			}
 			netList.setSelectedIndex(0);
-			try {
-				petriNet = SimulationComponents.getInstance().getPetriNet(netList.getSelectedValue().toString());
-			} catch (ParameterException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			petriNet = SimulationComponents.getInstance().getPetriNet(netList.getSelectedValue().toString());
 		}
 	}
 	
@@ -201,12 +196,12 @@ public class PetriNetDialog extends JDialog {
 		return petriNet;
 	}
 	
-	public static PTNet showPetriNetDialog(Window parentWindow){
+	public static PTNet showPetriNetDialog(Window parentWindow) throws ParameterException{
 		PetriNetDialog dialog = new PetriNetDialog(parentWindow);
 		return dialog.getPetriNet();
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParameterException {
 		new PetriNetDialog(null);
 	}
 }

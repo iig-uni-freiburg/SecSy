@@ -7,7 +7,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Stroke;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +39,7 @@ public class TimeFrameDialog extends JDialog {
 	
 	private TimeFramePanel timeFramePanel = null;
 
-	public TimeFrameDialog(Window parent, Simulation simulation) {
+	public TimeFrameDialog(Window parent, Simulation simulation) throws ConfigurationException {
 		super(parent);
 		setModal(true);
 		
@@ -81,7 +80,7 @@ public class TimeFrameDialog extends JDialog {
 
 
 
-	private Component getTimeFramePanel(Simulation simulation){
+	private Component getTimeFramePanel(Simulation simulation) throws ConfigurationException{
 		JScrollPane scrollPane = new JScrollPane();
 		timeFramePanel = new TimeFramePanel(simulation);
 		scrollPane.setViewportView(timeFramePanel);
@@ -90,6 +89,8 @@ public class TimeFrameDialog extends JDialog {
 	}
 	
 	private class TimeFramePanel extends JPanel{
+
+		private static final long serialVersionUID = -3708244174165780349L;
 		
 		private static final int minBoxWidth = 200;
 		private static final int minBoxHeight = 200;
@@ -107,7 +108,7 @@ public class TimeFrameDialog extends JDialog {
 		private Integer minPasses = Integer.MAX_VALUE;
 		private Double factor = null;
 		
-		public TimeFramePanel(Simulation simulation){
+		public TimeFramePanel(Simulation simulation) throws ConfigurationException{
 			setBorder(new EmptyBorder(5, 5, 5, 5));
 			setBackground(Color.white);
 			prepare(simulation);
@@ -120,14 +121,9 @@ public class TimeFrameDialog extends JDialog {
 
 
 
-		private void prepare(Simulation simulation){
+		private void prepare(Simulation simulation) throws ConfigurationException{
 			this.simulation = simulation;
-			try{
-				simulationRuns = simulation.getSimulationRuns();
-			} catch (ConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			simulationRuns = simulation.getSimulationRuns();
 			
 			int maxTransformerCount = 0;
 			for(SimulationRun run: simulationRuns){
@@ -151,8 +147,7 @@ public class TimeFrameDialog extends JDialog {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			
-			Graphics2D g2d = (Graphics2D)g;
-			Stroke strokeBak = g2d.getStroke();
+			Graphics2D g2d = (Graphics2D) g;
 			
 			g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1f, new float[] {2f}, 0f));
 
@@ -191,7 +186,6 @@ public class TimeFrameDialog extends JDialog {
 					try {
 						timeValue = new TimeValue(approxDays.intValue(), TimeScale.DAYS);
 					} catch (ParameterException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					approxDate = new Date(approxDate.getTime() + timeValue.getValueInMilliseconds());

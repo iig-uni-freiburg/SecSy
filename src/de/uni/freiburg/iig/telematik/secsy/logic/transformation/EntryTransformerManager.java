@@ -51,7 +51,7 @@ public class EntryTransformerManager {
 		Validate.notNull(source);
 		try{
 			for(AbstractEntryTransformer transformer: entryTransformers){
-				for(EntryField contextType: transformer.requiredContextInformation()){
+				for(EntryField contextType: transformer.requiredEntryFields()){
 					if(!source.providesLogInformation(contextType))
 						throw new IllegalArgumentException("Transformer requirement ("+contextType+") cannot be provided by source.");
 				}
@@ -86,7 +86,7 @@ public class EntryTransformerManager {
 		Validate.notNull(entryTransformer);
 		try {
 			if (entryGenerator != null)
-				for (EntryField contextType : entryTransformer.requiredContextInformation())
+				for (EntryField contextType : entryTransformer.requiredEntryFields())
 					if (!entryGenerator.providesLogInformation(contextType))
 						throw new MissingRequirementException(contextType);
 		} catch (ParameterException e) {

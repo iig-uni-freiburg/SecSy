@@ -30,17 +30,19 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import de.invation.code.toval.graphic.dialog.DefineGenerateDialog;
+import de.invation.code.toval.graphic.dialog.StringDialog;
+import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
 import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl.ACLDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.datausage.DataUsageDialog;
-import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 
 
 
@@ -269,7 +271,6 @@ public class ContextDialog extends JDialog {
 			txtACModelName.setText(acModel.getName());
 			acModelAssigned = true;
 		}
-		//TODO
 	}
 	
 	
@@ -381,12 +382,17 @@ public class ContextDialog extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					if(context != null)
 						JOptionPane.showMessageDialog(ContextDialog.this, "Importing activities will reset all context properties.", "Warning", JOptionPane.WARNING_MESSAGE);
-					PTNet ptNet = PetriNetDialog.showPetriNetDialog(ContextDialog.this);
+					PTNet ptNet = null;
+					try {
+						ptNet = PetriNetDialog.showPetriNetDialog(ContextDialog.this);
+					} catch (ParameterException e1) {
+						JOptionPane.showMessageDialog(ContextDialog.this, "<html>Cannot launch Petri net dialog.<br>Reason: " + e1.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					}
 					if(ptNet != null){
 						if(ptNet.getTransitions().isEmpty())
 							JOptionPane.showMessageDialog(ContextDialog.this, "Cannot import activities: Petri net contains no transitions.", "Invalid Argument", JOptionPane.ERROR_MESSAGE);
 						try{
-							newContext(PNUtils.getLabelSetFromTransitions(ptNet.getTransitions()));
+							newContext(PNUtils.getLabelSetFromTransitions(ptNet.getTransitions(), false));
 						}catch(ParameterException ex){
 							JOptionPane.showMessageDialog(ContextDialog.this, "Cannot extract activity names from Petri net transitions.", "Internal Error", JOptionPane.ERROR_MESSAGE);
 						}
@@ -491,8 +497,8 @@ public class ContextDialog extends JDialog {
 						if(context.getACModel() instanceof ACLModel){
 							ACLDialog.showDialog(ContextDialog.this, "Edit subject permissions", (ACLModel) context.getACModel(), context);
 						}
-						}catch(ParameterException ex){
-							ex.printStackTrace();
+					}catch(Exception ex){
+						JOptionPane.showMessageDialog(ContextDialog.this, "<html>Cannot launch subject permission dialog.<br>Reason: "+ex.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			});
@@ -537,7 +543,7 @@ public class ContextDialog extends JDialog {
 	private JList getActivityList(){
 		if(activityList == null){
 			activityList = new JList(activityListModel);
-			activityList.setCellRenderer(new CustomListRenderer());
+			activityList.setCellRenderer(new AlternatingRowColorListCellRenderer());
 			activityList.setFixedCellHeight(20);
 			activityList.setVisibleRowCount(10);
 			activityList.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -591,7 +597,7 @@ public class ContextDialog extends JDialog {
 	private JList getSubjectList(){
 		if(subjectList == null){
 			subjectList = new JList(subjectListModel);
-			subjectList.setCellRenderer(new CustomListRenderer());
+			subjectList.setCellRenderer(new AlternatingRowColorListCellRenderer());
 			subjectList.setFixedCellHeight(20);
 			subjectList.setVisibleRowCount(10);
 			subjectList.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -645,7 +651,7 @@ public class ContextDialog extends JDialog {
 	private JList getAttributeList(){
 		if(attributeList == null){
 			attributeList = new JList(attributeListModel);
-			attributeList.setCellRenderer(new CustomListRenderer());
+			attributeList.setCellRenderer(new AlternatingRowColorListCellRenderer());
 			attributeList.setFixedCellHeight(20);
 			attributeList.setVisibleRowCount(10);
 			attributeList.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -794,7 +800,12 @@ public class ContextDialog extends JDialog {
 				return;
 			}
 			
-			List<String> attributes = DefineGenerateDialog.showDialog(ContextDialog.this, "Attributes");
+			List<String> attributes = null;
+			try {
+				attributes = DefineGenerateDialog.showDialog(ContextDialog.this, "Attributes");
+			} catch (Exception e2) {
+				JOptionPane.showMessageDialog(ContextDialog.this, "<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+			}
 			if(attributes != null){
 				// Add attributes to the existing context.
 				boolean addToACModel = false;
@@ -839,7 +850,12 @@ public class ContextDialog extends JDialog {
 					return;
 			}
 			
-			List<String> subjects = DefineGenerateDialog.showDialog(ContextDialog.this, "Subjects");
+			List<String> subjects = null;
+			try {
+				subjects = DefineGenerateDialog.showDialog(ContextDialog.this, "Subjects");
+			} catch (Exception e2) {
+				JOptionPane.showMessageDialog(ContextDialog.this, "<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+			}
 			if(subjects != null){
 				// Add subjects to the existing context.
 				boolean addToACModel = false;
@@ -882,7 +898,12 @@ public class ContextDialog extends JDialog {
 				if(decision == JOptionPane.NO_OPTION)
 					return;
 			}
-			List<String> activities = DefineGenerateDialog.showDialog(ContextDialog.this, "Activities");
+			List<String> activities = null;
+			try {
+				activities = DefineGenerateDialog.showDialog(ContextDialog.this, "Activities");
+			} catch (Exception e2) {
+				JOptionPane.showMessageDialog(ContextDialog.this, "<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+			}
 			if(activities != null){
 				if(context == null){
 					// Create new context with the generated activities.

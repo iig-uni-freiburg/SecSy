@@ -4,6 +4,7 @@ package de.uni.freiburg.iig.telematik.secsy.gui.dialog.datausage;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,14 +13,16 @@ import java.awt.event.KeyListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
@@ -27,100 +30,115 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.invation.code.toval.graphic.dialog.ValueChooserDialog;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.secsy.gui.dialog.ValueChooserDialog;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 
 
 public class DataUsageDialog extends JDialog {
 
 	private static final long serialVersionUID = 9017322681121907900L;
-	
-	private final JPanel contentPanel = new JPanel();
+	private static final Dimension PREFERRED_SIZE_LEFT_PANEL = new Dimension(180,350);
+
 	private JList activityList = null;
 	private DataUsageTable dataUsageTable = null;
-	private JButton btnAddDataUsage = null;
 	private Context context = null;
-
+	private JPanel contentPanel = new JPanel(new BorderLayout(5,0));
+	private JButton addDUButton = null;
+	private JButton removeDUButton = null;
+	private JButton doneButton = null;
 
 	public DataUsageDialog(Window owner, Context context) {
 		super(owner);
 		this.context = context;
-		setResizable(false);
 		setTitle("Activity Data Usage");
-		setBounds(100, 100, 445, 320);
 		setModal(true);
+		setUpGUI();
+		pack();
 		setLocationRelativeTo(owner);
-		
-		getContentPane().setLayout(new BorderLayout());
+		setVisible(true);
+	}
+	
+	private void setUpGUI(){
+		setContentPane(contentPanel);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
-		{
-			JScrollPane scrollPane = new JScrollPane();
-			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			scrollPane.setBounds(20, 40, 150, 240);
-			contentPanel.add(scrollPane);
-			{
-				scrollPane.setViewportView(getActivityList());
-			}
-		}
-		{
-			JScrollPane scrollPane = new JScrollPane();
-			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			scrollPane.setBounds(185, 40, 240, 205);
-			contentPanel.add(scrollPane);
-			{
-				scrollPane.setViewportView(getDataUsageTable());
-				updateDataUsageList(getActivityList().getSelectedValue().toString());
-			}
-		}
-		{
-			JLabel lblActivities = new JLabel("Activities:");
-			lblActivities.setBounds(20, 20, 86, 16);
-			contentPanel.add(lblActivities);
-		}
-		{
-			btnAddDataUsage = new JButton("Add");
-			btnAddDataUsage.addActionListener(new ActionListener() {
+		
+		JPanel leftPanel = new JPanel(new BorderLayout(0,5));
+		leftPanel.setPreferredSize(PREFERRED_SIZE_LEFT_PANEL);
+		leftPanel.setMinimumSize(PREFERRED_SIZE_LEFT_PANEL);
+		JLabel lblActivities = new JLabel("Activities:");
+		leftPanel.add(lblActivities, BorderLayout.PAGE_START);
+		JScrollPane scrollPaneActivities = new JScrollPane(getActivityList());
+		scrollPaneActivities.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		leftPanel.add(scrollPaneActivities, BorderLayout.CENTER);
+		contentPanel.add(leftPanel, BorderLayout.LINE_START);
+		
+		JPanel rightPanel = new JPanel(new BorderLayout(0,5));
+		JLabel lblDataUsage = new JLabel("Attributes and usage modes:");
+		rightPanel.add(lblDataUsage, BorderLayout.PAGE_START);
+		JScrollPane scrollPaneDataUsage = new JScrollPane(getDataUsageTable());
+		scrollPaneDataUsage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneDataUsage.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		rightPanel.add(scrollPaneDataUsage);
+		updateDataUsageList(getActivityList().getSelectedValue().toString());
+		JPanel buttonPanel = new JPanel();
+		BoxLayout layout = new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS);
+		buttonPanel.setLayout(layout);
+		buttonPanel.add(getAddDUButton());
+		buttonPanel.add(getRemoveDUButton());
+		buttonPanel.add(Box.createHorizontalGlue());
+		buttonPanel.add(getDoneButton());
+		rightPanel.add(buttonPanel, BorderLayout.PAGE_END);
+//		Dimension preferredSize = new Dimension(getActivityList().getPreferredSize().width + 10, getActivityList().getPreferredSize().height);
+//		rightPanel.setPreferredSize(preferredSize);
+//		rightPanel.setMinimumSize(preferredSize);
+		contentPanel.add(rightPanel, BorderLayout.CENTER);
+	}
+
+	private JButton getAddDUButton(){
+		if(addDUButton == null){
+			addDUButton = new JButton("Add");
+			addDUButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					List<String> attributes = ValueChooserDialog.showDialog(DataUsageDialog.this, "Add new attribute to activity", DataUsageDialog.this.context.getAttributes());
+					List<String> attributes = null;
+					try {
+						attributes = ValueChooserDialog.showDialog(DataUsageDialog.this, "Add new attribute to activity", DataUsageDialog.this.context.getAttributes());
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(DataUsageDialog.this, "<html>Cannot launch value chooser dialog.<br>Reason: " + e1.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+					}
 					if(attributes != null && !attributes.isEmpty()){
 						dataUsageTable.getModel().addElement(attributes.get(0));
 					}
 					dataUsageTable.repaint();
 				}
 			});
-			btnAddDataUsage.setBounds(185, 250, 80, 29);
-			contentPanel.add(btnAddDataUsage);
 		}
-		{
-			JLabel lblDataUsage = new JLabel("Attributes and usage modes:");
-			lblDataUsage.setBounds(185, 20, 181, 16);
-			contentPanel.add(lblDataUsage);
-		}
-		{
-			JButton btnRemove = new JButton("Remove");
-			btnRemove.addActionListener(new ActionListener() {
+		return addDUButton;
+	}
+	
+	private JButton getRemoveDUButton(){
+		if(removeDUButton == null){
+			removeDUButton = new JButton("Remove");
+			removeDUButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					removeSelectedDataUsages();
 				}
 			});
-			btnRemove.setBounds(265, 250, 80, 29);
-			contentPanel.add(btnRemove);
 		}
-		{
-			JButton btnDone = new JButton("Done");
-			btnDone.addActionListener(new ActionListener() {
+		return removeDUButton;
+	}
+	
+	private JButton getDoneButton(){
+		if(doneButton == null){
+			doneButton = new JButton("Done");
+			doneButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					DataUsageDialog.this.dispose();
 				}
 			});
-			btnDone.setBounds(345, 251, 80, 29);
-			contentPanel.add(btnDone);
 		}
-		setVisible(true);
+		return doneButton;
 	}
 	
 	private void removeSelectedDataUsages(){
@@ -158,6 +176,7 @@ public class DataUsageDialog extends JDialog {
 	        			public void valueChanged(ListSelectionEvent e) {
 	        			    if ((e.getValueIsAdjusting() == false) && (activityList.getSelectedValue() != null)) {
 	        			    	updateDataUsageList(activityList.getSelectedValue().toString());
+	        			    	getDataUsageTable().requestFocusInWindow();
 	        			    }
 	        			}
 	        		}
@@ -181,27 +200,18 @@ public class DataUsageDialog extends JDialog {
 		return activityList;
 	}
 	
-	private JTable getDataUsageTable(){
+	private DataUsageTable getDataUsageTable(){
 		if(dataUsageTable == null){
 			dataUsageTable = new DataUsageTable(context);
 			dataUsageTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			dataUsageTable.setBorder(null);
-			
-//			dataUsageList.addListSelectionListener(
-//	        		new ListSelectionListener(){
-//	        			public void valueChanged(ListSelectionEvent e) {
-//	        			    if ((e.getValueIsAdjusting() == false) && (dataUsageList.getSelectedValue() != null)) {
-//	        			    }
-//	        			}
-//	        		}
-//	        );
 		}
 		return dataUsageTable;
 	}
 	
 	private void updateDataUsageList(String selectedActivity){
 		try {
-			dataUsageTable.update(selectedActivity);
+			getDataUsageTable().update(selectedActivity);
 		} catch (CompatibilityException e) {
 			e.printStackTrace();
 		} catch (ParameterException e) {
@@ -226,11 +236,12 @@ public class DataUsageDialog extends JDialog {
 				activityHasDataUsage = !context.getDataUsageFor(value.toString()).isEmpty();
 			} catch (Exception e) {}
 
-			if(activityHasDataUsage){
-				setText("<html><b>"+(String) value+"");
-			} else {
-				setText((String) value);
-			}
+//			if(activityHasDataUsage){
+//				setText("<html><b>"+(String) value+"");
+//			} else {
+//				setText((String) value);
+//			}
+			setText((String) value);
 			setToolTipText((String) value);
 			
 			if (isSelected) {

@@ -1,136 +1,110 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.Border;
 
-import de.uni.freiburg.iig.telematik.secsy.gui.misc.CustomListRenderer;
+import de.invation.code.toval.graphic.dialog.AbstractDialog;
+import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
+import de.uni.freiburg.iig.telematik.secsy.gui.GUIProperties;
+import de.uni.freiburg.iig.telematik.secsy.gui.action.AbstractSimulationDirectoryAction;
+import de.uni.freiburg.iig.telematik.secsy.gui.action.NewSimulationDirectoryAction;
+import de.uni.freiburg.iig.telematik.secsy.gui.action.OpenSimulationDirectoryAction;
 import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 
 
-public class SimulationDirectoryDialog extends JDialog implements PropertyChangeListener {
+public class SimulationDirectoryDialog extends AbstractDialog implements PropertyChangeListener {
 	
 	private static final long serialVersionUID = 2306027725394345926L;
+	
+	public static final Dimension PREFERRED_SIZE = new Dimension(500, 300);
+	
+	private JList stringList;
 
-	private final JPanel contentPanel = new JPanel();
+	private DefaultListModel stringListModel;
 	
-	private JList stringList = null;
-	private JButton btnOK = null;
-	private JButton btnCancel = null;
-	private DefaultListModel stringListModel = new DefaultListModel();
+	private String simulationDirectory;
+	private NewSimulationDirectoryAction newDirectoryAction;
+	private OpenSimulationDirectoryAction openDirectoryAction;
 	
-	private String simulationDirectory = null;
-	private NewSimulationDirectoryAction newDirectoryAction = null;
-	private OpenSimulationDirectoryAction openDirectoryAction = null;
-	
-	public SimulationDirectoryDialog(Window owner) {
+	public SimulationDirectoryDialog(Window owner) throws Exception {
 		super(owner);
-		setResizable(false);
-		setBounds(100, 100, 369, 365);
-		setModal(true);
-		setLocationRelativeTo(owner);
+	}
+	
+	@Override
+	protected void addComponents() {
+		mainPanel().setBorder(GUIProperties.DEFAULT_DIALOG_BORDER);
+		mainPanel().setLayout(new BorderLayout());
 		
-		newDirectoryAction = new NewSimulationDirectoryAction(this);
-		newDirectoryAction.addPropertyChangeListener(this);
-		openDirectoryAction = new OpenSimulationDirectoryAction(this);
-		openDirectoryAction.addPropertyChangeListener(this);
-		
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
+		JLabel label1 = new JLabel("Please choose the simulation directory to work with:");
+		label1.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+		mainPanel().add(label1, BorderLayout.PAGE_START);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(20, 101, 327, 151);
-		contentPanel.add(scrollPane);
 		scrollPane.setViewportView(getValueList());
+		mainPanel().add(scrollPane, BorderLayout.CENTER);
 		
-		JTextArea txtrThereAreNo = new JTextArea();
-		txtrThereAreNo.setBackground(UIManager.getColor("Panel.background"));
-		txtrThereAreNo.setText("Please choose the simulation directory to work with.\n\nSimulation directories are directories with a specific \nstructure used to store simulation-related content.");
-		txtrThereAreNo.setBounds(20, 16, 392, 64);
-		contentPanel.add(txtrThereAreNo);
-		
-		JButton btnExistingDirectory = new JButton(openDirectoryAction);
-		btnExistingDirectory.setBounds(45, 264, 157, 29);
-		contentPanel.add(btnExistingDirectory);
-		
-		JButton btnNewButton = new JButton(newDirectoryAction);
-		btnNewButton.setBounds(214, 264, 133, 29);
-		contentPanel.add(btnNewButton);
+		mainPanel().add(new JLabel("Simulation directories are used to store simulation-related content."), BorderLayout.PAGE_END);
+	}
+	
+	@Override
+	protected void initialize(Object... parameters) {
+		newDirectoryAction = new NewSimulationDirectoryAction(this);
+		newDirectoryAction.addPropertyChangeListener(this);
+		openDirectoryAction = new OpenSimulationDirectoryAction(this);
+		openDirectoryAction.addPropertyChangeListener(this);
+		stringListModel = new DefaultListModel();
+	}
 
-		JPanel buttonPane = new JPanel();
-		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-		buttonPane.add(getButtonOK());
-		buttonPane.add(getButtonCancel());
-		
-		
-		setVisible(true);
+	@Override
+	protected List<JButton> getLefthandButtons() {
+		List<JButton> result = super.getLefthandButtons();
+		result.add(new JButton(newDirectoryAction));
+		result.add(new JButton(openDirectoryAction));
+		return result;
 	}
-	
-	private JButton getButtonOK(){
-		if(btnOK == null){
-			btnOK = new JButton("OK");
-			btnOK.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if(!stringListModel.isEmpty()){
-						if(stringList.getSelectedValue() == null){
-							JOptionPane.showMessageDialog(SimulationDirectoryDialog.this, "Please choose a simulation directory.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-							return;
-						}
-						simulationDirectory = stringList.getSelectedValue().toString();
-						dispose();
-					} else {
-						JOptionPane.showMessageDialog(SimulationDirectoryDialog.this, "No known entries, please create new simulation directory.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-				}
-			});
-			btnOK.setActionCommand("OK");
-			getRootPane().setDefaultButton(btnOK);
+
+	@Override
+	protected void setTitle() {
+		setTitle("Choose Simulation Directory");
+	}
+
+	@Override
+	protected void okProcedure() {
+		if(!stringListModel.isEmpty()){
+			if(stringList.getSelectedValue() == null){
+				JOptionPane.showMessageDialog(SimulationDirectoryDialog.this, "Please choose a simulation directory.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			simulationDirectory = stringList.getSelectedValue().toString();
+			dispose();
+		} else {
+			JOptionPane.showMessageDialog(SimulationDirectoryDialog.this, "No known entries, please create new simulation directory.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+			return;
 		}
-		return btnOK;
 	}
-	
-	private JButton getButtonCancel(){
-		if(btnCancel == null){
-			btnCancel = new JButton("Cancel");
-			btnCancel.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					simulationDirectory = null;
-					dispose();
-				}
-			});
-			btnCancel.setActionCommand("Cancel");
-		}
-		return btnCancel;
-	}
-	
+
 	private JList getValueList(){
 		if(stringList == null){
 			stringList = new JList(stringListModel);
-			stringList.setCellRenderer(new CustomListRenderer());
+			stringList.setCellRenderer(new AlternatingRowColorListCellRenderer());
 			stringList.setFixedCellHeight(20);
 			stringList.setVisibleRowCount(10);
 			stringList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -154,8 +128,12 @@ public class SimulationDirectoryDialog extends JDialog implements PropertyChange
 		return simulationDirectory;
 	}
 	
+	@Override
+	public Dimension getPreferredSize() {
+		return PREFERRED_SIZE;
+	}
 	
-	public static String showDialog(Window owner){
+	public static String showDialog(Window owner) throws Exception{
 		SimulationDirectoryDialog activityDialog = new SimulationDirectoryDialog(owner);
 		return activityDialog.getSimulationDirectory();
 	}
@@ -170,4 +148,10 @@ public class SimulationDirectoryDialog extends JDialog implements PropertyChange
 			}
 		}
 	}
+
+	@Override
+	protected Border getBorder() {
+		return GUIProperties.DEFAULT_DIALOG_BORDER;
+	}
+	
 }

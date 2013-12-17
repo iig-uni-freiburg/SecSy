@@ -3,16 +3,17 @@ package de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.CircularObjectPermissionPanel;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemEvent;
-import de.uni.freiburg.iig.telematik.secsy.gui.permission.ObjectPermissionItemListener;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.CircularObjectPermissionPanel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemListener;
 
 
 public class ObjectPermissionTableModel extends AbstractTableModel implements ObjectPermissionItemListener {
@@ -27,7 +28,9 @@ public class ObjectPermissionTableModel extends AbstractTableModel implements Ob
 	
 	public ObjectPermissionTableModel(ACLModel aclModel){
 		rowNames = new ArrayList<String>(aclModel.getSubjects());
+		Collections.sort(rowNames);
 		colNames = new ArrayList<String>(aclModel.getObjects());
+		Collections.sort(colNames);
 		this.aclModel = aclModel;
 
 		permissionPanels = new CircularObjectPermissionPanel[rowNames.size()][colNames.size()];

@@ -7,7 +7,6 @@ import de.invation.code.toval.properties.AbstractProperties;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.TransformerType;
 
 
 public class AbstractTransformerProperties extends AbstractProperties{
@@ -83,22 +82,15 @@ public class AbstractTransformerProperties extends AbstractProperties{
 	
 	//-- Type
 	
-	public void setType(TransformerType type) throws ParameterException{
-		Validate.notNull(type);
-		props.setProperty(AbstractTransformerProperty.TYPE.toString(), type.toString());
+	public void setType(String className) throws ParameterException{
+		Validate.notNull(className);
+		props.setProperty(AbstractTransformerProperty.TYPE.toString(), className);
 	}
 	
-	public TransformerType getType() throws ParameterException{
+	public String getType() throws ParameterException{
 		String propertyValue = props.getProperty(AbstractTransformerProperty.TYPE.toString());
 		Validate.notNull(propertyValue);
-		
-		TransformerType type = null;
-		try{
-			type = TransformerType.valueOfString(propertyValue);
-		}catch(Exception e){
-			
-		}
-		return type;
+		return propertyValue;
 	}
 	
 	

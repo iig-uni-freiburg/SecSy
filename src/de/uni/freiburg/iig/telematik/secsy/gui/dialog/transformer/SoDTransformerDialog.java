@@ -3,42 +3,27 @@ package de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.swing.AbstractListModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.AbstractListModel;
-import javax.swing.JSeparator;
 
 public class SoDTransformerDialog extends JDialog {
 
+	private static final long serialVersionUID = -3756374615684655497L;
+	
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtSodTransformer;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			SoDTransformerDialog dialog = new SoDTransformerDialog();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 */
 	public SoDTransformerDialog() {
 		setTitle("New SoD-Property Transformer");
 		setBounds(100, 100, 300, 288);
@@ -87,6 +72,7 @@ public class SoDTransformerDialog extends JDialog {
 		
 		JList list = new JList();
 		list.setModel(new AbstractListModel() {
+			private static final long serialVersionUID = -4596249052603627042L;
 			String[] values = new String[] {"Sign Contract", "Acknowledge"};
 			public int getSize() {
 				return values.length;
@@ -121,5 +107,15 @@ public class SoDTransformerDialog extends JDialog {
 			}
 		}
 		setVisible(true);
+	}
+	
+	public static void main(String[] args) {
+		try {
+			SoDTransformerDialog dialog = new SoDTransformerDialog();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

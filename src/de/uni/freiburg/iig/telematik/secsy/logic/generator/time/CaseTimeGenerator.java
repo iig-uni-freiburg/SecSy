@@ -641,20 +641,5 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	protected String getDefaultActivityDelayString(){
 		return getDefaultActivityDelay().toString();
 	}
-	
-	public static void main(String[] args) throws Exception {
-		Calendar cal = new GregorianCalendar(Calendar.getInstance().getTimeZone());
-		cal.set(2012, Calendar.JANUARY, 1);
-		CaseTimeGenerator time = new CaseTimeGenerator(cal.getTimeInMillis(), 10);
-//		time.setCaseStartingTimePrecision(CaseStartPrecision.HOUR);
-//		for(int i=1; i<20; i++){
-//			time.traceStarted(i);
-//		}
-//		time.setMaxCasesPerDay(20);
-//		for(int i=21; i<70; i++){
-//			time.traceStarted(i);
-//		}
-		System.out.println(time.getSkipDays());
-	}
 
 }
