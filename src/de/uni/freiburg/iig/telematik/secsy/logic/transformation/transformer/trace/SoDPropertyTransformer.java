@@ -9,8 +9,9 @@ import java.util.Set;
 import de.invation.code.toval.misc.SetUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.jawl.log.EntryUtils;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntryUtils;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntryUtils;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.AbstractTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
@@ -57,7 +58,7 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 	}
 
 	@Override
-	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
+	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
 		EnforcementResult trivialResult = super.ensureProperty(activityGroup, entries, transformerResult);
 		if(trivialResult.equals(EnforcementResult.SUCCESSFUL) || trivialResult.equals(EnforcementResult.NOTNECESSARY))
 			return trivialResult;
@@ -65,11 +66,11 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 		//The sets of originators executing the corresponding activities
 		
 		//Check if the locking settings for the field ORIGINATOR violate the property.
-		List<LogEntry> entriesWithNoAlternativeOriginator = EntryUtils.getEntriesWithNoAlternativeOriginator(entries);
+		List<SimulationLogEntry> entriesWithNoAlternativeOriginator = SimulationLogEntryUtils.getEntriesWithNoAlternativeOriginator(entries);
 		//Determine the set of fixed originators for each activity
 		Map<String, Set<String>> fixedOriginatorSets = new HashMap<String, Set<String>>();
 		if(!entriesWithNoAlternativeOriginator.isEmpty())
-			EntryUtils.clusterOriginatorsAccordingToActivity(entriesWithNoAlternativeOriginator);
+			LogEntryUtils.clusterOriginatorsAccordingToActivity(entriesWithNoAlternativeOriginator);
 		if(!entriesWithNoAlternativeOriginator.isEmpty()){ 
 			//There are entries with locked or unalterable originator fields
 			//If any two sets of entries each belonging to a specific activity 
@@ -88,13 +89,13 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 		//-> Property enforcement depends on entries without locked originator field
 		
 		//Try to choose different originators for all other entries (without fixed originator field)
-		List<LogEntry> entriesWithAlternativeOriginator = EntryUtils.getEntriesWithAlternativeOriginator(entries);	
+		List<SimulationLogEntry> entriesWithAlternativeOriginator = SimulationLogEntryUtils.getEntriesWithAlternativeOriginator(entries);	
 		//Determine all originator candidates for entries with alternative originators
-		Map<LogEntry, List<String>> candidateList = new HashMap<LogEntry, List<String>>();
+		Map<SimulationLogEntry, List<String>> candidateList = new HashMap<SimulationLogEntry, List<String>>();
 		for(String activity: activityGroup){
 			if(entriesForActivity.containsKey(activity)){
 				//Otherwise there is no entry that relates to this activity
-				for(LogEntry entry: entriesForActivity.get(activity)){
+				for(SimulationLogEntry entry: entriesForActivity.get(activity)){
 					//Add all originator candidates of the log entry to the list of candidates
 					List<String> originatorCandidates = entry.getOriginatorCandidates();
 					//Remove all fixed originators of entries conducting concurrent activities from the list
@@ -122,7 +123,7 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 	}
 	
 	@Override
-	protected EnforcementResult violateProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
+	protected EnforcementResult violateProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
 		EnforcementResult trivialResult = super.violateProperty(activityGroup, entries, transformerResult);
 		if(trivialResult.equals(EnforcementResult.SUCCESSFUL) || trivialResult.equals(EnforcementResult.NOTNECESSARY))
 			return trivialResult;
@@ -130,7 +131,7 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 		//There are no overlaps in the sets of originators executing the corresponding activities
 		
 		//Try if there are entries for which alternative originators can be set
-		List<LogEntry> entriesWithAlternativeOriginator = EntryUtils.getEntriesWithAlternativeOriginator(entries);	
+		List<SimulationLogEntry> entriesWithAlternativeOriginator = SimulationLogEntryUtils.getEntriesWithAlternativeOriginator(entries);	
 		if(entriesWithAlternativeOriginator.isEmpty()){
 			//No valid combination possible because for no entry the originator can be altered.
 			//-> Violation not enforceable
@@ -140,11 +141,11 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 		//There are log entries that have alternative originators.
 		
 		//Determine all originator candidates for entries with alternative originators
-		Map<LogEntry, List<String>> candidateList = new HashMap<LogEntry, List<String>>();
+		Map<SimulationLogEntry, List<String>> candidateList = new HashMap<SimulationLogEntry, List<String>>();
 		for(String activity: activityGroup){
 			if(entriesForActivity.containsKey(activity)){
 				//Otherwise there is no entry that relates to this activity
-				for(LogEntry entry: entriesForActivity.get(activity)){
+				for(SimulationLogEntry entry: entriesForActivity.get(activity)){
 					if(entriesWithAlternativeOriginator.contains(entry)){
 						//Add all originator candidates of the log entry to the list of candidates
 						List<String> originatorCandidates = entry.getOriginatorCandidates();

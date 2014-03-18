@@ -13,8 +13,9 @@ import de.invation.code.toval.types.IndexCounter;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
-import de.uni.freiburg.iig.telematik.jawl.log.EntryUtils;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntryUtils;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.AbstractTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AGPropertyEnforcementTransformerProperties;
@@ -31,7 +32,7 @@ public abstract class SoDBoDPropertyTransformer extends ActivityGroupPropertyEnf
 	protected final String NONEEDF_TRIVIAL = "No enforcement necessary - trace only contains one activity of group %s";
 	protected final String NOTICE_COMBINATIONS = "Trying originator combinations ";
 	
-	protected Map<String, List<LogEntry>> entriesForActivity;
+	protected Map<String, List<SimulationLogEntry>> entriesForActivity;
 	
 	public SoDBoDPropertyTransformer(AGPropertyEnforcementTransformerProperties properties) throws ParameterException, PropertyException {
 		super(properties);
@@ -55,10 +56,10 @@ public abstract class SoDBoDPropertyTransformer extends ActivityGroupPropertyEnf
 	 * @throws ParameterException 
 	 */
 	@Override
-	protected List<LogEntry> removeIrrelevantEntries(List<LogEntry> entries, TraceTransformerResult result) throws ParameterException {
+	protected List<SimulationLogEntry> removeIrrelevantEntries(List<SimulationLogEntry> entries, TraceTransformerResult result) throws ParameterException {
 		super.removeIrrelevantEntries(entries, result);
-		List<LogEntry> relevantEntries = new ArrayList<LogEntry>(entries);
-		for (LogEntry entry : relevantEntries)
+		List<SimulationLogEntry> relevantEntries = new ArrayList<SimulationLogEntry>(entries);
+		for (SimulationLogEntry entry : relevantEntries)
 			if (entry.getOriginatorCandidates() == null) {
 				relevantEntries.remove(entry);
 				try {
@@ -79,11 +80,11 @@ public abstract class SoDBoDPropertyTransformer extends ActivityGroupPropertyEnf
 	 * <code>false</code> otherwise.
 	 * @throws ParameterException 
 	 */
-	protected boolean checkTrivialCase(List<LogEntry> entries, TransformerAction action) throws ParameterException{
-		entriesForActivity = EntryUtils.clusterEntriesAccordingToActivities(entries);
+	protected boolean checkTrivialCase(List<SimulationLogEntry> entries, TransformerAction action) throws ParameterException{
+		entriesForActivity = LogEntryUtils.clusterEntriesAccordingToActivities(entries);
 		if(entriesForActivity.keySet().size()<2)
 			return true;
-		return transformerEnforcedOnOriginatorSets(EntryUtils.clusterOriginatorsAccordingToActivity(entries), action);
+		return transformerEnforcedOnOriginatorSets(LogEntryUtils.clusterOriginatorsAccordingToActivity(entries), action);
 	}
 	
 	/**
@@ -94,19 +95,19 @@ public abstract class SoDBoDPropertyTransformer extends ActivityGroupPropertyEnf
 	 * @return A valid index combination in case a valid one could be found;<br> <code>null</code> otherwise.
 	 * @throws ParameterException 
 	 */
-	protected Map<LogEntry, Integer> findValidIndexCombination(Map<LogEntry, List<String>> candidateList, TransformerAction transformerAction) throws ParameterException{
+	protected Map<SimulationLogEntry, Integer> findValidIndexCombination(Map<SimulationLogEntry, List<String>> candidateList, TransformerAction transformerAction) throws ParameterException{
 		Validate.notNull(candidateList);
 		Validate.notNull(candidateList.keySet());
 		Validate.noNullElements(candidateList.keySet());
 		Validate.noNullElements(candidateList.values());
 		Validate.notNull(transformerAction);
-		IndexCounter<LogEntry> counter = new IndexCounter<LogEntry>();
-		for(LogEntry entry: candidateList.keySet()){
+		IndexCounter<SimulationLogEntry> counter = new IndexCounter<SimulationLogEntry>();
+		for(SimulationLogEntry entry: candidateList.keySet()){
 			counter.addNewIndex(entry, candidateList.get(entry).size() - 1);
 		}
 		
 		//Check if there is an originator configuration that fulfills the property
-		Map<LogEntry, Integer> indexConfig = null;
+		Map<SimulationLogEntry, Integer> indexConfig = null;
 		Map<String, Set<String>> originatorSets = new HashMap<String, Set<String>>();
 		while(counter.hasNext()){
 			//Next configuration
@@ -134,11 +135,11 @@ public abstract class SoDBoDPropertyTransformer extends ActivityGroupPropertyEnf
 	}
 	
 	protected EnforcementResult findValidOriginatorCombination(Set<String> activityGroup,
-															   List<LogEntry> allEntries,
-			 												   Map<LogEntry, List<String>> candidateList, 
+															   List<SimulationLogEntry> allEntries,
+			 												   Map<SimulationLogEntry, List<String>> candidateList, 
 			 												   AbstractTransformerResult transformerResult, 
 			 												   TransformerAction transformerAction) throws ParameterException{
-		Map<LogEntry, Integer> validIndexCombination = findValidIndexCombination(candidateList, transformerAction);
+		Map<SimulationLogEntry, Integer> validIndexCombination = findValidIndexCombination(candidateList, transformerAction);
 		if(validIndexCombination == null){
 			//No valid index combination could be found
 			//-> Violation is not possible
@@ -148,7 +149,7 @@ public abstract class SoDBoDPropertyTransformer extends ActivityGroupPropertyEnf
 		//A valid index combination could be found
 		//Assign originators to entries according to the valid index combination
 		//and lock the originator field for those entries
-		for(LogEntry entry: candidateList.keySet()){
+		for(SimulationLogEntry entry: candidateList.keySet()){
 			addMessageToResult(getNoticeMessage(String.format(CUSTOM_SINGLE_SUCCESSFUL_ENFORCEMENT_FORMAT, candidateList.get(entry).get(validIndexCombination.get(entry)), entry)), transformerResult);
 			try {
 				entry.setOriginator(candidateList.get(entry).get(validIndexCombination .get(entry)));
@@ -158,7 +159,7 @@ public abstract class SoDBoDPropertyTransformer extends ActivityGroupPropertyEnf
 			} 
 		}
 		//Lock the originator field for all entries where it is not already locked.
-		EntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Transformer Enforcement: "+this.getClass().getName(), allEntries);
+		LogEntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Transformer Enforcement: "+this.getClass().getName(), allEntries);
 
 		return EnforcementResult.SUCCESSFUL;
 }
@@ -166,7 +167,7 @@ public abstract class SoDBoDPropertyTransformer extends ActivityGroupPropertyEnf
 	protected abstract boolean transformerEnforcedOnOriginatorSets(Map<String, Set<String>> originatorSets, TransformerAction transformerAction);
 
 	@Override
-	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
+	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
 		if(checkTrivialCase(entries, TransformerAction.ENSURE)){
 			//property already enforced by the current setting of task executors
 			//-> no need for enforcement 
@@ -180,14 +181,14 @@ public abstract class SoDBoDPropertyTransformer extends ActivityGroupPropertyEnf
 				// Cannot happen, since getNotiveMessage() is not called with null-values.
 				e.printStackTrace();
 			}
-			EntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Transformer Enforcement: "+this.getClass().getName(), entries);
+			LogEntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Transformer Enforcement: "+this.getClass().getName(), entries);
 			return EnforcementResult.NOTNECESSARY;
 		}
 		return EnforcementResult.UNSUCCESSFUL;
 	}
 
 	@Override
-	protected EnforcementResult violateProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
+	protected EnforcementResult violateProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
 		super.violateProperty(activityGroup, entries, transformerResult);
 		if(checkTrivialCase(entries, TransformerAction.VIOLATE)){
 			//property already enforced by the current setting of task executors
@@ -202,7 +203,7 @@ public abstract class SoDBoDPropertyTransformer extends ActivityGroupPropertyEnf
 				// Cannot happen, since getNotiveMessage() is not called with null-values.
 				e.printStackTrace();
 			}
-			EntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Transformer Enforcement: "+this.getClass().getName(), entries);
+			LogEntryUtils.lockFieldForEntries(EntryField.ORIGINATOR, "Transformer Enforcement: "+this.getClass().getName(), entries);
 			return EnforcementResult.NOTNECESSARY;
 		}
 		return EnforcementResult.UNSUCCESSFUL;

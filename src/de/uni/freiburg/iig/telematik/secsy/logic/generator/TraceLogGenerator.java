@@ -6,13 +6,13 @@ import java.util.Date;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
+import de.uni.freiburg.iig.telematik.jawl.format.LogPerspective;
 import de.uni.freiburg.iig.telematik.jawl.log.EventType;
 import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
-import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
-import de.uni.freiburg.iig.telematik.jawl.logformat.LogPerspective;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator.ExecutionTime;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.EventHandling;
@@ -35,17 +35,17 @@ public class TraceLogGenerator extends LogGenerator{
 	
 	private EventHandling eventHandling = EventHandling.END;
 	
-	public TraceLogGenerator(LogFormat logFormat) 
+	public TraceLogGenerator(AbstractLogFormat logFormat) 
 			throws ParameterException, IOException, PerspectiveException {
 		super(logFormat, LogPerspective.TRACE_PERSPECTIVE);
 	}
 	
-	public TraceLogGenerator(LogFormat logFormat, String fileName) 
+	public TraceLogGenerator(AbstractLogFormat logFormat, String fileName) 
 			throws ParameterException, IOException, PerspectiveException {
 		super(logFormat, LogPerspective.TRACE_PERSPECTIVE, fileName);
 	}
 	
-	public TraceLogGenerator(LogFormat logFormat, String logPath, String fileName) 
+	public TraceLogGenerator(AbstractLogFormat logFormat, String logPath, String fileName) 
 			throws ParameterException, IOException, PerspectiveException {
 		super(logFormat, LogPerspective.TRACE_PERSPECTIVE, logPath, fileName);
 	}
@@ -93,13 +93,13 @@ public class TraceLogGenerator extends LogGenerator{
 		try {
 			while(!simulationRun.isDone()){
 				int nextCaseID = startNextCase();
-				LogTrace trace = new LogTrace(nextCaseID);
+				LogTrace<SimulationLogEntry> trace = new LogTrace<SimulationLogEntry>(nextCaseID);
 				caseGenerator.newCase(nextCaseID);
 				while(!caseGenerator.isCaseCompleted()){
 					AbstractTransition<?,?> nextTransition = caseGenerator.getNextTransition();
 					AbstractTransition<?,?> next = simulationRun.getPetriNet().fire(nextTransition.getName());
 					if (next!=null && !next.isSilent()){
-						LogEntry entry = null;
+						SimulationLogEntry entry = null;
 						try {
 							entry = getLogEntryGenerator().getLogEntryFor(next,nextCaseID);
 						} catch (ParameterException e1) {
@@ -156,8 +156,9 @@ public class TraceLogGenerator extends LogGenerator{
 	 * @param logEntry
 	 * @param executionTime
 	 * @throws LockingException If the time field of the given entry is locked.
+	 * @throws ParameterException 
 	 */
-	protected void addEntryToTrace(LogTrace trace, LogEntry logEntry, ExecutionTime executionTime) throws LockingException{
+	protected void addEntryToTrace(LogTrace<SimulationLogEntry> trace, SimulationLogEntry logEntry, ExecutionTime executionTime) throws LockingException, ParameterException{
 		
 		switch(eventHandling){
 		
@@ -177,7 +178,7 @@ public class TraceLogGenerator extends LogGenerator{
 			logEntry.setTimestamp(new Date(executionTime.startTime));
 			logEntry.setGroup(group);
 			trace.addEntry(logEntry);
-			LogEntry completeEntry = logEntry.clone();
+			SimulationLogEntry completeEntry = logEntry.clone();
 			completeEntry.setEventType(EventType.complete);
 			completeEntry.setTimestamp(new Date(executionTime.endTime));
 			completeEntry.setGroup(group);

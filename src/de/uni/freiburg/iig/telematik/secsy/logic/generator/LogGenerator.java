@@ -16,10 +16,10 @@ import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
+import de.uni.freiburg.iig.telematik.jawl.format.LogPerspective;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
-import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
-import de.uni.freiburg.iig.telematik.jawl.logformat.LogPerspective;
 import de.uni.freiburg.iig.telematik.jawl.writer.LogWriter;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
@@ -40,7 +40,7 @@ public abstract class LogGenerator implements TransformerListener{
 	public static final String DEFAULT_FILE_NAME = "LOG";
 	
 	protected LogPerspective logPerspective = null;
-	protected LogFormat logFormat = null;
+	protected AbstractLogFormat logFormat = null;
 	protected String fileName = null;
 	protected String logPath = null;
 	protected List<SimulationRun> simulationRuns = new ArrayList<SimulationRun>();
@@ -62,17 +62,17 @@ public abstract class LogGenerator implements TransformerListener{
 	
 	//------- Constructors -------------------------------------------------------------------
 	
-	public LogGenerator(LogFormat logFormat, LogPerspective logPerspective) 
+	public LogGenerator(AbstractLogFormat logFormat, LogPerspective logPerspective) 
 			throws ParameterException, PerspectiveException, IOException {
 		this(logFormat, logPerspective, DEFAULT_LOG_PATH, DEFAULT_FILE_NAME);
 	}
 	
-	public LogGenerator(LogFormat logFormat, LogPerspective logPerspective, String fileName) 
+	public LogGenerator(AbstractLogFormat logFormat, LogPerspective logPerspective, String fileName) 
 			throws ParameterException, PerspectiveException, IOException {
 		this(logFormat, logPerspective, DEFAULT_LOG_PATH, fileName);
 	}
 	
-	public LogGenerator(LogFormat logFormat, LogPerspective logPerspective, String logPath, String fileName) 
+	public LogGenerator(AbstractLogFormat logFormat, LogPerspective logPerspective, String logPath, String fileName) 
 			throws ParameterException, PerspectiveException, IOException {
 		initialize(logFormat, logPerspective, logPath, fileName);
 		
@@ -88,11 +88,11 @@ public abstract class LogGenerator implements TransformerListener{
 		return caseTimeGenerator;
 	}
 	
-	public LogFormat getLogFormat(){
+	public AbstractLogFormat getLogFormat(){
 		return logFormat;
 	}
 	
-	public void setLogFormat(LogFormat logFormat) throws PerspectiveException{
+	public void setLogFormat(AbstractLogFormat logFormat) throws PerspectiveException{
 		this.logFormat = logFormat;
 		logFormat.setLogPerspective(this.logPerspective);
 	}
@@ -164,7 +164,7 @@ public abstract class LogGenerator implements TransformerListener{
 	
 	//------- Methods to set up the log generator --------------------------------------------
 	
-	protected void initialize(LogFormat logFormat, LogPerspective logPerspective, String logPath, String fileName) 
+	protected void initialize(AbstractLogFormat logFormat, LogPerspective logPerspective, String logPath, String fileName) 
 			throws ParameterException, PerspectiveException,  IOException {
 		this.logFormat = logFormat;
 		setLogPerspective(logPerspective);
@@ -186,7 +186,7 @@ public abstract class LogGenerator implements TransformerListener{
 	 * @throws ParameterException - if some parameters are null or file name is an empty string.
 	 * @throws IOException - if output file creation or header writing cause an exception.
 	 */
-	protected void prepareLogWriter(LogFormat logFormat, String logPath, String fileName) throws CompatibilityException, PerspectiveException, ParameterException, IOException {
+	protected void prepareLogWriter(AbstractLogFormat logFormat, String logPath, String fileName) throws CompatibilityException, PerspectiveException, ParameterException, IOException {
 		if(logWriter != null){
 			logWriter.closeFile();
 		}

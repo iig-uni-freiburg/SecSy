@@ -48,9 +48,9 @@ import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
-import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatFactory;
-import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatType;
+import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
+import de.uni.freiburg.iig.telematik.jawl.format.LogFormatFactory;
+import de.uni.freiburg.iig.telematik.jawl.format.LogFormatType;
 import de.uni.freiburg.iig.telematik.secsy.gui.GUIProperties;
 import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
@@ -885,7 +885,7 @@ public class SimulationDialog extends AbstractDialog {
 			return;
 		}
 		
-		LogFormat logFormat = LogFormatFactory.getFormat(getLogFormatType());
+		AbstractLogFormat logFormat = LogFormatFactory.getFormat(getLogFormatType());
 		
 		// Create log generator
 		TraceLogGenerator logGenerator = null;

@@ -46,7 +46,7 @@ import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.parser.graphic.ParserDialog;
+import de.uni.freiburg.iig.telematik.sepia.parser.graphic.PNParserDialog;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 
@@ -258,7 +258,7 @@ public class Simulator extends JFrame {
 			@SuppressWarnings({ "rawtypes"})
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractGraphicalPN importedNet = ParserDialog.showPetriNetDialog(Simulator.this);
+				AbstractGraphicalPN importedNet = PNParserDialog.showPetriNetDialog(Simulator.this);
 				if(importedNet != null){
 					
 		            AbstractPetriNet loadedNet = importedNet.getPetriNet();

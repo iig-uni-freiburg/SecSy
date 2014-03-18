@@ -13,6 +13,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.AbstractTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
@@ -77,10 +78,10 @@ public abstract class AbstractMultipleTraceTransformer extends AbstractTraceTran
 		determineAppliances(event.logTrace.size(), result);
 		
 		int successfulAppliances = 0;
-		List<LogEntry> entries = new ArrayList<LogEntry>(event.logTrace.getEntries());
+		List<SimulationLogEntry> entries = new ArrayList<SimulationLogEntry>(event.logTrace.getEntries());
 		Collections.shuffle(entries);
-		Iterator<LogEntry> iter = entries.iterator();
-		LogEntry nextEntry;
+		Iterator<SimulationLogEntry> iter = entries.iterator();
+		SimulationLogEntry nextEntry;
 		while(successfulAppliances<targetAppliances && iter.hasNext()){
 			nextEntry = iter.next();
 			if(applyEntryTransformation(event.logTrace, nextEntry, result)){
@@ -106,7 +107,7 @@ public abstract class AbstractMultipleTraceTransformer extends AbstractTraceTran
 		addMessageToResult(getNoticeMessage(String.format(TARGET_APPLIANCES_FORMAT, targetAppliances)), result);
 	}
 	
-	protected abstract boolean applyEntryTransformation(LogTrace trace, LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException;
+	protected abstract boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult) throws ParameterException;
 
 	@Override
 	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {

@@ -14,6 +14,7 @@ import de.uni.freiburg.iig.telematik.jawl.log.EventType;
 import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
@@ -98,7 +99,7 @@ public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer 
 	}
 	
 	@Override
-	protected boolean applyEntryTransformation(LogTrace trace, LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
 		if(!isValid()){
 			addMessageToResult(getErrorMessage("Cannot apply transformer in invalid state: No time generator reference."), transformerResult);
 			return false;
@@ -136,12 +137,12 @@ public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer 
 				// The log entry belongs to a group.
 				// The log entry either reports on the START of an activity and there is also 
 				// a log entry reporting on the COMPLETE of the activity or the other way round.
-				List<LogEntry> entryGroup = trace.getEntriesForGroup(entry.getGroup());
+				List<SimulationLogEntry> entryGroup = trace.getEntriesForGroup(entry.getGroup());
 				
 				// The log entry belongs to a group of events reporting on an activity
 				// -> Check if there are both, START and END event
-				LogEntry startEntry = null;
-				LogEntry endEntry = null;
+				SimulationLogEntry startEntry = null;
+				SimulationLogEntry endEntry = null;
 				switch(entryGroup.get(0).getEventType()){
 				case start: 
 					startEntry = entryGroup.get(0);
@@ -191,16 +192,16 @@ public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer 
 		return false;
 	}
 	
-	protected void correctSuccessorTime(LogTrace trace, LogEntry entry, long timeCorrection) throws NullPointerException, LockingException{
+	protected void correctSuccessorTime(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, long timeCorrection) throws ParameterException, LockingException{
 		
 		if(timeCorrection == 0)
 			return;
 		if(timeCorrection < 0){
-			for(LogEntry successor: trace.getSucceedingEntries(entry)){
+			for(SimulationLogEntry successor: trace.getSucceedingEntries(entry)){
 				successor.addTime(timeCorrection);
 			}
 		} else if(timeCorrection > 0){
-			for(LogEntry successor: trace.getSucceedingEntries(entry)){
+			for(SimulationLogEntry successor: trace.getSucceedingEntries(entry)){
 				successor.subTime(timeCorrection);
 			}
 		}

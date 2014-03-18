@@ -19,7 +19,6 @@ import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.time.Weekday;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
 
 
 public class TimeProperties extends AbstractProperties{
@@ -962,7 +961,7 @@ public class TimeProperties extends AbstractProperties{
 		Validate.notNull(endTime);
 		Validate.inclusiveBetween(0, 23, startTime);
 		Validate.inclusiveBetween(0, 23, endTime);
-		Validate.notTrue(startTime == endTime);
+		Validate.isFalse(startTime == endTime);
 		Validate.minMax(startTime, endTime);
 	}
 	
@@ -977,8 +976,8 @@ public class TimeProperties extends AbstractProperties{
 		TimeValue minDelayV = new TimeValue(minDelay, minDelayScale);
 		TimeValue maxDelayV = new TimeValue(maxDelay, maxDelayScale);
 		
-		Validate.notTrue(minDelayV.equals(maxDelayV));
-		Validate.notTrue(minDelayV.isBiggerThan(maxDelayV));
+		Validate.isFalse(minDelayV.equals(maxDelayV));
+		Validate.isFalse(minDelayV.isBiggerThan(maxDelayV));
 	}
 	
 	public static void validateCasesPerDay(Integer casesPerDay) throws ParameterException{

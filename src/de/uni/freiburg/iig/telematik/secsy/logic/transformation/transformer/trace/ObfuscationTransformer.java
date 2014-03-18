@@ -14,9 +14,9 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
@@ -99,7 +99,7 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 	}
 
 	@Override
-	protected boolean applyEntryTransformation(LogTrace trace, LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
 		//Find all fields that can be obfuscated
 		List<EntryField> possibleFields = new ArrayList<EntryField>();
 		possibleFields.remove(EntryField.ORIGINATOR_CANDIDATES);
@@ -126,7 +126,7 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 		return false;
 	}
 	
-	protected Obfuscation applyObfuscation(EntryField field, LogEntry entry) throws ParameterException{
+	protected Obfuscation applyObfuscation(EntryField field, SimulationLogEntry entry) throws ParameterException{
 		Validate.notNull(field);
 		Validate.notNull(entry);
 		Obfuscation result = new Obfuscation(field, entry.getFieldValue(field));
@@ -136,7 +136,7 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 		
 	}
 	
-	protected boolean appliancePossible(EntryField field, LogEntry entry) throws ParameterException{
+	protected boolean appliancePossible(EntryField field, SimulationLogEntry entry) throws ParameterException{
 		Validate.notNull(field);
 		Validate.notNull(entry);
 		switch (field) {
@@ -153,7 +153,7 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 		}
 	}
 	
-	protected boolean setNewValueFor(EntryField field, LogEntry entry) throws ParameterException{
+	protected boolean setNewValueFor(EntryField field, SimulationLogEntry entry) throws ParameterException{
 		Validate.notNull(field);
 		Validate.notNull(entry);
 		try{

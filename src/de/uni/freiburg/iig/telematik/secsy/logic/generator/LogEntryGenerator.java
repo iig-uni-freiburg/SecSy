@@ -3,7 +3,7 @@ package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformerManager;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
@@ -74,8 +74,8 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 * @throws ParameterException 
 	 * @throws Exception 
 	 */
-	public LogEntry getLogEntryFor(AbstractTransition<?,?> transition, int caseNumber) throws ParameterException {
-		LogEntry entry = prepareLogEntry(transition, caseNumber);
+	public SimulationLogEntry getLogEntryFor(AbstractTransition<?,?> transition, int caseNumber) throws ParameterException {
+		SimulationLogEntry entry = prepareLogEntry(transition, caseNumber);
 		if(entryTransformerManager != null)
 			entryTransformerManager.applyTransformers(entry, caseNumber);
 		return entry;
@@ -91,10 +91,10 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 * @throws ParameterException 
 	 * @throws Exception 
 	 */
-	protected LogEntry prepareLogEntry(AbstractTransition<?,?> transition, int caseNumber) throws ParameterException {
+	protected SimulationLogEntry prepareLogEntry(AbstractTransition<?,?> transition, int caseNumber) throws ParameterException {
 		Validate.notNull(transition);
 		Validate.bigger(caseNumber, 0);
-		LogEntry entry = new LogEntry(transition.getLabel());
+		SimulationLogEntry entry = new SimulationLogEntry(transition.getLabel());
 		return entry;
 	}
 	

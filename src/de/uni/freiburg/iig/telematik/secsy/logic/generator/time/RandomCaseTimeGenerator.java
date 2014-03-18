@@ -121,7 +121,7 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	public void setDefaultDelayBounds(TimeValue minDelay, TimeValue maxDelay) throws ParameterException {
 		Validate.notNull(minDelay);
 		Validate.notNull(maxDelay);
-		Validate.notTrue(minDelay.isBiggerThan(maxDelay));
+		Validate.isFalse(minDelay.isBiggerThan(maxDelay));
 
 		this.defaultDelayMin = minDelay.clone();
 		this.defaultDelayMax = maxDelay.clone();
@@ -136,7 +136,7 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	public void setDefaultDurationBounds(TimeValue minDuration, TimeValue maxDuration) throws ParameterException {
 		Validate.notNull(minDuration);
 		Validate.notNull(maxDuration);
-		Validate.notTrue(minDuration.isBiggerThan(maxDuration));
+		Validate.isFalse(minDuration.isBiggerThan(maxDuration));
 
 		this.defaultDurationMin = minDuration.clone();
 		this.defaultDurationMax = maxDuration.clone();

@@ -23,8 +23,8 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormat;
-import de.uni.freiburg.iig.telematik.jawl.logformat.LogFormatFactory;
+import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
+import de.uni.freiburg.iig.telematik.jawl.format.LogFormatFactory;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.AbstractTransformerPanel;
@@ -513,7 +513,7 @@ public class SimulationComponents {
 			throw new IOException("Cannot load properties file: " + simulationFile + ".");
 		}
 		
-		LogFormat logFormat= LogFormatFactory.getFormat(properties.getLogFormatType());
+		AbstractLogFormat logFormat= LogFormatFactory.getFormat(properties.getLogFormatType());
 		String fileName = properties.getFileName();
 		
 		//Log Generator

@@ -48,7 +48,7 @@ import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.Simulatio
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerManager;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.parser.graphic.ParserDialog;
+import de.uni.freiburg.iig.telematik.sepia.parser.graphic.PNParserDialog;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.RandomPTTraverser;
@@ -451,7 +451,7 @@ public class SimulationRunDialog extends AbstractDialog {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
-					AbstractGraphicalPN importedNet = ParserDialog.showPetriNetDialog(SimulationRunDialog.this);
+					AbstractGraphicalPN importedNet = PNParserDialog.showPetriNetDialog(SimulationRunDialog.this);
 					if(importedNet != null){
 						
 			            AbstractPetriNet loadedNet = importedNet.getPetriNet();

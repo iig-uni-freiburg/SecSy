@@ -8,9 +8,8 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
-import de.uni.freiburg.iig.telematik.jawl.log.ModificationException;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
@@ -61,7 +60,7 @@ public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTrans
 	public void setProperties(Object[] properties) throws Exception {}
 
 	@Override
-	protected boolean applyEntryTransformation(LogTrace trace, LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
 		if(!isValid()){
 			addMessageToResult(getErrorMessage("Cannot apply transformer in invalid state: No context reference."), transformerResult);
 			return false;
@@ -116,9 +115,6 @@ public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTrans
 						e1.printStackTrace();
 					} catch (LockingException e1) {
 						// Cannot happen since the field ORIGINATOR is not locked
-						e1.printStackTrace();
-					} catch (ModificationException e1) {
-						// Cannot happen since the argument is chosen out of the candidate set of the log entry
 						e1.printStackTrace();
 					}
 				}

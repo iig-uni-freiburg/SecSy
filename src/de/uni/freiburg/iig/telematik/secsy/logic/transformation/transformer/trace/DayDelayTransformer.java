@@ -11,6 +11,7 @@ import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
@@ -95,14 +96,14 @@ public class DayDelayTransformer extends AbstractMultipleTraceTransformer implem
 	}
 
 	@Override
-	protected boolean applyEntryTransformation(LogTrace trace, LogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
 		
 		// Check, if timestamps can be altered for the entry itself and all its successors within the trace
 		if(entry.isFieldLocked(EntryField.TIME)){
 			addMessageToResult(super.getErrorMessage("entry " + entry.getActivity() + ": Cannot add delay due to locked time-field"), transformerResult);
 			return false;
 		}
-		for(LogEntry affectedEntry: transformerResult.getLogTrace().getSucceedingEntries(entry)){
+		for(SimulationLogEntry affectedEntry: transformerResult.getLogTrace().getSucceedingEntries(entry)){
 			if(affectedEntry.isFieldLocked(EntryField.TIME)){
 				addMessageToResult(super.getErrorMessage("entry " + entry.getActivity() + ": Cannot add delay due to locked time-field in sucessing entry ("+affectedEntry.getActivity()+")"), transformerResult);
 				return false;

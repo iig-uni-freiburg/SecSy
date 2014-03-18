@@ -10,7 +10,7 @@ import java.util.Set;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.AbstractTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
@@ -147,7 +147,7 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 		EnforcementResult success;
 		for(Set<String> activityGroup: activityGroups){
 			addMessageToResult(getNoticeMessage(String.format(NOTICEF_ENFORCE, (ensureProperty ? "ensure" : "violate"),activityGroup)), result);
-			List<LogEntry> correspondingEntries = event.logTrace.getEntriesForActivities(activityGroup);
+			List<SimulationLogEntry> correspondingEntries = event.logTrace.getEntriesForActivities(activityGroup);
 			if(!correspondingEntries.isEmpty()){
 				//Remove all traces that are not relevant for the transformation (e.g. do not contain enough information)
 				removeIrrelevantEntries(correspondingEntries, result);
@@ -190,7 +190,7 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 	 * @return A list containing relevant entries only.
 	 * @throws ParameterException 
 	 */
-	protected List<LogEntry> removeIrrelevantEntries(List<LogEntry> entries, TraceTransformerResult result) throws ParameterException{
+	protected List<SimulationLogEntry> removeIrrelevantEntries(List<SimulationLogEntry> entries, TraceTransformerResult result) throws ParameterException{
 		Validate.notNull(entries);
 		Validate.noNullElements(entries);
 		return entries;
@@ -205,7 +205,7 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 	 * @throws ParameterException 
 	 * @see EnforcementResult
 	 */
-	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
+	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
 		Validate.notNull(activityGroup);
 		Validate.notEmpty(activityGroup);
 		Validate.noNullElements(activityGroup);
@@ -225,7 +225,7 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 	 * @throws ParameterException 
 	 * @see EnforcementResult
 	 */
-	protected EnforcementResult violateProperty(Set<String> activityGroup, List<LogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
+	protected EnforcementResult violateProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
 		Validate.notNull(activityGroup);
 		Validate.notEmpty(activityGroup);
 		Validate.noNullElements(activityGroup);

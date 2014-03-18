@@ -8,6 +8,7 @@ import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.EventType;
 import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException.ErrorCode;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformerManager;
@@ -119,10 +120,10 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	 * @see Context
 	 */
 	@Override
-	protected LogEntry prepareLogEntry(AbstractTransition<?,?> transition, int caseNumber) throws ParameterException {
+	protected SimulationLogEntry prepareLogEntry(AbstractTransition<?,?> transition, int caseNumber) throws ParameterException {
 		Validate.notNull(transition);
 		Validate.bigger(caseNumber, 0);
-		LogEntry result = super.prepareLogEntry(transition, caseNumber);
+		SimulationLogEntry result = super.prepareLogEntry(transition, caseNumber);
 		try {
 			result.setOriginatorCandidates(context.getACModel().getAuthorizedSubjectsForTransaction(transition.getLabel()));
 			for(DataAttribute attribute: caseDataContainer.getAttributesForActivity(transition.getLabel(), caseNumber)){
