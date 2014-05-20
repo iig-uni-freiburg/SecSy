@@ -8,7 +8,6 @@ import java.util.List;
 
 import de.invation.code.toval.misc.ListUtils;
 import de.invation.code.toval.misc.ListUtils.Partition;
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 
@@ -75,7 +74,7 @@ public class Test {
 		String s = new String();
 	}
 	
-	public static void testLocking() throws ParameterException{
+	public static void testLocking(){
 		SimulationLogEntry entry = new SimulationLogEntry("A");
 		try {
 //			System.out.println(entry.setActivity("B"));

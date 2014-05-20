@@ -41,16 +41,14 @@ public class SimulationRun implements TraceCompletionListener{
 
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 			   								   int passes,
-			   								   PNTraverser traverser) 
-			   								   throws ParameterException {
+			   								   PNTraverser traverser){
 		setPasses(passes);
 		setPetriNet(petriNet);
 		setPNTraverser(traverser);
 	}
 	
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
-														   int passes) 
-														   throws ParameterException {
+														   int passes) {
 		this(petriNet, passes, new RandomPNTraverser<T>(petriNet));
 	}
 	
@@ -58,24 +56,21 @@ public class SimulationRun implements TraceCompletionListener{
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 														   int passes,
 														   PNTraverser traverser,
-														   TraceTransformerManager traceTransformerManager) 
-														   throws ParameterException {
+														   TraceTransformerManager traceTransformerManager){
 		this(petriNet, passes, traverser);
 		setTraceTransformerManager(traceTransformerManager);
 	}
 	
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 			   												int passes,
-			   												TraceTransformerManager traceTransformerManager) 
-			   											    throws ParameterException {
+			   												TraceTransformerManager traceTransformerManager){
 		this(petriNet, passes, new RandomPNTraverser<T>(petriNet), traceTransformerManager);
 	}
 
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 			   												int passes,
 			   												PNTraverser traverser,
-			   												EntryTransformerManager entryTransformerManager) 
-			   											    throws ParameterException {
+			   												EntryTransformerManager entryTransformerManager){
 		this(petriNet, passes, traverser);
 		setEntryTransformerManager(entryTransformerManager);
 	}
@@ -83,16 +78,14 @@ public class SimulationRun implements TraceCompletionListener{
 	
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 														   int passes,
-														   EntryTransformerManager entryTransformerManager) 
-														   throws ParameterException {
+														   EntryTransformerManager entryTransformerManager){
 		this(petriNet, passes, new RandomPNTraverser<T>(petriNet), entryTransformerManager);
 	}
 
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 														   int passes,
 														   TraceTransformerManager traceTransformerManager,
-														   EntryTransformerManager entryTransformerManager) 
-														   throws ParameterException {
+														   EntryTransformerManager entryTransformerManager){
 		this(petriNet, passes);
 		setEntryTransformerManager(entryTransformerManager);
 		setTraceTransformerManager(traceTransformerManager);
@@ -100,8 +93,7 @@ public class SimulationRun implements TraceCompletionListener{
 
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
 														   PNTraverser pnTraverser, 
-														   int passes) 
-														   throws ParameterException{
+														   int passes){
 		this(petriNet, passes);
 		setPNTraverser(pnTraverser);
 	}
@@ -109,8 +101,7 @@ public class SimulationRun implements TraceCompletionListener{
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
 														   PNTraverser pnTraverser, 
 														   int passes, 
-														   TraceTransformerManager traceTransformerManager) 
-														   throws ParameterException {
+														   TraceTransformerManager traceTransformerManager){
 		this(petriNet, passes, traceTransformerManager);
 		setPNTraverser(pnTraverser);
 	}
@@ -118,8 +109,7 @@ public class SimulationRun implements TraceCompletionListener{
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
 														   PNTraverser pnTraverser, 
 														   int passes, 
-														   EntryTransformerManager entryTransformerManager) 
-														   throws ParameterException {
+														   EntryTransformerManager entryTransformerManager){
 		this(petriNet, passes, entryTransformerManager);
 		setPNTraverser(pnTraverser);
 	}
@@ -128,8 +118,7 @@ public class SimulationRun implements TraceCompletionListener{
 														   PNTraverser pnTraverser, 
 														   int passes, 
 														   TraceTransformerManager traceTransformerManager, 
-														   EntryTransformerManager entryTransformerManager) 
-														   throws ParameterException {
+														   EntryTransformerManager entryTransformerManager){
 		this(petriNet, passes, traceTransformerManager, entryTransformerManager);
 		setPNTraverser(pnTraverser);
 	}
@@ -149,7 +138,7 @@ public class SimulationRun implements TraceCompletionListener{
 		return petriNet;
 	}
 	
-	public void setPetriNet(AbstractPetriNet<?,?,?,?,?> petriNet) throws ParameterException{
+	public void setPetriNet(AbstractPetriNet<?,?,?,?,?> petriNet){
 		Validate.notNull(petriNet);
 		this.petriNet = petriNet;
 	}
@@ -158,7 +147,7 @@ public class SimulationRun implements TraceCompletionListener{
 		return traceTransformerManager;
 	}
 	
-	public void setTraceTransformerManager(TraceTransformerManager traceTransformerManager) throws ParameterException {
+	public void setTraceTransformerManager(TraceTransformerManager traceTransformerManager){
 		Validate.notNull(traceTransformerManager);
 		this.traceTransformerManager = traceTransformerManager;
 	}
@@ -167,12 +156,12 @@ public class SimulationRun implements TraceCompletionListener{
 		return entryTransformerManager;
 	}
 	
-	public void setEntryTransformerManager(EntryTransformerManager entryTransformerManager) throws ParameterException {
+	public void setEntryTransformerManager(EntryTransformerManager entryTransformerManager){
 		Validate.notNull(entryTransformerManager);
 		this.entryTransformerManager = entryTransformerManager;
 	}
 	
-	public void setPNTraverser(PNTraverser<?> pnTraverser) throws ParameterException{
+	public void setPNTraverser(PNTraverser<?> pnTraverser){
 		Validate.notNull(pnTraverser);
 		this.pnTraverser = pnTraverser;
 	}
@@ -181,7 +170,7 @@ public class SimulationRun implements TraceCompletionListener{
 		return pnTraverser;
 	}
 	
-	public void setPasses(int passes) throws ParameterException{
+	public void setPasses(int passes){
 		Validate.notNegative(passes, "Negative number of passes.");
 		this.passes = passes;
 	}
@@ -199,7 +188,7 @@ public class SimulationRun implements TraceCompletionListener{
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Set<String> getActivities() throws ParameterException{
+	public Set<String> getActivities(){
 		Set<String> activities = new HashSet<String>();
 		AbstractPetriNet ptNet = getPetriNet();
 		if(ptNet == null)

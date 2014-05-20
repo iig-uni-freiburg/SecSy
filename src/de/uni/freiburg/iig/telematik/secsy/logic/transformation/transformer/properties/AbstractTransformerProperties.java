@@ -5,7 +5,6 @@ import java.util.Properties;
 
 import de.invation.code.toval.properties.AbstractProperties;
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
@@ -27,7 +26,7 @@ public class AbstractTransformerProperties extends AbstractProperties{
 	
 	//-- Name
 	
-	public void setName(String name) throws ParameterException{
+	public void setName(String name){
 		Validate.notNull(name);
 		Validate.notEmpty(name);
 		props.setProperty(AbstractTransformerProperty.NAME.toString(), name);
@@ -43,12 +42,12 @@ public class AbstractTransformerProperties extends AbstractProperties{
 	
 	//-- Activation probability
 	
-	public void setActivationProbability(Double probability) throws ParameterException{
+	public void setActivationProbability(Double probability){
 		validateActivationProbability(probability);
 		props.setProperty(AbstractTransformerProperty.ACTIVATION_PROBABILITY.toString(), probability.toString());
 	}
 	
-	public Double getActivationProbability() throws ParameterException, PropertyException{
+	public Double getActivationProbability() throws PropertyException{
 		String propertyValue = props.getProperty(AbstractTransformerProperty.ACTIVATION_PROBABILITY.toString());
 		Double result = null;
 		try{
@@ -63,7 +62,7 @@ public class AbstractTransformerProperties extends AbstractProperties{
 	
 	//-- Include messages
 	
-	public void setIncludeMessages(Boolean includeMessages) throws ParameterException{
+	public void setIncludeMessages(Boolean includeMessages) {
 		Validate.notNull(includeMessages);
 		props.setProperty(AbstractTransformerProperty.INCLUDE_STATUS_MESSAGES.toString(), includeMessages.toString());
 	}
@@ -82,12 +81,12 @@ public class AbstractTransformerProperties extends AbstractProperties{
 	
 	//-- Type
 	
-	public void setType(String className) throws ParameterException{
+	public void setType(String className) {
 		Validate.notNull(className);
 		props.setProperty(AbstractTransformerProperty.TYPE.toString(), className);
 	}
 	
-	public String getType() throws ParameterException{
+	public String getType(){
 		String propertyValue = props.getProperty(AbstractTransformerProperty.TYPE.toString());
 		Validate.notNull(propertyValue);
 		return propertyValue;
@@ -109,7 +108,7 @@ public class AbstractTransformerProperties extends AbstractProperties{
 	
 	//------- Parameter validation -------------------------------------------------------------------------
 	
-	protected void validateActivationProbability(Double probability) throws ParameterException{
+	protected void validateActivationProbability(Double probability){
 		Validate.probability(probability);
 	}
 	

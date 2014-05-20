@@ -3,7 +3,6 @@ package de.uni.freiburg.iig.telematik.secsy.logic.transformation;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.AbstractTransformer;
 
@@ -12,7 +11,7 @@ public class TransformerListenerSupport {
 	
 	private Set<TransformerListener> listeners = new HashSet<TransformerListener>();
 	
-	public void addTransformerListener(TransformerListener listener) throws ParameterException{
+	public void addTransformerListener(TransformerListener listener){
 		Validate.notNull(listener);
 		this.listeners.add(listener);
 	}

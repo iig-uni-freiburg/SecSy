@@ -23,7 +23,7 @@ public class DesignatorTransformer extends AbstractTraceTransformer{
 		super();
 	}
 
-	public DesignatorTransformer(Double activationProbability) throws ParameterException {
+	public DesignatorTransformer(Double activationProbability) {
 		super(activationProbability);
 	}
 
@@ -52,7 +52,7 @@ public class DesignatorTransformer extends AbstractTraceTransformer{
 		return minSize;
 	}
 
-	public void setMinSize(Integer minSize) throws ParameterException {
+	public void setMinSize(Integer minSize) {
 		Validate.notNull(minSize);
 		Validate.positive(minSize);
 		this.minSize = minSize;
@@ -62,7 +62,7 @@ public class DesignatorTransformer extends AbstractTraceTransformer{
 		return designator;
 	}
 
-	public void setDesignator(String designator) throws ParameterException {
+	public void setDesignator(String designator) {
 		Validate.notNull(designator);
 		Validate.notEmpty(designator);
 		this.designator = designator;
@@ -79,6 +79,11 @@ public class DesignatorTransformer extends AbstractTraceTransformer{
 	}
 
 	@Override
+	public boolean isMandatory() {
+		return true;
+	}
+
+	@Override
 	public List<EntryField> requiredEntryFields() {
 		List<EntryField> result = new ArrayList<EntryField>();
 		result.add(EntryField.ACTIVITY);
@@ -87,11 +92,13 @@ public class DesignatorTransformer extends AbstractTraceTransformer{
 
 	@Override
 	public String getHint() {
-		return "<p>This is a dummy custom-transformer. Based on the parameter \"minSize\", it adds a case attribute to each trace with length >= minSize with the value of the parameter \"designator\".</p>";
+		return "<p>This is a dummy custom-transformer. Based on the parameter \"minSize\", " +
+				"it adds a case attribute to each trace with length >= minSize with " +
+				"the value of the parameter \"designator\".</p>";
 	}
 
 	@Override
-	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event) throws ParameterException {
+	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event){
 		TraceTransformerResult result = new TraceTransformerResult(event.logTrace, true);
 		if(event.logTrace.size() >= minSize){
 			for(LogEntry traceEntry: event.logTrace.getEntries()){

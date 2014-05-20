@@ -15,8 +15,8 @@ import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerator;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.DataAttribute;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.properties.CaseDataContainerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
@@ -90,16 +90,16 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 	 * to the parameter type of a related context constraint on this attribute.</li>
 	 * </ul>
 	 */
-	public CaseDataContainer(AttributeValueGenerator attributeValueGenerator) throws ParameterException{
+	public CaseDataContainer(AttributeValueGenerator attributeValueGenerator){
 		setAttributeValueGenerator(attributeValueGenerator);
 	}
 	
-	public CaseDataContainer(Context context, AttributeValueGenerator attributeValueGenerator) throws ParameterException{
+	public CaseDataContainer(Context context, AttributeValueGenerator attributeValueGenerator){
 		this(attributeValueGenerator);
 		setContext(context);
 	}
 	
-	public void setAttributeValueGenerator(AttributeValueGenerator attValueGenerator) throws ParameterException{
+	public void setAttributeValueGenerator(AttributeValueGenerator attValueGenerator){
 		Validate.notNull(attValueGenerator);
 		this.attributeValueGenerator = attValueGenerator;
 	}
@@ -110,7 +110,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 	 * @param caseNumber The number of the case where attribute values are of interest.
 	 * @throws ParameterException If the given case number is smaller or equal 0.
 	 */
-	public void setActualGuardCase(int caseNumber) throws ParameterException{
+	public void setActualGuardCase(int caseNumber){
 		Validate.bigger(caseNumber, 0);
 		this.actualGuardCase = caseNumber;
 	}
@@ -125,7 +125,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 		return context;
 	}
 	
-	public void setContext(Context context) throws ParameterException{
+	public void setContext(Context context){
 		Validate.notNull(context);
 		// Check if the value type of routing constraints is compatible with the type of generated values for attributes.
 				for(String activity: context.getActivities()){
@@ -148,7 +148,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 		}
 	}
 	
-	public <O extends Object> boolean checkConstraint(int caseNumber, AbstractConstraint<O> constraint) throws CompatibilityException, ParameterException{
+	public <O extends Object> boolean checkConstraint(int caseNumber, AbstractConstraint<O> constraint) throws CompatibilityException{
 		context.validateAttribute(constraint.getElement());
 		if(!caseAttributeValues.containsKey(caseNumber))
 			throw new ParameterException(ErrorCode.INCONSISTENCY, "No case data generated yet for case number " + caseNumber);
@@ -167,7 +167,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 	 * @throws ParameterException 
 	 * @throws Exception If the attribute value generator throws an exception.
 	 */
-	public Set<DataAttribute> getAttributesForActivity(String id, int caseNumber) throws ParameterException, ValueGenerationException{
+	public Set<DataAttribute> getAttributesForActivity(String id, int caseNumber) throws ValueGenerationException{
 		Validate.notNull(id);
 		Validate.bigger(caseNumber, 0);
 		if(caseAttributeValues.get(caseNumber) == null)
@@ -176,7 +176,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 	}
 	
 	
-	public Map<String, Object> getAttributeValuesForActivity(String activity, int caseNumber) throws ParameterException, ValueGenerationException {
+	public Map<String, Object> getAttributeValuesForActivity(String activity, int caseNumber) throws ValueGenerationException {
 		Map<String, Object> result = new HashMap<String, Object>();
 		for(DataAttribute attribute: getAttributesForActivity(activity, caseNumber)){
 			result.put(attribute.name, attribute.value);
@@ -184,7 +184,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 		return result;
 	}
 	
-	private Object getValueForAttribute(String attribute, int caseNumber) throws ParameterException, ValueGenerationException{
+	private Object getValueForAttribute(String attribute, int caseNumber) throws ValueGenerationException{
 		if(caseAttributeValues.get(caseNumber) == null)
 			generateCaseData(caseNumber);
 		return caseAttributeValues.get(attribute);
@@ -198,7 +198,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 	 * @throws ValueGenerationException 
 	 * @throws Exception If the attribute value generator throws an exception.
 	 */
-	protected void generateCaseData(int caseNumber) throws ParameterException, ValueGenerationException {
+	protected void generateCaseData(int caseNumber) throws ValueGenerationException {
 		Validate.bigger(caseNumber, 0);
 		caseAttributeValues.put(caseNumber, new HashMap<String, Object>());
 		for(String attribute: context.getAttributes()){
@@ -264,7 +264,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 	}
 
 	@Override
-	public Class getAttributeValueClass(String attribute) throws ParameterException{
+	public Class getAttributeValueClass(String attribute){
 		if(!getAttributes().contains(attribute))
 			throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Unknown attribute in case daata container: " + attribute);
 		return attributeValueGenerator.getAttributeValueClass(attribute);
@@ -274,22 +274,17 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 		return attributeValueGenerator;
 	}
 	
-	public ValueGenerator<?> getValueGenerator(String attribute) throws ParameterException{
+	public ValueGenerator<?> getValueGenerator(String attribute){
 		return attributeValueGenerator.getValueGenerator(attribute);
 	}
 	
 	public void takeOverValues(CaseDataContainer dataContainer){
-		try {
-			this.setContext(dataContainer.getContext());
-		} catch (ParameterException e) {
-			// Do nothing, context was not set yet.
-		}
-		
+		this.setContext(dataContainer.getContext());
 		this.setName(dataContainer.getName());
 		this.attributeValueGenerator = dataContainer.getAttributeValueGenerator();
 	}
 	
-	public CaseDataContainerProperties getProperties() throws ParameterException{
+	public CaseDataContainerProperties getProperties(){
 		CaseDataContainerProperties properties = new CaseDataContainerProperties();
 		
 		properties.setName(getName());

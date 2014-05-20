@@ -12,7 +12,6 @@ import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.AbstractProperties;
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.format.LogFormatType;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
@@ -33,11 +32,11 @@ public class SimulationProperties extends AbstractProperties{
 	public static final LogFormatType defaultLogFormat = LogFormatType.MXML;
 	
 	
-	public SimulationProperties() throws ParameterException {
+	public SimulationProperties(){
 		super();
 	}
 
-	public SimulationProperties(String fileName) throws IOException, ParameterException {
+	public SimulationProperties(String fileName) throws IOException{
 		super(fileName);
 	}
 	
@@ -57,7 +56,7 @@ public class SimulationProperties extends AbstractProperties{
 	
 	//-- Simulation name
 	
-	public void setName(String name) throws ParameterException{
+	public void setName(String name){
 		validateStringValue(name);
 		setProperty(SimulationProperty.SIMULATION_NAME, name);
 	}
@@ -85,7 +84,7 @@ public class SimulationProperties extends AbstractProperties{
 	
 	//-- File name
 	
-	public void setFileName(String fileName) throws ParameterException{
+	public void setFileName(String fileName){
 		validateStringValue(fileName);
 		setProperty(SimulationProperty.FILE_NAME, fileName);
 	}
@@ -99,7 +98,7 @@ public class SimulationProperties extends AbstractProperties{
 	
 	//-- Entry generation type
 	
-	public void setEntryGeneration(EntryGenerationType entryGenerationType) throws ParameterException{
+	public void setEntryGeneration(EntryGenerationType entryGenerationType){
 		Validate.notNull(entryGenerationType);
 		setProperty(SimulationProperty.ENTRY_GENERATION, entryGenerationType.toString());
 	}
@@ -119,7 +118,7 @@ public class SimulationProperties extends AbstractProperties{
 	
 	//-- Event Handling
 	
-	public void setEventHandling(EventHandling eventHandling) throws ParameterException{
+	public void setEventHandling(EventHandling eventHandling){
 		Validate.notNull(eventHandling);
 		setProperty(SimulationProperty.EVENT_HANDLING, eventHandling.toString());
 	}
@@ -140,7 +139,7 @@ public class SimulationProperties extends AbstractProperties{
 	
 	//-- Log format
 	
-	public void setLogFormat(LogFormatType logFormatType) throws ParameterException{
+	public void setLogFormat(LogFormatType logFormatType){
 		Validate.notNull(logFormatType);
 		setProperty(SimulationProperty.LOG_FORMAT, logFormatType.toString());
 	}
@@ -160,13 +159,13 @@ public class SimulationProperties extends AbstractProperties{
 	
 	//-- Context
 	
-	public void setContextName(String contextName) throws ParameterException{
+	public void setContextName(String contextName){
 		Validate.notNull(contextName);
 		Validate.notEmpty(contextName);
 		setProperty(SimulationProperty.CONTEXT_NAME, contextName);
 	}
 	
-	public String getContextName() throws PropertyException, ParameterException {
+	public String getContextName() throws PropertyException {
 		String propertyValue = getProperty(SimulationProperty.CONTEXT_NAME);
 		if(propertyValue == null)
 			throw new PropertyException(SimulationProperty.CONTEXT_NAME, propertyValue);
@@ -182,13 +181,13 @@ public class SimulationProperties extends AbstractProperties{
 	
 	//-- Data container
 	
-	public void setDataContainerName(String containerName) throws ParameterException{
+	public void setDataContainerName(String containerName){
 		Validate.notNull(containerName);
 		Validate.notEmpty(containerName);
 		setProperty(SimulationProperty.DATA_CONTAINER_NAME, containerName);
 	}
 	
-	public String getDataContainerName() throws PropertyException, ParameterException {
+	public String getDataContainerName() throws PropertyException{
 		String propertyValue = getProperty(SimulationProperty.DATA_CONTAINER_NAME);
 		if(propertyValue == null)
 			throw new PropertyException(SimulationProperty.DATA_CONTAINER_NAME, propertyValue);
@@ -204,12 +203,12 @@ public class SimulationProperties extends AbstractProperties{
 	
 	//-- Time generator
 	
-	public void setTimeGeneratorName(String generatorName) throws ParameterException{
+	public void setTimeGeneratorName(String generatorName){
 		validateStringValue(generatorName);
 		setProperty(SimulationProperty.TIME_GENERATOR_NAME, generatorName);
 	}
 	
-	public String getTimeGeneratorName() throws PropertyException, ParameterException {
+	public String getTimeGeneratorName() throws PropertyException{
 		String propertyValue = getProperty(SimulationProperty.TIME_GENERATOR_NAME);
 		if(propertyValue == null)
 			throw new PropertyException(SimulationProperty.TIME_GENERATOR_NAME, propertyValue);
@@ -221,7 +220,7 @@ public class SimulationProperties extends AbstractProperties{
 	
 	//-- Simulation runs
 	
-	public void addSimulationRun(SimulationRun simulationRun) throws ParameterException{
+	public void addSimulationRun(SimulationRun simulationRun){
 		Validate.notNull(simulationRun);
 		
 		String simulationRunName = String.format(SIMULATION_RUN_FORMAT, getSimulationRunNames().size()+1);
@@ -233,7 +232,7 @@ public class SimulationProperties extends AbstractProperties{
 		props.setProperty(simulationRunName, String.format(SIMULATION_RUN_VALUE_FORMAT, "'"+simulationRun.getName()+"'", "'"+simulationRun.getPetriNet().getName()+"'", simulationRun.getPasses(), ArrayUtils.toString(encapsulateValues(transformerNames))));
 	}
 	
-	public Set<SimulationRunProperties> getSimulationRuns() throws PropertyException, ParameterException{
+	public Set<SimulationRunProperties> getSimulationRuns() throws PropertyException{
 		Set<SimulationRunProperties> result = new HashSet<SimulationRunProperties>();
 		for(String simulationRunName: getSimulationRunNames()){
 			result.add(getSimulationRunProperties(simulationRunName));
@@ -241,7 +240,7 @@ public class SimulationProperties extends AbstractProperties{
 		return result;
 	}
 	
-	private SimulationRunProperties getSimulationRunProperties(String simulationRunName) throws PropertyException, ParameterException{
+	private SimulationRunProperties getSimulationRunProperties(String simulationRunName) throws PropertyException{
 		validateStringValue(simulationRunName);
 		
 		String propertyValue = props.getProperty(simulationRunName);
@@ -289,7 +288,7 @@ public class SimulationProperties extends AbstractProperties{
 		return result;
 	}
 	
-	public void addSimulationRunName(String simulationRunName) throws ParameterException{
+	public void addSimulationRunName(String simulationRunName){
 		validateStringValue(simulationRunName);
 		
 		Set<String> currentRuns = getSimulationRunNames();
@@ -313,7 +312,7 @@ public class SimulationProperties extends AbstractProperties{
 		return !getSimulationRunNames().isEmpty();
 	}
 	
-	public void removeSimulationRunName(String simulationRunName) throws ParameterException{
+	public void removeSimulationRunName(String simulationRunName){
 		Validate.notNull(simulationRunName);
 		Validate.notEmpty(simulationRunName);
 		Set<String> currentRuns = getSimulationRunNames();

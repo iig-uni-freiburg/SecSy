@@ -17,8 +17,6 @@ import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.ModificationException;
 
-
-
 public class SimulationLogEntry extends DULogEntry{
 
 	/**
@@ -40,9 +38,9 @@ public class SimulationLogEntry extends DULogEntry{
 	/**
 	 * Generates a new log entry using the given activity.
 	 * @param activity Activity of the log entry.
-	 * @throws ParameterException if the given activity is <code>null</code>.
+	 * @ if the given activity is <code>null</code>.
 	 */
-	public SimulationLogEntry(String activity) throws ParameterException {
+	public SimulationLogEntry(String activity)  {
 		super(activity);
 	}
 	
@@ -52,7 +50,7 @@ public class SimulationLogEntry extends DULogEntry{
 	 * @param originatorCandidates List of originator candidates.
 	 * @throws Exception
 	 */
-	public SimulationLogEntry(String activity, List<String> originatorCandidates) throws ParameterException{
+	public SimulationLogEntry(String activity, List<String> originatorCandidates) {
 		this(activity);
 		try {
 			this.setOriginatorCandidates(originatorCandidates);
@@ -76,7 +74,7 @@ public class SimulationLogEntry extends DULogEntry{
 	 * <code>false</code> otherwise.
 	 */
 	@Override
-	public boolean setOriginator(String originator) throws ParameterException, LockingException {
+	public boolean setOriginator(String originator) throws LockingException {
 		Validate.notNull(originator);
 
 		if(isFieldLocked(EntryField.ORIGINATOR)){
@@ -95,12 +93,12 @@ public class SimulationLogEntry extends DULogEntry{
 	/**
 	 * Chooses the originator with the given index from {@link #originatorCandidates} as new value for {@link #originator}.
 	 * @param index Index of the originator candidate.
-	 * @throws ParameterException if the extracted originator candidate is <code>null</code> or cannot be extracted.
+	 * @ if the extracted originator candidate is <code>null</code> or cannot be extracted.
 	 * @throws LockingException if the originator field is locked <br>and the given value differs from the actual value of {@link #originator}.
 	 * @return <code>true</code> if {@link #originator} was modified;<br>
 	 * <code>false</code> otherwise.
 	 */
-	public boolean setOriginator(Integer index) throws ParameterException, LockingException{
+	public boolean setOriginator(Integer index) throws LockingException{
 		Validate.notNull(index);
 		Validate.notNegative(index);
 		
@@ -127,12 +125,12 @@ public class SimulationLogEntry extends DULogEntry{
 	/**
 	 * Sets the given originator as the only originator candidate and thus as the value of {@link #originator}.
 	 * @param originator Originator candidate
-	 * @throws ParameterException if the given originator is <code>null</code>.
+	 * @ if the given originator is <code>null</code>.
 	 * @throws LockingException if the field ORIGINATOR_CANDIDATES is locked <br>and the given candidate is not already the only candidate.
 	 * @return <code>true</code> if {@link #originatorCandidates} was modified;<br>
 	 * <code>false</code> otherwise.
 	 */
-	public boolean setOriginatorCandidate(String originator) throws ParameterException,LockingException {
+	public boolean setOriginatorCandidate(String originator) throws LockingException {
 		Validate.notNull(originator);
 		return setOriginatorCandidates(Collections.singletonList(originator));
 	}
@@ -140,12 +138,12 @@ public class SimulationLogEntry extends DULogEntry{
 	/**
 	 * Sets the elements of the given list as originator candidates and chooses a random entry as new value of {@link #originator}.
 	 * @param originators List of originator candidates
-	 * @throws ParameterException if the list is <code>null</code>.
+	 * @ if the list is <code>null</code>.
 	 * @throws LockingException if the field ORIGINATOR_CANDIDATES is locked <br>and the given candidates are not the same than the current ones.
 	 * @return <code>true</code> if {@link #originatorCandidates} was modified;<br>
 	 * <code>false</code> otherwise.
 	 */
-	public boolean setOriginatorCandidates(List<String> originators) throws ParameterException, LockingException {
+	public boolean setOriginatorCandidates(List<String> originators) throws LockingException {
 		Validate.notNull(originators);
 		Validate.notEmpty(originators);
 		Validate.noNullElements(originators);
@@ -167,12 +165,12 @@ public class SimulationLogEntry extends DULogEntry{
 	/**
 	 * Adds the given originator to the list of originator candidates {@link #originatorCandidates}.
 	 * @param originator Originator candidate to add
-	 * @throws ParameterException if the given originator candidate is <code>null</code> or empty.
+	 * @ if the given originator candidate is <code>null</code> or empty.
 	 * @throws LockingException if The field ORIGINATOR_CANDIDATES is locked <br>and {@link #originatorCandidates} does not already contain the given candidate.
 	 * @return <code>true</code> if {@link #originatorCandidates} was modified;<br>
 	 * <code>false</code> otherwise.
 	 */
-	public boolean addOriginatorCandidate(String originator) throws ParameterException,LockingException {
+	public boolean addOriginatorCandidate(String originator) throws LockingException {
 		Validate.notNull(originator);
 		Validate.notEmpty(originator);
 		if(isFieldLocked(EntryField.ORIGINATOR_CANDIDATES)){
@@ -188,12 +186,12 @@ public class SimulationLogEntry extends DULogEntry{
 	/**
 	 * Adds the given originators to the list of originator candidates ({@link #originatorCandidates}).
 	 * @param originators Originators to add
-	 * @throws ParameterException if the given originator candidate list is <code>null</code>, empty or contains invalid values.
+	 * @ if the given originator candidate list is <code>null</code>, empty or contains invalid values.
 	 * @throws LockingException if the originator candidate field is locked <br>and {@link #originatorCandidates} does not already contain all given candidates.
 	 * @return <code>true</code> if {@link #originatorCandidates} was modified;<br>
 	 * <code>false</code> otherwise.
 	 */
-	public boolean addOriginatorCandidates(List<String> originators) throws ParameterException, LockingException {
+	public boolean addOriginatorCandidates(List<String> originators) throws LockingException {
 		Validate.notNull(originators);
 		Validate.notEmpty(originators);
 		if(isFieldLocked(EntryField.ORIGINATOR_CANDIDATES)){
@@ -215,10 +213,10 @@ public class SimulationLogEntry extends DULogEntry{
 	 * @param originator Originator to remove.
 	 * @return <code>true</code> if {@link #originatorCandidates} was modified;<br>
 	 * <code>false</code> otherwise.
-	 * @throws ParameterException if the given originator is <code>null</code>.
+	 * @ if the given originator is <code>null</code>.
 	 * @throws LockingException if the field ORIGINATOR_CANDIDATES is locked <br>and the given originator is not already contained in {@link #originatorCandidates}.
 	 */
-	public boolean removeOriginatorCandidate(String originator) throws ParameterException,LockingException{
+	public boolean removeOriginatorCandidate(String originator) throws LockingException{
 		if(originator==null)
 			throw new NullPointerException();
 		return removeOriginatorCandidates(Collections.singletonList(originator));
@@ -229,10 +227,10 @@ public class SimulationLogEntry extends DULogEntry{
 	 * @param originators Originators to remove
 	 * @return <code>true</code> if {@link #originatorCandidates} was modified;<br>
 	 * <code>false</code> otherwise.
-	 * @throws ParameterException if the given originator list is <code>null</code>.
+	 * @ if the given originator list is <code>null</code>.
 	 * @throws LockingException if the field ORIGINATOR_CANDIDATES is locked <br>and the given originators are not already contained in {@link #originatorCandidates}.
 	 */
-	public boolean removeOriginatorCandidates(Collection<String> originators) throws ParameterException,LockingException{
+	public boolean removeOriginatorCandidates(Collection<String> originators) throws LockingException{
 		Validate.notNull(originators);
 		if(originators.isEmpty())
 			return false;
@@ -294,7 +292,7 @@ public class SimulationLogEntry extends DULogEntry{
 	}
 
 	@Override
-	protected void copyFieldValues(LogEntry clone) throws LockingException, ParameterException {
+	protected void copyFieldValues(LogEntry clone) throws LockingException {
 		super.copyFieldValues(clone);
 		for(DataAttribute att: dataUsage.keySet()){
 			((SimulationLogEntry) clone).setDataUsageFor(att, new HashSet<DataUsage>(dataUsage.get(att)));

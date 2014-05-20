@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Properties;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
@@ -20,12 +19,12 @@ public abstract class AbstractMultipleTraceTransformerProperties extends Abstrac
 		super(fileName);
 	}
 	
-	public void setMaxAppliances(Integer maxAppliances) throws ParameterException{
+	public void setMaxAppliances(Integer maxAppliances){
 		validateAppliances(maxAppliances);
 		props.setProperty(MultipleTraceTransformerProperty.MAX_APPLIANCES.toString(), maxAppliances.toString());
 	}
 	
-	public Integer getMaxAppliances() throws ParameterException, PropertyException{
+	public Integer getMaxAppliances() throws PropertyException{
 		String propertyValue = props.getProperty(MultipleTraceTransformerProperty.MAX_APPLIANCES.toString());
 		Integer result = null;
 		try{
@@ -37,7 +36,7 @@ public abstract class AbstractMultipleTraceTransformerProperties extends Abstrac
 		return result;
 	}
 	
-	public static void validateAppliances(Integer appliances) throws ParameterException{
+	public static void validateAppliances(Integer appliances){
 		Validate.notNull(appliances);
 		Validate.notNegative(appliances);
 		Validate.bigger(appliances, 0);

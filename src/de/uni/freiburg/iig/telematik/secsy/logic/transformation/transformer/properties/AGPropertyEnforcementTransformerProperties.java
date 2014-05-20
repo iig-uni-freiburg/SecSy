@@ -12,8 +12,8 @@ import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.ActivityGroupPropertyEnforcementTransformer.TransformerAction;
 
 
@@ -34,12 +34,12 @@ public abstract class AGPropertyEnforcementTransformerProperties extends Abstrac
 		super(fileName);
 	}
 	
-	public void setViolationProbability(Double probability) throws ParameterException{
+	public void setViolationProbability(Double probability) {
 		Validate.probability(probability);
 		props.setProperty(AGPEProperty.VIOLATION_PROBABILITY.toString(), probability.toString());
 	}
 	
-	public Double getViolationProbability() throws ParameterException, PropertyException{
+	public Double getViolationProbability() throws PropertyException{
 		String propertyValue = props.getProperty(AGPEProperty.VIOLATION_PROBABILITY.toString());
 		Double result = null;
 		try{
@@ -51,29 +51,29 @@ public abstract class AGPropertyEnforcementTransformerProperties extends Abstrac
 		return result;
 	}
 	
-	public void addActivityGroup(String... group) throws ParameterException, PropertyException{
+	public void addActivityGroup(String... group) throws PropertyException{
 		validateActivityGroup(group);
 		props.setProperty(String.format(ACTIVITY_GROUP_FORMAT, incNumberOfGroups()), ArrayUtils.toString(group));
 	}
 	
-	public void addActivityGroup(Set<String> group) throws ParameterException, PropertyException{
+	public void addActivityGroup(Set<String> group) throws PropertyException{
 		validateActivityGroup(group);
 		props.setProperty(String.format(ACTIVITY_GROUP_FORMAT, incNumberOfGroups()), ArrayUtils.toString(group.toArray()));
 	}
 	
-	private Integer incNumberOfGroups() throws ParameterException, PropertyException{
+	private Integer incNumberOfGroups() throws PropertyException{
 		Integer currentNumberOfGroups = getNumberOfGroups();
 		setNumberOfGroups(currentNumberOfGroups + 1);
 		return currentNumberOfGroups + 1;
 	}
 	
-	private void setNumberOfGroups(Integer number) throws ParameterException{
+	private void setNumberOfGroups(Integer number){
 		Validate.notNull(number);
 		Validate.notNegative(number);
 		props.setProperty(AGPEProperty.NUMBER_OF_GROUPS.toString(), number.toString());
 	}
 	
-	private Integer getNumberOfGroups() throws PropertyException, ParameterException{
+	private Integer getNumberOfGroups() throws PropertyException{
 		String propertyValue = props.getProperty(AGPEProperty.NUMBER_OF_GROUPS.toString());
 		Integer result = null;
 		try{
@@ -85,7 +85,7 @@ public abstract class AGPropertyEnforcementTransformerProperties extends Abstrac
 		return result;
 	}
 	
-	public List<Set<String>> getActivityGroups() throws PropertyException, ParameterException{
+	public List<Set<String>> getActivityGroups() throws PropertyException{
 		List<Set<String>> groups = new ArrayList<Set<String>>();
 		Integer numberOfGroups = getNumberOfGroups();
 		for(int i=1; i<= numberOfGroups; i++){
@@ -107,19 +107,19 @@ public abstract class AGPropertyEnforcementTransformerProperties extends Abstrac
 	}
 	
 	@Override
-	protected void validateActivationProbability(Double probability) throws ParameterException {
+	protected void validateActivationProbability(Double probability){
 		super.validateActivationProbability(probability);
 		if(probability != 1.0)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Activation probability has to be 1.0");
 	}
 	
-	public static void validateActivityGroup(Set<String> group) throws ParameterException{
+	public static void validateActivityGroup(Set<String> group){
 		Validate.notNull(group);
 		Validate.notEmpty(group);
 		Validate.noNullElements(group);
 	}
 	
-	public static void validateActivityGroup(String[] group) throws ParameterException{
+	public static void validateActivityGroup(String[] group){
 		Validate.notNull(group);
 		Validate.notEmpty(group);
 		Validate.noNullElements(group);

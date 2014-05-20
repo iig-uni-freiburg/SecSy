@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Properties;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
@@ -21,21 +20,21 @@ public class DayDelayTransformerProperties extends AbstractMultipleTraceTransfor
 		super(fileName);
 	}
 	
-	public void setDayBounds(Integer minDays, Integer maxDays) throws ParameterException {
+	public void setDayBounds(Integer minDays, Integer maxDays){
 		validateDayBounds(minDays, maxDays);
 		props.setProperty(DayDelayTransformerProperty.MIN_DAYS.toString(), minDays.toString());
 		props.setProperty(DayDelayTransformerProperty.MAX_DAYS.toString(), maxDays.toString());
 	}
 	
-	public Integer getMinDays() throws PropertyException, ParameterException{
+	public Integer getMinDays() throws PropertyException{
 		return getDays(DayBound.MIN_DAY);
 	}
 	
-	public Integer getMaxDays() throws PropertyException, ParameterException{
+	public Integer getMaxDays() throws PropertyException{
 		return getDays(DayBound.MAX_DAY);
 	}
 	
-	private Integer getDays(DayBound bound) throws PropertyException, ParameterException{
+	private Integer getDays(DayBound bound) throws PropertyException{
 		String minDays = props.getProperty(DayDelayTransformerProperty.MIN_DAYS.toString());
 		String maxDays = props.getProperty(DayDelayTransformerProperty.MAX_DAYS.toString());
 		if(minDays == null)
@@ -63,7 +62,7 @@ public class DayDelayTransformerProperties extends AbstractMultipleTraceTransfor
 		}
 	}
 	
-	public static void validateDayBounds(Integer minDays, Integer maxDays) throws ParameterException{
+	public static void validateDayBounds(Integer minDays, Integer maxDays){
 		Validate.notNull(minDays);
 		Validate.notNull(maxDays);
 		Validate.notNegative(minDays);

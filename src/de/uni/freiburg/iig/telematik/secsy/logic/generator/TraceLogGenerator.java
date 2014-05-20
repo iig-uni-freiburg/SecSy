@@ -5,7 +5,6 @@ import java.util.Date;
 
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.validate.InconsistencyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
 import de.uni.freiburg.iig.telematik.jawl.format.LogPerspective;
 import de.uni.freiburg.iig.telematik.jawl.log.EventType;
@@ -36,17 +35,17 @@ public class TraceLogGenerator extends LogGenerator{
 	private EventHandling eventHandling = EventHandling.END;
 	
 	public TraceLogGenerator(AbstractLogFormat logFormat) 
-			throws ParameterException, IOException, PerspectiveException {
+			throws IOException, PerspectiveException {
 		super(logFormat, LogPerspective.TRACE_PERSPECTIVE);
 	}
 	
 	public TraceLogGenerator(AbstractLogFormat logFormat, String fileName) 
-			throws ParameterException, IOException, PerspectiveException {
+			throws IOException, PerspectiveException {
 		super(logFormat, LogPerspective.TRACE_PERSPECTIVE, fileName);
 	}
 	
 	public TraceLogGenerator(AbstractLogFormat logFormat, String logPath, String fileName) 
-			throws ParameterException, IOException, PerspectiveException {
+			throws IOException, PerspectiveException {
 		super(logFormat, LogPerspective.TRACE_PERSPECTIVE, logPath, fileName);
 	}
 	
@@ -68,26 +67,17 @@ public class TraceLogGenerator extends LogGenerator{
 	protected void simulateNet(SimulationRun simulationRun) throws SimulationException, IOException{
 		EntryTransformerManager entryTransformerManager = null;
 		TraceTransformerManager traceTransformerManager = null;
-		try{
-			entryTransformerManager = simulationRun.getEntryTransformerManager();
-			entryTransformerManager.setSource(getLogEntryGenerator());
-			traceTransformerManager = simulationRun.getTraceTransformerManager();
-			traceTransformerManager.setSource(getLogEntryGenerator());
-		}catch(ParameterException e){
-			// Is only thrown if setSource() methods are called with null-Parameters.
-			// This cannot happen, since simulateNet is called by startSimulation(),
-			// which throws an Exception, in case the log entry generator is null.
-			e.printStackTrace();
-		}
-		try {
-			caseGenerator.setPetriNet(simulationRun.getPetriNet(), simulationRun.getPNTraverser());
-			if(getLogEntryGenerator() instanceof DetailedLogEntryGenerator){
-				DetailedLogEntryGenerator entryGenerator = (DetailedLogEntryGenerator) getLogEntryGenerator();
-				caseGenerator.setContext(entryGenerator.getContext());
-				caseGenerator.setCaseDataContainer(entryGenerator.getCaseDataContainer());
-			}
-		} catch (ParameterException e2) {
-			throw new SimulationException("Case generator is in invalid state. Null-value for Petri net or PN-traverser.");
+		
+		entryTransformerManager = simulationRun.getEntryTransformerManager();
+		entryTransformerManager.setSource(getLogEntryGenerator());
+		traceTransformerManager = simulationRun.getTraceTransformerManager();
+		traceTransformerManager.setSource(getLogEntryGenerator());
+
+		caseGenerator.setPetriNet(simulationRun.getPetriNet(), simulationRun.getPNTraverser());
+		if (getLogEntryGenerator() instanceof DetailedLogEntryGenerator) {
+			DetailedLogEntryGenerator entryGenerator = (DetailedLogEntryGenerator) getLogEntryGenerator();
+			caseGenerator.setContext(entryGenerator.getContext());
+			caseGenerator.setCaseDataContainer(entryGenerator.getCaseDataContainer());
 		}
 			
 		try {
@@ -99,13 +89,7 @@ public class TraceLogGenerator extends LogGenerator{
 					AbstractTransition<?,?> nextTransition = caseGenerator.getNextTransition();
 					AbstractTransition<?,?> next = simulationRun.getPetriNet().fire(nextTransition.getName());
 					if (next!=null && !next.isSilent()){
-						SimulationLogEntry entry = null;
-						try {
-							entry = getLogEntryGenerator().getLogEntryFor(next,nextCaseID);
-						} catch (ParameterException e1) {
-							// Cannot happen, since next is not null and the case id is always positive.
-							e1.printStackTrace();
-						}
+						SimulationLogEntry entry = getLogEntryGenerator().getLogEntryFor(next,nextCaseID);
 						if(entry!=null){
 							try {
 								addEntryToTrace(trace, entry, getCaseTimeGenerator().getTimeFor(next.getLabel(), nextCaseID));
@@ -117,22 +101,12 @@ public class TraceLogGenerator extends LogGenerator{
 								// Cannot happen, since transition names are never null 
 								// and the case id is always positive.
 								e.printStackTrace();
-							} catch (ParameterException e) {
-								// Cannot happen, since the preceding startNextCase() ensures,
-								// that case data is generated for the actual case id.
-								e.printStackTrace();
-							} 
+							}
 							notifyEntryListeners(entry);
 						}
 					}
 				}
-				try {
-					traceTransformerManager.applyTransformers(trace);
-				} catch (ParameterException e) {
-					// Is only thrown if applyTransformers() is called with a null-parameter.
-					// This cannot happen, since trace is created before.
-					e.printStackTrace();
-				}
+				traceTransformerManager.applyTransformers(trace);
 				trace.sort();
 				notifyTraceListeners(trace);
 				logWriter.writeTrace(trace);
@@ -142,8 +116,6 @@ public class TraceLogGenerator extends LogGenerator{
 			//Cannot happen since TraceLogGenerator enforces trace perspective.
 			e.printStackTrace();
 		} catch (PNException e) {
-			e.printStackTrace();
-		} catch (ParameterException e) {
 			e.printStackTrace();
 		} catch (ValueGenerationException e) {
 			e.printStackTrace();
@@ -158,7 +130,7 @@ public class TraceLogGenerator extends LogGenerator{
 	 * @throws LockingException If the time field of the given entry is locked.
 	 * @throws ParameterException 
 	 */
-	protected void addEntryToTrace(LogTrace<SimulationLogEntry> trace, SimulationLogEntry logEntry, ExecutionTime executionTime) throws LockingException, ParameterException{
+	protected void addEntryToTrace(LogTrace<SimulationLogEntry> trace, SimulationLogEntry logEntry, ExecutionTime executionTime) throws LockingException{
 		
 		switch(eventHandling){
 		

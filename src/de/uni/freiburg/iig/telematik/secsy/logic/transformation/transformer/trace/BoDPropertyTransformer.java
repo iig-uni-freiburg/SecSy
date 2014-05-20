@@ -9,7 +9,6 @@ import java.util.Set;
 
 import de.invation.code.toval.misc.SetUtils;
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntryUtils;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
@@ -37,20 +36,20 @@ public class BoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 									  "A probability of 0 lets the transformer enforce the property.</p>" +
 									  "<p>The transformer fails, if originators cannot be chosen adequately.</p>";
 
-	public BoDPropertyTransformer(BoDTransformerProperties properties) throws ParameterException, PropertyException{
+	public BoDPropertyTransformer(BoDTransformerProperties properties) throws PropertyException{
 		super(properties);
 	}
 	
-	public BoDPropertyTransformer(Double violationProbability) throws ParameterException {
+	public BoDPropertyTransformer(Double violationProbability){
 		super(violationProbability);
 	}
 	
-	public BoDPropertyTransformer() throws ParameterException {
+	public BoDPropertyTransformer(){
 		super();
 	}
 
 	@Override
-	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
+	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult){
 		EnforcementResult trivialResult = super.ensureProperty(activityGroup, entries, transformerResult);
 		if(trivialResult.equals(EnforcementResult.SUCCESSFUL) || trivialResult.equals(EnforcementResult.NOTNECESSARY))
 			return trivialResult;
@@ -120,7 +119,7 @@ public class BoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 	}
 	
 	@Override
-	protected boolean checkTrivialCase(List<SimulationLogEntry> entries, TransformerAction action) throws ParameterException{
+	protected boolean checkTrivialCase(List<SimulationLogEntry> entries, TransformerAction action){
 		if(super.checkTrivialCase(entries, action))
 			return true;
 		//SoD is enforced if all pairwise intersections of the sets of executors of activities is empty.
@@ -191,7 +190,7 @@ public class BoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 //	}
 
 	@Override
-	protected EnforcementResult violateProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
+	protected EnforcementResult violateProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult){
 		EnforcementResult trivialResult = super.violateProperty(activityGroup, entries, transformerResult);
 		if(trivialResult.equals(EnforcementResult.SUCCESSFUL) || trivialResult.equals(EnforcementResult.NOTNECESSARY))
 			return trivialResult;
@@ -242,7 +241,7 @@ public class BoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 	}
 
 	@Override
-	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+	public AbstractTransformerProperties getProperties() throws PropertyException {
 		BoDTransformerProperties properties = new BoDTransformerProperties();
 		fillProperties(properties);
 		return properties;

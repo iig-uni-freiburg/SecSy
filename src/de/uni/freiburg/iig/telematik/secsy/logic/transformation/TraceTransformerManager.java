@@ -8,7 +8,6 @@ import java.util.Map;
 
 import de.invation.code.toval.misc.CollectionUtils;
 import de.invation.code.toval.misc.FormatUtils;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
@@ -33,7 +32,7 @@ public class TraceTransformerManager {
 	
 	private TransformerListenerSupport transformerListenerSupport = new TransformerListenerSupport();
 	
-	public void registerTransformerListener(TransformerListener listener) throws ParameterException{
+	public void registerTransformerListener(TransformerListener listener){
 		transformerListenerSupport.addTransformerListener(listener);
 	}
 	
@@ -41,19 +40,14 @@ public class TraceTransformerManager {
 		transformerListenerSupport.removeTransformerListener(listener);
 	}
 	
-	public void setSource(LogEntryGenerator source) throws MissingRequirementException, ParameterException {
+	public void setSource(LogEntryGenerator source) throws MissingRequirementException {
 		Validate.notNull(source);
-		try{
-			for (AbstractTraceTransformer transformer : traceTransformers) {
-				for (EntryField contextType : transformer.requiredEntryFields()) {
-					if (!source.providesLogInformation(contextType))
-						throw new MissingRequirementException(contextType);
+		for (AbstractTraceTransformer transformer : traceTransformers) {
+			for (EntryField contextType : transformer.requiredEntryFields()) {
+				if (!source.providesLogInformation(contextType)) {
+					throw new MissingRequirementException(contextType);
 				}
 			}
-		} catch(ParameterException e){
-			// Cannot happen, since transformers are required to never return null-values
-			// in the method transformer.requiredContextInformation().
-			e.printStackTrace();
 		}
 		this.source = source;
 	}
@@ -72,22 +66,19 @@ public class TraceTransformerManager {
 	 * @throws MissingRequirementException 
 	 * @throws ParameterException 
 	 */
-	public void addTransformer(AbstractTraceTransformer traceTransformer) throws MissingRequirementException, ParameterException{
+	public void addTransformer(AbstractTraceTransformer traceTransformer) throws MissingRequirementException{
 		Validate.notNull(traceTransformer);
-		try{
-			if(source!=null)
-				for(EntryField contextType: traceTransformer.requiredEntryFields())
-					if(!source.providesLogInformation(contextType))
-						throw new MissingRequirementException(contextType);
-		} catch(ParameterException e){
-			// Cannot happen, since transformers are required to never return null-values
-			// in the method transformer.requiredContextInformation().
-			e.printStackTrace();
+		if (source != null) {
+			for (EntryField contextType : traceTransformer.requiredEntryFields()) {
+				if (!source.providesLogInformation(contextType)) {
+					throw new MissingRequirementException(contextType);
+				}
+			}
 		}
 		traceTransformers.add(traceTransformer);
 	}
 	
-	public void applyTransformers(LogTrace logTrace) throws ParameterException{
+	public void applyTransformers(LogTrace logTrace){
 		if(!traceTransformers.isEmpty()){
 			TraceTransformerEvent event = new TraceTransformerEvent(logTrace, source);
 			for(AbstractTraceTransformer traceTransformer: traceTransformers){

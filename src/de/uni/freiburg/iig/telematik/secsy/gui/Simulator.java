@@ -529,11 +529,7 @@ public class Simulator extends JFrame {
 		if(comboSimulation.getSelectedItem() == null){
 			return null;
 		}
-		try {
-			return SimulationComponents.getInstance().getSimulation(comboSimulation.getSelectedItem().toString());
-		} catch (ParameterException e) {
-			return null;
-		}
+		return SimulationComponents.getInstance().getSimulation(comboSimulation.getSelectedItem().toString());
 	}
 
 }

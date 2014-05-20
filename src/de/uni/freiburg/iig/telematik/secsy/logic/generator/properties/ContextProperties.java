@@ -20,7 +20,6 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.types.DataUsage;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 
 public class ContextProperties extends AbstractProperties {
 	
@@ -44,7 +43,7 @@ public class ContextProperties extends AbstractProperties {
 	
 	//-- Context name
 	
-	public void setName(String name) throws ParameterException{
+	public void setName(String name) {
 		Validate.notNull(name);
 		Validate.notEmpty(name);
 		setProperty(ContextProperty.CONTEXT_NAME, name);
@@ -59,11 +58,11 @@ public class ContextProperties extends AbstractProperties {
 	
 	//-- Activities
 	
-	public void addActivity(String activity) throws ParameterException{
+	public void addActivity(String activity) {
 		addActivities(Arrays.asList(activity));
 	}
 	
-	public void addActivities(Collection<String> activities) throws ParameterException{
+	public void addActivities(Collection<String> activities) {
 		validateStringCollection(activities);
 		Set<String> currentValues = getActivities();
 		currentValues.addAll(activities);
@@ -87,11 +86,11 @@ public class ContextProperties extends AbstractProperties {
 		return !getActivities().isEmpty();
 	}
 	
-	public void removeActivity(String activity) throws ParameterException{
+	public void removeActivity(String activity) {
 		removeActivities(Arrays.asList(activity));
 	}
 	
-	public void removeActivities(Collection<String> activities) throws ParameterException{
+	public void removeActivities(Collection<String> activities) {
 		validateStringCollection(activities);
 		Set<String> currentActivities = getActivities();
 		currentActivities.removeAll(activities);
@@ -100,11 +99,11 @@ public class ContextProperties extends AbstractProperties {
 	
 	//-- Subjects
 	
-	public void addSubject(String subject) throws ParameterException{
+	public void addSubject(String subject) {
 		addSubjects(Arrays.asList(subject));
 	}
 	
-	public void addSubjects(Collection<String> subjects) throws ParameterException{
+	public void addSubjects(Collection<String> subjects) {
 		validateStringCollection(subjects);
 		Set<String> currentValues = getSubjects();
 		currentValues.addAll(subjects);
@@ -128,11 +127,11 @@ public class ContextProperties extends AbstractProperties {
 		return !getSubjects().isEmpty();
 	}
 	
-	public void removeSubject(String subject) throws ParameterException{
+	public void removeSubject(String subject) {
 		removeSubjects(Arrays.asList(subject));
 	}
 	
-	public void removeSubjects(Collection<String> subjects) throws ParameterException{
+	public void removeSubjects(Collection<String> subjects) {
 		validateStringCollection(subjects);
 		Set<String> currentSubjects = getSubjects();
 		currentSubjects.removeAll(subjects);
@@ -141,11 +140,11 @@ public class ContextProperties extends AbstractProperties {
 	
 	//-- Attributes
 	
-	public void addAttribute(String attribute) throws ParameterException{
+	public void addAttribute(String attribute) {
 		addAttributes(Arrays.asList(attribute));
 	}
 	
-	public void addAttributes(Collection<String> attributes) throws ParameterException{
+	public void addAttributes(Collection<String> attributes) {
 		validateStringCollection(attributes);
 		Set<String> currentValues = getAttributes();
 		currentValues.addAll(attributes);
@@ -169,11 +168,11 @@ public class ContextProperties extends AbstractProperties {
 		return !getAttributes().isEmpty();
 	}
 	
-	public void removeAttribute(String attribute) throws ParameterException{
+	public void removeAttribute(String attribute) {
 		removeAttributes(Arrays.asList(attribute));
 	}
 	
-	public void removeAttributes(Collection<String> attributes) throws ParameterException{
+	public void removeAttributes(Collection<String> attributes) {
 		validateStringCollection(attributes);
 		Set<String> currentAttributes = getAttributes();
 		currentAttributes.removeAll(attributes);
@@ -186,12 +185,12 @@ public class ContextProperties extends AbstractProperties {
 	 * Adds a routing constraint for an activity.
 	 * @param activity The name of the activity for which the constraint is added.
 	 * @param constraint The routing constraint to add.
-	 * @throws ParameterException if the given parameters are invalid.
+	 * @ if the given parameters are invalid.
 	 * @throws PropertyException if the given constraint cannot be added as a property.
 	 * @see #addConstraint(AbstractConstraint)
 	 * @see #addActivityWithConstraints(String)
 	 */
-	public void addRoutingConstraint(String activity, AbstractConstraint<?> constraint) throws ParameterException, PropertyException{
+	public void addRoutingConstraint(String activity, AbstractConstraint<?> constraint) throws PropertyException{
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Validate.notNull(constraint);
@@ -213,9 +212,9 @@ public class ContextProperties extends AbstractProperties {
 	/**
 	 * Adds an activity to the list of activities with routing constraints.
 	 * @param activity The name of the activity to add.
-	 * @throws ParameterException if the activity name is invalid.
+	 * @ if the activity name is invalid.
 	 */
-	private void addActivityWithConstraints(String activity) throws ParameterException{
+	private void addActivityWithConstraints(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> currentActivities = getActivitiesWithConstraints();
@@ -226,9 +225,9 @@ public class ContextProperties extends AbstractProperties {
 	/**
 	 * Removes an activity from the list of activities with routing constraints.
 	 * @param activity The name of the activity to remove.
-	 * @throws ParameterException if the activity name is invalid.
+	 * @ if the activity name is invalid.
 	 */
-	private void removeActivityWithConstraints(String activity) throws ParameterException{
+	private void removeActivityWithConstraints(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> currentActivities = getActivitiesWithConstraints();
@@ -252,7 +251,7 @@ public class ContextProperties extends AbstractProperties {
 		return result;
 	}
 	
-	public boolean hasConstraints(String activity) throws ParameterException{
+	public boolean hasConstraints(String activity) {
 		Validate.notNull(activity);
 		String propertyValue = props.getProperty(String.format(ACTIVITY_CONSTRAINTS_FORMAT, activity));
 		return propertyValue != null;
@@ -265,12 +264,12 @@ public class ContextProperties extends AbstractProperties {
 	 * Additionally, the new constraint name is stored in the property field which is summing up all constraint names (CONSTRAINTS).
 	 * @param constraint The routing constraint to add.
 	 * @return The newly generated name for the constraint under which it is accessible.
-	 * @throws ParameterException if the given routing constraint is <code>null</code>. 
+	 * @ if the given routing constraint is <code>null</code>. 
 	 * @throws PropertyException if the constraint property name cannot be generated or the constraint cannot be stored.
 	 * @see #getNextConstraintIndex()
 	 * @see #addConstraintName(String)
 	 */
-	private String addConstraint(AbstractConstraint<?> constraint) throws PropertyException, ParameterException{
+	private String addConstraint(AbstractConstraint<?> constraint) throws PropertyException{
 		Validate.notNull(constraint);
 		String constraintName = String.format(CONSTRAINT_FORMAT, getNextConstraintIndex());
 		props.setProperty(constraintName, constraint.toString());
@@ -326,9 +325,9 @@ public class ContextProperties extends AbstractProperties {
 	/**
 	 * Adds a new constraint property name to the list of constraint properties (CONSTRAINTS-field).
 	 * @param constraintName The name of the constraint-property to add (e.g. CONSTRAINT_5).
-	 * @throws ParameterException if the given property name is invalid.
+	 * @ if the given property name is invalid.
 	 */
-	private void addConstraintNameToList(String constraintName) throws ParameterException{
+	private void addConstraintNameToList(String constraintName) {
 		validateStringValue(constraintName);
 		Set<String> currentValues = getConstraintNameList();
 		currentValues.add(constraintName);
@@ -338,9 +337,9 @@ public class ContextProperties extends AbstractProperties {
 	/**
 	 * Removes the constraint property with the given name from the list of constraint properties (CONSTRAINTS-field).
 	 * @param constraintName The name of the constraint-property to remove (e.g. CONSTRAINT_5).
-	 * @throws ParameterException if the given property name is invalid.
+	 * @ if the given property name is invalid.
 	 */
-	private void removeConstraintNameFromList(String constraintName) throws ParameterException{
+	private void removeConstraintNameFromList(String constraintName) {
 		validateStringValue(constraintName);
 		Set<String> currentValues = getConstraintNameList();
 		currentValues.remove(constraintName);
@@ -370,12 +369,12 @@ public class ContextProperties extends AbstractProperties {
 	 * 
 	 * @param activity The name of the activity whose routing constraints are requested.
 	 * @return A possibly empty set of routing constraints.
-	 * @throws ParameterException if the activity name is <code>null</code> or empty.
+	 * @ if the activity name is <code>null</code> or empty.
 	 * @throws PropertyException if corresponding constraint-properties cannot be extracted.
 	 * @see #getConstraintNames(String)
 	 * @see #getConstraint(String)
 	 */
-	public Set<AbstractConstraint<?>> getRoutingConstraints(String activity) throws ParameterException, PropertyException{
+	public Set<AbstractConstraint<?>> getRoutingConstraints(String activity) throws PropertyException{
 		Set<String> constraintNames = getConstraintNames(activity);
 		Set<AbstractConstraint<?>> result = new HashSet<AbstractConstraint<?>>();
 		for(String constraintName: constraintNames){
@@ -389,9 +388,9 @@ public class ContextProperties extends AbstractProperties {
 	 * These names are required to extract constraint property-values.
 	 * @param activity The name of the activity
 	 * @return A set of constraint property-names related to the given activity.
-	 * @throws ParameterException if the given activity name is <code>null</code or invalid.
+	 * @ if the given activity name is <code>null</code or invalid.
 	 */
-	private Set<String> getConstraintNames(String activity) throws ParameterException{
+	private Set<String> getConstraintNames(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> result = new HashSet<String>();
@@ -429,7 +428,7 @@ public class ContextProperties extends AbstractProperties {
 		return result;
 	}
 	
-	public void removeRoutingConstraint(String activity, AbstractConstraint<?> constraint) throws ParameterException, PropertyException{
+	public void removeRoutingConstraint(String activity, AbstractConstraint<?> constraint) throws PropertyException{
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Validate.notNull(constraint);
@@ -473,12 +472,12 @@ public class ContextProperties extends AbstractProperties {
 	
 	//-- AC Model
 	
-	public void setACModelName(String acModelName) throws ParameterException{
+	public void setACModelName(String acModelName) {
 		validateStringValue(acModelName);
 		setProperty(ContextProperty.AC_MODEL_NAME, acModelName);
 	}
 	
-	public String getACModelName() throws PropertyException, ParameterException {
+	public String getACModelName() throws PropertyException {
 		String propertyValue = getProperty(ContextProperty.AC_MODEL_NAME);
 		if(propertyValue == null)
 			throw new PropertyException(ContextProperty.AC_MODEL_NAME, propertyValue);
@@ -490,7 +489,7 @@ public class ContextProperties extends AbstractProperties {
 	
 	// Data Usage
 	
-	public void setDataUsage(String activity, Map<String, Set<DataUsage>> dataUsage) throws ParameterException, PropertyException{
+	public void setDataUsage(String activity, Map<String, Set<DataUsage>> dataUsage) throws PropertyException{
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Validate.notNull(dataUsage);
@@ -509,7 +508,7 @@ public class ContextProperties extends AbstractProperties {
 		props.setProperty(String.format(ACTIVITY_DATA_USAGES_FORMAT, activity), ArrayUtils.toString(propertyNamesForDataUsages.toArray()));
 	}
 	
-	public Map<String, Set<DataUsage>> getDataUsageFor(String activity) throws ParameterException, PropertyException{
+	public Map<String, Set<DataUsage>> getDataUsageFor(String activity) throws PropertyException{
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		
@@ -529,12 +528,12 @@ public class ContextProperties extends AbstractProperties {
 	 * and storing a string-representation of this data usage under this name.<br>
 	 * Additionally, the new data usage name is stored in the property field which is summing up all data usage names (ACTIVITY_DATA_USAGES).
 	 * @return The newly generated name for the data usage under which it is accessible.
-	 * @throws ParameterException if the given data usage parameters are invalid. 
+	 * @ if the given data usage parameters are invalid. 
 	 * @throws PropertyException if the data usage property name cannot be generated or the data usage cannot be stored.
 	 * @see #getNextDataUsageIndex()
 	 * @see #addDataUsageNameToList(String)
 	 */
-	private String addDataUsage(String attribute, Set<DataUsage> usages) throws PropertyException, ParameterException{
+	private String addDataUsage(String attribute, Set<DataUsage> usages) throws PropertyException{
 		Validate.notNull(attribute);
 		Validate.notEmpty(attribute);
 		Validate.notNull(usages);
@@ -587,9 +586,9 @@ public class ContextProperties extends AbstractProperties {
 	/**
 	 * Adds an activity to the list of activities with data usage.
 	 * @param activity The name of the activity to add.
-	 * @throws ParameterException if the activity name is invalid.
+	 * @ if the activity name is invalid.
 	 */
-	private void addActivityWithDataUsage(String activity) throws ParameterException{
+	private void addActivityWithDataUsage(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> currentActivities = getActivitiesWithDataUsage();
@@ -616,9 +615,9 @@ public class ContextProperties extends AbstractProperties {
 	/**
 	 * Adds a new data usage property name to the list of data usage properties (DATA_USAGES-field).
 	 * @param dataUsageName The name of the data usage-property to add (e.g. DATA_USAGE_5).
-	 * @throws ParameterException if the given property name is invalid.
+	 * @ if the given property name is invalid.
 	 */
-	private void addDataUsageNameToList(String dataUsageName) throws ParameterException{
+	private void addDataUsageNameToList(String dataUsageName) {
 		validateStringValue(dataUsageName);
 		Set<String> currentValues = getDataUsageNameList();
 		currentValues.add(dataUsageName);
@@ -674,9 +673,9 @@ public class ContextProperties extends AbstractProperties {
 	 * These names are required to extract data usage property-values.
 	 * @param activity The name of the activity
 	 * @return A set of data usage property-names related to the given activity.
-	 * @throws ParameterException if the given activity name is <code>null</code or invalid.
+	 * @ if the given activity name is <code>null</code or invalid.
 	 */
-	private Set<String> getDataUsageNames(String activity) throws ParameterException{
+	private Set<String> getDataUsageNames(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> result = new HashSet<String>();

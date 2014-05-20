@@ -2,7 +2,6 @@ package de.uni.freiburg.iig.telematik.secsy.logic.simulation;
 
 import java.io.IOException;
 
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.AttributeValueGenerator;
@@ -21,7 +20,7 @@ public class SimulatorFactory {
 												 AbstractLogFormat logFormat,
 												 long startTime,
 												 int casesPerDay) 
-			throws ParameterException, IOException, PerspectiveException, ConfigurationException{
+			throws IOException, PerspectiveException, ConfigurationException{
 		
 		TraceLogGenerator logGenerator =  new TraceLogGenerator(logFormat);
 		logGenerator.setEventHandling(eventHandling);
@@ -35,7 +34,7 @@ public class SimulatorFactory {
 			 									 AbstractLogFormat logFormat,
 			 									 long startTime,
 			 									 int casesPerDay) 
-			throws ParameterException, IOException, PerspectiveException, ConfigurationException{
+			throws IOException, PerspectiveException, ConfigurationException{
 
 		AttributeValueGenerator valueGenerator = new AttributeValueGenerator();
 		CaseDataContainer caseDataContainer = new CaseDataContainer(context, valueGenerator);
@@ -48,7 +47,7 @@ public class SimulatorFactory {
 												 AbstractLogFormat logFormat, 
 												 long startTime, 
 												 int casesPerDay)
-			throws ParameterException, IOException, PerspectiveException,
+			throws IOException, PerspectiveException,
 			ConfigurationException {
 
 		TraceLogGenerator logGenerator =  new TraceLogGenerator(logFormat);

@@ -1,7 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
@@ -18,7 +17,7 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.prop
 @SuppressWarnings("serial")
 public abstract class AbstractTraceTransformer extends AbstractTransformer {
 	
-	public AbstractTraceTransformer(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
+	public AbstractTraceTransformer(AbstractTransformerProperties properties) throws PropertyException {
 		super(properties);
 	}
 
@@ -28,7 +27,7 @@ public abstract class AbstractTraceTransformer extends AbstractTransformer {
 	 * If the probability is 1, the transformer is always applied.
 	 * @throws ParameterException 
 	 */
-	public AbstractTraceTransformer(Double activationProbability) throws ParameterException{
+	public AbstractTraceTransformer(Double activationProbability) {
 		super(activationProbability);
 	}
 	
@@ -49,18 +48,12 @@ public abstract class AbstractTraceTransformer extends AbstractTransformer {
 	 * @throws ParameterException 
 	 * @see AbstractTraceTransformer#applyTransformation(TraceTransformerEvent);
 	 */
-	public TraceTransformerResult transformLogTrace(TraceTransformerEvent event) throws ParameterException{
+	public TraceTransformerResult transformLogTrace(TraceTransformerEvent event) {
 		Validate.notNull(event);
-		if(activationProbability==1.0 || rand.nextDouble()<=activationProbability){
+		if(isMandatory() || getActivationProbability()==1.0 || rand.nextDouble()<=getActivationProbability()){
 			return applyTransformation(event);
 		}
-		try {
-			return new TraceTransformerResult(event.logTrace, false);
-		} catch (ParameterException e) {
-			// Cannot happen, since TraceTransformerEvent enforces non-null values for log traces.
-			e.printStackTrace();
-		}
-		return null;
+		return new TraceTransformerResult(event.logTrace, false);
 	}
 	
 	/**
@@ -68,7 +61,7 @@ public abstract class AbstractTraceTransformer extends AbstractTransformer {
 	 * @param event Contains the LogTrace as such together with information on the caller of the transformer routine (e.g. a LogEntryGenerator).
 	 * @return Information on the success of the transformer appliance together with transformer messages.
 	 */
-	protected abstract TraceTransformerResult applyTransformation(TraceTransformerEvent event) throws ParameterException;
+	protected abstract TraceTransformerResult applyTransformation(TraceTransformerEvent event);
 	
 	/**
 	 * When a transformer is mandatory, it is applied on all traces.<br>

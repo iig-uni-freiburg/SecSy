@@ -1,7 +1,5 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 
-import de.invation.code.toval.validate.ParameterException;
-
 public interface TraceStartListener {
 	
 	/**
@@ -11,6 +9,6 @@ public interface TraceStartListener {
 	 * @param caseNumber
 	 * @throws ParameterException
 	 */
-	public void traceStarted(int caseNumber) throws ParameterException;
+	public void traceStarted(int caseNumber);
 
 }

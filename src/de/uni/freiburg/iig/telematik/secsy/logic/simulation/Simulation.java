@@ -55,7 +55,7 @@ public class Simulation implements SimulationListener{
 	public Simulation(){}
 	
 	public Simulation(LogGenerator logGenerator, LogEntryGenerator entryGenerator, CaseTimeGenerator timeGenerator) 
-			throws ConfigurationException, ParameterException {
+			throws ConfigurationException {
 		setLogGenerator(logGenerator);
 		setLogEntryGenerator(entryGenerator);
 		setCaseTimeGenerator(timeGenerator);
@@ -69,7 +69,7 @@ public class Simulation implements SimulationListener{
 		this.name = name;
 	}
 	
-	public void addSimulationListener(SimulationListener listener) throws ParameterException{
+	public void addSimulationListener(SimulationListener listener){
 		simulationListenerSupport.addSimulationListener(listener);
 	}
 	
@@ -85,7 +85,7 @@ public class Simulation implements SimulationListener{
 		System.out.println("Simulation time: " + (endTime - startTime) / 1000.0 + " s");
 	}
 	
-	public void setLogGenerator(LogGenerator logGenerator) throws ConfigurationException, ParameterException{
+	public void setLogGenerator(LogGenerator logGenerator) throws ConfigurationException{
 		this.logGenerator = logGenerator;
 		validateLogGenerator();
 		if(entryGenerator != null)
@@ -103,14 +103,14 @@ public class Simulation implements SimulationListener{
 		return entryGenerator;
 	}
 	
-	public void setLogEntryGenerator(LogEntryGenerator entryGenerator) throws ConfigurationException, ParameterException {
+	public void setLogEntryGenerator(LogEntryGenerator entryGenerator) throws ConfigurationException {
 		this.entryGenerator = entryGenerator;
 		validateEntryGenerator();
 		if(logGenerator != null)
 			logGenerator.setLogEntryGenerator(entryGenerator);
 	}
 	
-	public void setCaseTimeGenerator(CaseTimeGenerator timeGenerator) throws ConfigurationException, ParameterException{
+	public void setCaseTimeGenerator(CaseTimeGenerator timeGenerator) throws ConfigurationException{
 		this.timeGenerator = timeGenerator;
 		validateTimeGenerator();
 		if(logGenerator != null)
@@ -118,7 +118,7 @@ public class Simulation implements SimulationListener{
 	}
 	
 	public void setCaseTimeGenerator(TimeProperties timeProperties) 
-			throws ConfigurationException, ParameterException, PropertyException {
+			throws ConfigurationException, PropertyException {
 		setCaseTimeGenerator(TimeGeneratorFactory.createCaseTimeGenerator(timeProperties));
 	}
 	
@@ -126,17 +126,17 @@ public class Simulation implements SimulationListener{
 		return timeGenerator;
 	}
 	
-	public void setSimulationRuns(Collection<SimulationRun> runs) throws ParameterException{
+	public void setSimulationRuns(Collection<SimulationRun> runs){
 		logGenerator.removeAllSimulationRuns();
 		logGenerator.addSimulationRuns(runs);
 	}
 	
-	public void setSimulationRuns(SimulationRun...runs) throws ParameterException{
+	public void setSimulationRuns(SimulationRun...runs){
 		logGenerator.removeAllSimulationRuns();
 		logGenerator.addSimulationRuns(runs);
 	}
 	
-	public void addSimulationRun(SimulationRun simulationRun) throws ParameterException, ConfigurationException {
+	public void addSimulationRun(SimulationRun simulationRun) throws ConfigurationException {
 		Validate.notNull(simulationRun);
 		
 		//Check if the log entry generator is set
@@ -162,11 +162,11 @@ public class Simulation implements SimulationListener{
 		logGenerator.addSimulationRun(simulationRun);
 	}
 	
-	public void addSimulationRuns(SimulationRun... simulationRuns) throws ParameterException, ConfigurationException {
+	public void addSimulationRuns(SimulationRun... simulationRuns) throws ConfigurationException {
 		addSimulationRuns(Arrays.asList(simulationRuns));
 	}
 	
-	public void addSimulationRuns(Collection<SimulationRun> simulationRuns) throws ParameterException, ConfigurationException{
+	public void addSimulationRuns(Collection<SimulationRun> simulationRuns) throws ConfigurationException{
 		Validate.notNull(simulationRuns);
 		for(SimulationRun simulationRun: simulationRuns)
 			addSimulationRun(simulationRun);
@@ -190,7 +190,7 @@ public class Simulation implements SimulationListener{
 		return true;
 	}
 	
-	public SimulationProperties getProperties() throws ParameterException{
+	public SimulationProperties getProperties(){
 		if(!isValid()){
 			throw new ParameterException(de.invation.code.toval.validate.ParameterException.ErrorCode.INCONSISTENCY, "Cannot extract properties in invalid state.");
 		}
@@ -293,7 +293,7 @@ public class Simulation implements SimulationListener{
 		return "SIMPLE";
 	}
 	
-	public void takeoverValues(Simulation otherSimulation) throws ConfigurationException, ParameterException{
+	public void takeoverValues(Simulation otherSimulation) throws ConfigurationException{
 		this.setName(otherSimulation.getName());
 		this.setCaseTimeGenerator(otherSimulation.getCaseTimeGenerator());
 		this.setLogGenerator(otherSimulation.getLogGenerator());

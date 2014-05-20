@@ -1,7 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.entry;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformerResult;
@@ -11,27 +10,22 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.prop
 
 public abstract class AbstractEntryTransformer extends AbstractTransformer {
 	
-	public AbstractEntryTransformer(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
+	private static final long serialVersionUID = 8034453922971088702L;
+
+	public AbstractEntryTransformer(AbstractTransformerProperties properties) throws PropertyException {
 		super(properties);
 	}
 
-	public AbstractEntryTransformer(double activationProbability) throws ParameterException{
+	public AbstractEntryTransformer(double activationProbability){
 		super(activationProbability);
 	}
 	
-	public EntryTransformerResult transformLogEntry(EntryTransformerEvent event) throws ParameterException{
+	public EntryTransformerResult transformLogEntry(EntryTransformerEvent event){
 		Validate.notNull(event);
-		if(activationProbability==1.0 || rand.nextDouble()<=activationProbability){
+		if(getActivationProbability()==1.0 || rand.nextDouble()<=getActivationProbability()){
 			return applyTransformation(event);
 		}
-		try {
-			return new EntryTransformerResult(event.logEntry, event.caseNumber, false);
-		} catch (ParameterException e) {
-			// Cannot happen, since EntryTransformerManager enforces non-null values for 
-			// log entries and case numbers.
-			e.printStackTrace();
-		}
-		return null;
+		return new EntryTransformerResult(event.logEntry, event.caseNumber, false);
 	}
 	
 	/**
@@ -39,6 +33,6 @@ public abstract class AbstractEntryTransformer extends AbstractTransformer {
 	 * @param event
 	 * @return
 	 */
-	protected abstract EntryTransformerResult applyTransformation(EntryTransformerEvent event) throws ParameterException;
+	protected abstract EntryTransformerResult applyTransformation(EntryTransformerEvent event);
 
 }

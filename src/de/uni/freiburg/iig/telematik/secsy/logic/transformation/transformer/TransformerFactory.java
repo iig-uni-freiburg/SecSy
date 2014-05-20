@@ -41,7 +41,7 @@ public class TransformerFactory {
 		propertiesClass.put(BoDPropertyTransformer.class, BoDTransformerProperties.class);
 	}
 	
-	public static AbstractTraceTransformer loadTransformer(String file) throws IOException, ParameterException, PropertyException{
+	public static AbstractTraceTransformer loadTransformer(String file) throws IOException, PropertyException{
 		AbstractTransformerProperties properties = new AbstractTransformerProperties();
 		properties.load(file);
 		String transformerClassName = properties.getType();
@@ -57,7 +57,7 @@ public class TransformerFactory {
 		}
 	}
 	
-	public static AbstractTraceTransformer loadCustomTransformer(String file) throws IOException, ParameterException, PropertyException{
+	public static AbstractTraceTransformer loadCustomTransformer(String file) throws IOException, PropertyException{
 		AbstractTraceTransformer newTransformer = null;
 		try {
 			ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));

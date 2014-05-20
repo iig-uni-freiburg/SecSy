@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
@@ -37,11 +36,11 @@ public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTrans
 									  "<p>The transformer fails, if all originators are authorized" +
 									  "to execute all activities.</p></html>";
 	
-	public UnauthorizedExecutionTransformer(UnauthorizedExecutionTransformerProperties properties) throws ParameterException, PropertyException{
+	public UnauthorizedExecutionTransformer(UnauthorizedExecutionTransformerProperties properties) throws PropertyException{
 		super(properties);
 	}
 	
-	public UnauthorizedExecutionTransformer(Double activationProbability, Integer maxAppliance) throws ParameterException {
+	public UnauthorizedExecutionTransformer(Double activationProbability, Integer maxAppliance){
 		super(activationProbability, maxAppliance);
 	}
 	
@@ -60,7 +59,7 @@ public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTrans
 	public void setProperties(Object[] properties) throws Exception {}
 
 	@Override
-	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult){
 		if(!isValid()){
 			addMessageToResult(getErrorMessage("Cannot apply transformer in invalid state: No context reference."), transformerResult);
 			return false;
@@ -134,7 +133,7 @@ public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTrans
 	}
 
 	@Override
-	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+	public AbstractTransformerProperties getProperties() throws PropertyException {
 		UnauthorizedExecutionTransformerProperties properties = new UnauthorizedExecutionTransformerProperties();
 		fillProperties(properties);
 		return properties;

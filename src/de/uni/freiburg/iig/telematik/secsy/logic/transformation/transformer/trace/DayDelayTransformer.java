@@ -35,12 +35,12 @@ public class DayDelayTransformer extends AbstractMultipleTraceTransformer implem
 	private int minDays;
 	private int maxDays;
 
-	public DayDelayTransformer(DayDelayTransformerProperties properties) throws ParameterException, PropertyException {
+	public DayDelayTransformer(DayDelayTransformerProperties properties) throws PropertyException {
 		super(properties);
 		setDayBounds(properties.getMinDays(), properties.getMaxDays());
 	}
 	
-	public DayDelayTransformer(Double activationProbability, Integer maxAppliances) throws ParameterException {
+	public DayDelayTransformer(Double activationProbability, Integer maxAppliances){
 		super(activationProbability, maxAppliances);
 	}
 	
@@ -70,7 +70,7 @@ public class DayDelayTransformer extends AbstractMultipleTraceTransformer implem
 		setDayBounds((Integer) properties[0], (Integer) properties[1]);
 	}
 
-	public void setDayBounds(int minDays, int maxDays) throws ParameterException{
+	public void setDayBounds(int minDays, int maxDays){
 		DayDelayTransformerProperties.validateDayBounds(minDays, maxDays);
 		this.minDays = minDays;
 		this.maxDays = maxDays;
@@ -85,7 +85,7 @@ public class DayDelayTransformer extends AbstractMultipleTraceTransformer implem
 	}
 	
 	@Override
-	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event) throws ParameterException {
+	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event){
 		TraceTransformerResult result = super.applyTransformation(event);
 		if(result.isSuccess()){
 			for(LogEntry transformedEntry: transformedEntries){
@@ -96,7 +96,7 @@ public class DayDelayTransformer extends AbstractMultipleTraceTransformer implem
 	}
 
 	@Override
-	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult){
 		
 		// Check, if timestamps can be altered for the entry itself and all its successors within the trace
 		if(entry.isFieldLocked(EntryField.TIME)){
@@ -145,13 +145,13 @@ public class DayDelayTransformer extends AbstractMultipleTraceTransformer implem
 	}
 	
 	@Override
-	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws PropertyException {
 		super.fillProperties(properties);
 		((DayDelayTransformerProperties) properties).setDayBounds(getMinDays(), getMaxDays());
 	}
 
 	@Override
-	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+	public AbstractTransformerProperties getProperties() throws PropertyException {
 		DayDelayTransformerProperties properties = new DayDelayTransformerProperties();
 		fillProperties(properties);
 		return properties;

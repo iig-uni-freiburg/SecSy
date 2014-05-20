@@ -9,7 +9,6 @@ import java.util.HashMap;
 import de.invation.code.toval.misc.RandomUtils;
 import de.invation.code.toval.time.TimeScale;
 import de.invation.code.toval.time.TimeValue;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties.CaseStartPrecision;
@@ -63,11 +62,11 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * @param startTime Day for the start time of the first Case.
 	 * @param passesPerDay Number of cases to be generated per day.
 	 * @param dayCasesDeviation Deviation for the number of cases to be generated per day.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see #dayStart
 	 * @see #setWorkingHours(int, int)
 	 */
-	public RandomCaseTimeGenerator(long startTime, int passesPerDay, double dayCasesDeviation) throws ParameterException {
+	public RandomCaseTimeGenerator(long startTime, int passesPerDay, double dayCasesDeviation){
 		super(startTime, passesPerDay);
 		setDayCasesDeviation(dayCasesDeviation);
 	}
@@ -80,11 +79,11 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * 
 	 * @param startTime Day for the start time of the first Case.
 	 * @param passesPerDay Number of cases to generate per day.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see #dayStart
 	 * @see #setWorkingHours(int, int)
 	 */
-	public RandomCaseTimeGenerator(long startTime, int passesPerDay) throws ParameterException {
+	public RandomCaseTimeGenerator(long startTime, int passesPerDay)  {
 		super(startTime, passesPerDay);
 	}
 	
@@ -95,19 +94,19 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * Note that when case times are still to be created for the current day,
 	 * the effect of this change will not be recognizable before the next day starts.
 	 * @param dayCasesDeviation
-	 * @throws ParameterException 
+	 * @ 
 	 */
-	public void setDayCasesDeviation(double dayCasesDeviation) throws ParameterException{
+	public void setDayCasesDeviation(double dayCasesDeviation) {
 		Validate.probability(dayCasesDeviation, "Deviation must be within [0;1].");
 		this.dayCasesDeviation = dayCasesDeviation;
 	}
 	
-	public void setDefaultActivityDurationDeviation(Double deviation) throws ParameterException{
+	public void setDefaultActivityDurationDeviation(Double deviation) {
 		Validate.probability(deviation);
 		this.defaultDurationDeviation = deviation;
 	}
 	
-	public void setDefaultActivityDelayDeviation(Double deviation) throws ParameterException{
+	public void setDefaultActivityDelayDeviation(Double deviation) {
 		Validate.probability(deviation);
 		this.defaultDelayDeviation = deviation;
 	}
@@ -116,9 +115,9 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * Sets the bounds for the randomization of default activity delays.<br>
 	 * @param minDelay Minimum delay time.
 	 * @param maxDelay Maximum delay time.
-	 * @throws ParameterException 
+	 * @ 
 	 */
-	public void setDefaultDelayBounds(TimeValue minDelay, TimeValue maxDelay) throws ParameterException {
+	public void setDefaultDelayBounds(TimeValue minDelay, TimeValue maxDelay)  {
 		Validate.notNull(minDelay);
 		Validate.notNull(maxDelay);
 		Validate.isFalse(minDelay.isBiggerThan(maxDelay));
@@ -131,9 +130,9 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * Sets the bounds for the randomization of default activity durations.<br>
 	 * @param minDuration Minimum duration time.
 	 * @param maxDuration Maximum duration time.
-	 * @throws ParameterException 
+	 * @ 
 	 */
-	public void setDefaultDurationBounds(TimeValue minDuration, TimeValue maxDuration) throws ParameterException {
+	public void setDefaultDurationBounds(TimeValue minDuration, TimeValue maxDuration)  {
 		Validate.notNull(minDuration);
 		Validate.notNull(maxDuration);
 		Validate.isFalse(minDuration.isBiggerThan(maxDuration));
@@ -151,10 +150,10 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * @param value Duration value.
 	 * @param scale Scale for the interpretation of the time value.
 	 * @param deviationPercentage Deviation percentage.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDuration(String activity, Integer value, TimeScale scale, double deviationPercentage) throws ParameterException{
+	public void setDuration(String activity, Integer value, TimeScale scale, double deviationPercentage) {
 		setDuration(activity, value.doubleValue(), scale, deviationPercentage);
 	}
 	
@@ -166,10 +165,10 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * @param duration Duration
 	 * @param deviationPercentage Deviation percentage.
 	 * @param scale Scale for the interpretation of the time value.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDuration(String activity, TimeValue duration, double deviationPercentage) throws ParameterException{
+	public void setDuration(String activity, TimeValue duration, double deviationPercentage) {
 		setDuration(activity, duration.getValue(), duration.getScale(), deviationPercentage);
 	}
 	
@@ -180,10 +179,10 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * @param seconds Duration value
 	 * @param scale Scale for the interpretation of the time value.
 	 * @param deviationPercentage Deviation percentage.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDuration(String activity, Double value, TimeScale scale, double deviationPercentage) throws ParameterException{
+	public void setDuration(String activity, Double value, TimeScale scale, double deviationPercentage) {
 		super.setDuration(activity, value, scale);
 		Validate.probability(deviationPercentage, "Deviation must be within [0;1].");
 		durationDeviations.put(activity, deviationPercentage);
@@ -196,10 +195,10 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * @param seconds Delay value.
 	 * @param deviationPercentage Deviation percentage.
 	 * @param scale Scale for the interpretation of the time value.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDelay(String activity, Integer value, TimeScale scale, double deviationPercentage) throws ParameterException{
+	public void setDelay(String activity, Integer value, TimeScale scale, double deviationPercentage) {
 		setDelay(activity, value.doubleValue(), scale, deviationPercentage);
 	}
 	
@@ -210,10 +209,10 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * @param seconds Delay value.
 	 * @param deviationPercentage Deviation percentage.
 	 * @param scale Scale for the interpretation of the time value.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDelay(String activity, TimeValue delay, double deviationPercentage) throws ParameterException{
+	public void setDelay(String activity, TimeValue delay, double deviationPercentage) {
 		setDelay(activity, delay.getValue(), delay.getScale(), deviationPercentage);
 	}
 	
@@ -224,10 +223,10 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * @param seconds Delay value.
 	 * @param deviationPercentage Deviation percentage.
 	 * @param scale Scale for the interpretation of the time value.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDelay(String activity, Double value, TimeScale scale, double deviationPercentage) throws ParameterException{
+	public void setDelay(String activity, Double value, TimeScale scale, double deviationPercentage) {
 		super.setDelay(activity, value, scale);
 		Validate.probability(deviationPercentage, "Deviation must be within [0;1].");
 		delayDeviations.put(activity, deviationPercentage);
@@ -240,10 +239,10 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * Overrides the superclass method to consider deviation percentages.
 	 * In case no adjustment was made for the given activity,
 	 * the method calls the corresponding superclass method.
-	 * @throws ParameterException 
+	 * @ 
 	 */
 	@Override
-	public TimeValue getDurationFor(String activity) throws ParameterException{
+	public TimeValue getDurationFor(String activity) {
 		Validate.notNull(activity);
 		if(activityDurations.containsKey(activity)){
 			//Activity duration was adjusted
@@ -284,10 +283,10 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	 * Overrides superclass method to provide a random delay
 	 * between min and max values that can be explicitly adjusted.
 	 * The default implementation adds no delay.
-	 * @throws ParameterException 
+	 * @ 
 	 */
 	@Override
-	public TimeValue getDelayFor(String activity) throws ParameterException{
+	public TimeValue getDelayFor(String activity) {
 		Validate.notNull(activity);
 		if(activityDelays.containsKey(activity)){
 			//Activity delay was adjusted
@@ -344,7 +343,7 @@ public class RandomCaseTimeGenerator extends AdjustableCaseTimeGenerator {
 	
 	
 	@Override
-	protected void fillProperties(TimeProperties properties) throws ParameterException {
+	protected void fillProperties(TimeProperties properties)  {
 		super.fillProperties(properties);
 		
 		properties.setDayCasesDeviation(dayCasesDeviation);

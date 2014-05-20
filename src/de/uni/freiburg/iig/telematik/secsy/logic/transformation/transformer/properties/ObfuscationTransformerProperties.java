@@ -9,7 +9,6 @@ import java.util.StringTokenizer;
 import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 
@@ -26,12 +25,12 @@ public class ObfuscationTransformerProperties  extends AbstractMultipleTraceTran
 		super(fileName);
 	}
 	
-	public void setExcludedFields(EntryField... excludedFields) throws ParameterException {
+	public void setExcludedFields(EntryField... excludedFields){
 		validateExcludedFields(excludedFields);
 		props.setProperty(ObfuscationTransformerProperty.EXCLUDED_FIELDS.toString(), ArrayUtils.toString(excludedFields));
 	}
 	
-	public void setExcludedFields(Set<EntryField> excludedFields) throws ParameterException {
+	public void setExcludedFields(Set<EntryField> excludedFields){
 		Validate.notNull(excludedFields);
 		Validate.noNullElements(excludedFields);
 		props.setProperty(ObfuscationTransformerProperty.EXCLUDED_FIELDS.toString(), ArrayUtils.toString(excludedFields.toArray()));
@@ -55,7 +54,7 @@ public class ObfuscationTransformerProperties  extends AbstractMultipleTraceTran
 		return result;
 	}
 	
-	public static void validateExcludedFields(EntryField... excludedFields) throws ParameterException{
+	public static void validateExcludedFields(EntryField... excludedFields){
 		Validate.notNull(excludedFields);
 		Validate.notEmpty(excludedFields);
 		Validate.noNullElements(excludedFields);

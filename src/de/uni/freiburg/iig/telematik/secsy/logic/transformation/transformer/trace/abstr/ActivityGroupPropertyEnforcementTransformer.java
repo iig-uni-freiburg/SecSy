@@ -46,17 +46,17 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 	
 	public enum TransformerAction {ENSURE, VIOLATE};
 
-	public ActivityGroupPropertyEnforcementTransformer(AGPropertyEnforcementTransformerProperties properties) throws ParameterException, PropertyException {
+	public ActivityGroupPropertyEnforcementTransformer(AGPropertyEnforcementTransformerProperties properties) throws PropertyException {
 		super(properties);
 		violationProbability = properties.getViolationProbability();
 		activityGroups = properties.getActivityGroups();
 	}
 	
-	public ActivityGroupPropertyEnforcementTransformer() throws ParameterException {
+	public ActivityGroupPropertyEnforcementTransformer(){
 		super(1.0);
 	}
 	
-	public ActivityGroupPropertyEnforcementTransformer(Double activationProbability) throws ParameterException {
+	public ActivityGroupPropertyEnforcementTransformer(Double activationProbability){
 		super(activationProbability);
 	}
 	
@@ -96,7 +96,7 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 		setActivityGroups(activityGroups);
 	}
 
-	public void setViolationProbability(Double probability) throws ParameterException{
+	public void setViolationProbability(Double probability){
 		Validate.notNull(probability);
 		Validate.probability(probability);
 		this.violationProbability = probability;
@@ -106,7 +106,7 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 		return Collections.unmodifiableList(activityGroups);
 	}
 	
-	public void setActivityGroups(Set<Set<String>> activityGroups) throws ParameterException{
+	public void setActivityGroups(Set<Set<String>> activityGroups){
 		Validate.notNull(activityGroups);
 		Validate.noNullElements(activityGroups);
 		this.activityGroups.clear();
@@ -125,15 +125,9 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 	 * @throws ParameterException 
 	 */
 	@Override
-	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event) throws ParameterException {
+	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event){
 		Validate.notNull(event);
-		TraceTransformerResult result = null;
-		try {
-			result = new TraceTransformerResult(event.logTrace, true);
-		} catch (ParameterException e) {
-			// Cannot happen, since TraceTransformerEvent ensures non-null values for log traces.
-			e.printStackTrace();
-		}
+		TraceTransformerResult result = new TraceTransformerResult(event.logTrace, true);
 		boolean ensureProperty = violationProbability==0.0 || rand.nextDouble()>violationProbability;
 		String successfulFormat = SUCCESSFULF_ENFORCEMENT;
 		String notSuccessfulFormat = UNSUCCESSFULF_ENFORCEMENT;
@@ -190,7 +184,7 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 	 * @return A list containing relevant entries only.
 	 * @throws ParameterException 
 	 */
-	protected List<SimulationLogEntry> removeIrrelevantEntries(List<SimulationLogEntry> entries, TraceTransformerResult result) throws ParameterException{
+	protected List<SimulationLogEntry> removeIrrelevantEntries(List<SimulationLogEntry> entries, TraceTransformerResult result){
 		Validate.notNull(entries);
 		Validate.noNullElements(entries);
 		return entries;
@@ -205,7 +199,7 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 	 * @throws ParameterException 
 	 * @see EnforcementResult
 	 */
-	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
+	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult){
 		Validate.notNull(activityGroup);
 		Validate.notEmpty(activityGroup);
 		Validate.noNullElements(activityGroup);
@@ -225,7 +219,7 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 	 * @throws ParameterException 
 	 * @see EnforcementResult
 	 */
-	protected EnforcementResult violateProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException{
+	protected EnforcementResult violateProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult){
 		Validate.notNull(activityGroup);
 		Validate.notEmpty(activityGroup);
 		Validate.noNullElements(activityGroup);
@@ -238,7 +232,7 @@ public abstract class ActivityGroupPropertyEnforcementTransformer extends Abstra
 	
 	
 	@Override
-	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws PropertyException {
 		super.fillProperties(properties);
 		((AGPropertyEnforcementTransformerProperties) properties).setViolationProbability(getViolationProbability());
 		for(Set<String> activityGroup: activityGroups){

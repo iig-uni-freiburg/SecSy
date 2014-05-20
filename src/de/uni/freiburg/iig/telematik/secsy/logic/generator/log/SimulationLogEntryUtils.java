@@ -5,13 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import de.invation.code.toval.types.HashList;
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntryUtils;
 
 public class SimulationLogEntryUtils extends LogEntryUtils {
 
-	public static <E extends SimulationLogEntry> List<E> getEntriesWithAlternativeOriginator(List<E> entries) throws ParameterException{
+	public static <E extends SimulationLogEntry> List<E> getEntriesWithAlternativeOriginator(List<E> entries) {
 		validateEntries(entries);
 		List<E> entriesWithAlternativeOriginator = new ArrayList<E>();
 		for(E entry: entries){
@@ -22,7 +21,7 @@ public class SimulationLogEntryUtils extends LogEntryUtils {
 		return entriesWithAlternativeOriginator;
 	}
 	
-	public static <E extends SimulationLogEntry> List<E> getEntriesWithNoAlternativeOriginator(List<E> entries) throws ParameterException{
+	public static <E extends SimulationLogEntry> List<E> getEntriesWithNoAlternativeOriginator(List<E> entries) {
 		validateEntries(entries);
 		List<E> entriesWithNoAlternativeOriginator = new ArrayList<E>();
 		for(E entry: entries){
@@ -38,9 +37,9 @@ public class SimulationLogEntryUtils extends LogEntryUtils {
 	 * That set contains all originators that are candidates for all entries.
 	 * @param entries A set of log entries
 	 * @return Shared originator candidates (shuffled)
-	 * @throws ParameterException 
+	 * @ 
 	 */
-	public static <E extends SimulationLogEntry> HashList<String> getSharedOriginatorCandidates(List<E> entries) throws ParameterException{
+	public static <E extends SimulationLogEntry> HashList<String> getSharedOriginatorCandidates(List<E> entries) {
 		validateEntries(entries);
 		HashList<String> sharedCandidates = new HashList<String>();
 		sharedCandidates.addAll(entries.get(0).getOriginatorCandidates());

@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.transformation;
 
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
@@ -16,7 +15,7 @@ public abstract class AbstractTransformerResult {
 		this.transformerApplied = transformerApplied;
 	}
 	
-	public void setCaseNumber(int caseNumber) throws ParameterException{
+	public void setCaseNumber(int caseNumber){
 		Validate.bigger(caseNumber, 0);
 		this.caseNumber = caseNumber;
 	}

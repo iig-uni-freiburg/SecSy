@@ -31,7 +31,7 @@ public abstract class AbstractTransformerPanel<T extends AbstractTransformer> ex
 	
 	public abstract void initializeFields(T transformer) throws Exception;
 	
-	public abstract void validateFieldValues() throws ParameterException;
+	public abstract void validateFieldValues();
 	
 	public abstract Object[] getParameters() throws Exception;
 	

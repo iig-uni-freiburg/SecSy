@@ -56,7 +56,7 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	 * @see CaseDataContainer
 	 */
 	public DetailedLogEntryGenerator(Context context, CaseDataContainer caseDataContainer) 
-			throws ConfigurationException, ParameterException{
+			throws ConfigurationException{
 		super();
 		Validate.notNull(context);
 		if(!context.isValid())
@@ -86,7 +86,7 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	 * @throws Exception If this generator is incompatible to the transformer manager.
 	 */
 	public DetailedLogEntryGenerator(Context context, CaseDataContainer caseDataContainer, EntryTransformerManager entryTransformerManager) 
-			throws ParameterException, ConfigurationException {
+			throws ConfigurationException {
 		super(entryTransformerManager);
 		Validate.notNull(context);
 		if(!context.isValid())
@@ -120,7 +120,7 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	 * @see Context
 	 */
 	@Override
-	protected SimulationLogEntry prepareLogEntry(AbstractTransition<?,?> transition, int caseNumber) throws ParameterException {
+	protected SimulationLogEntry prepareLogEntry(AbstractTransition<?,?> transition, int caseNumber){
 		Validate.notNull(transition);
 		Validate.bigger(caseNumber, 0);
 		SimulationLogEntry result = super.prepareLogEntry(transition, caseNumber);

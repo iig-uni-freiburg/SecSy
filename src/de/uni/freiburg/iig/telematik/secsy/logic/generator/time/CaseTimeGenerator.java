@@ -164,11 +164,11 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * 
 	 * @param startTime Day for the start time of the first Case.
 	 * @param passesPerDay Number of cases to be generated per day.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see #dayStart
 	 * @see #setWorkingHours(int, int)
 	 */
-	public CaseTimeGenerator(long startTime, int casesPerDay) throws ParameterException{
+	public CaseTimeGenerator(long startTime, int casesPerDay) {
 		Validate.notNegative(startTime);
 		setMaxCasesPerDay(casesPerDay);
 		try {
@@ -203,9 +203,9 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * Sets the number of cases to be generated per day.<br>
 	 * Note that when case times are still to be created for the current day,
 	 * the effect of this change will not be recognizable before the next day starts.
-	 * @throws ParameterException 
+	 * @ 
 	 */
-	public void setMaxCasesPerDay(int casesPerDay) throws ParameterException{
+	public void setMaxCasesPerDay(int casesPerDay) {
 		Validate.notNegative(casesPerDay);
 		maxCasesPerDay = casesPerDay;
 	}
@@ -221,9 +221,9 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	/**
 	 * Sets the default activity duration to the given value.
 	 * @param duration Default duration time.
-	 * @throws ParameterException 
+	 * @ 
 	 */
-	public void setDefaultDuration(TimeValue duration) throws ParameterException {
+	public void setDefaultDuration(TimeValue duration)  {
 		setDefaultDuration(duration.getValue(), duration.getScale());
 	}
 	
@@ -239,9 +239,9 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * Sets the default activity duration to the given value.
 	 * @param duration Time value for duration.
 	 * @param scale Scale for the interpretation of the time value.
-	 * @throws ParameterException 
+	 * @ 
 	 */
-	public void setDefaultDuration(Double duration, TimeScale scale) throws ParameterException {
+	public void setDefaultDuration(Double duration, TimeScale scale)  {
 		Validate.notNull(duration);
 		Validate.notNull(scale);
 		Validate.notNegative(duration, "Negative duration");
@@ -252,10 +252,10 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * Sets the precision for case starting times.<br>
 	 * Depending on the chosen precision, time information on lower levels are set to zero.
 	 * @param precision Precision for case starting times.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see CaseStartPrecision
 	 */
-	public void setCaseStartingTimePrecision(CaseStartPrecision precision) throws ParameterException{
+	public void setCaseStartingTimePrecision(CaseStartPrecision precision) {
 		Validate.notNull(precision);
 		this.caseStartingTimePrecision = precision;
 	}
@@ -269,9 +269,9 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * The default setting is 7 am to 5 pm.
 	 * @param startTime Start working time (0-24)
 	 * @param endTime End working time (0-24)
-	 * @throws ParameterException 
+	 * @ 
 	 */
-	public void setWorkingHours(int startTime, int endTime) throws ParameterException{
+	public void setWorkingHours(int startTime, int endTime) {
 		TimeProperties.validateWorkingHours(startTime, endTime);
 		this.dayStart = startTime;
 		this.dayEnd = endTime;
@@ -363,11 +363,11 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * @param activity Activity name.
 	 * @param caseNumber Case number.
 	 * @return The execution time of the given activity within the given case.
-	 * @throws ParameterException If activity is <code>null</code>, 
+	 * @ If activity is <code>null</code>, 
 	 * caseNmber is negative or there is no starting time for the case.
 	 * @see ExecutionTime
 	 */
-	public ExecutionTime getTimeFor(String activity, int caseNumber) throws InconsistencyException, ParameterException{
+	public ExecutionTime getTimeFor(String activity, int caseNumber) throws InconsistencyException{
 		Validate.notNull(activity);
 		Validate.notNegative(caseNumber);
 		if(caseTimes.get(caseNumber) == null)
@@ -386,10 +386,10 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * This method is public to allow external case time increments (e.g. by time-oriented transformers).
 	 * @param caseNumber Case number.
 	 * @param increase Increase in milliseconds.
-	 * @throws ParameterException 
+	 * @ 
 	 * @throws IllegalArgumentException If the increase is smaller than zero.
 	 */
-	public void incrementCaseTime(int caseNumber, long increase) throws ParameterException{
+	public void incrementCaseTime(int caseNumber, long increase) {
 		Validate.notNegative(increase, "Cannot decrease actual case time.");
 		Validate.notNegative(caseNumber);
 		caseTimes.put(caseNumber, caseTimes.get(caseNumber)+increase);
@@ -480,10 +480,10 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * 
 	 * @param activity Name of the activity.
 	 * @return The activity duration in milliseconds.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see CaseTimeGenerator#defaultDuration
 	 */
-	public TimeValue getDurationFor(String activity) throws ParameterException{
+	public TimeValue getDurationFor(String activity) {
 		Validate.notNull(activity);
 		return defaultActivityDuration;
 	}
@@ -499,9 +499,9 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * 
 	 * @param activity Activity name.
 	 * @return The delay added after the end time of the given activity.
-	 * @throws ParameterException 
+	 * @ 
 	 */
-	public TimeValue getDelayFor(String activity) throws ParameterException{
+	public TimeValue getDelayFor(String activity) {
 		Validate.notNull(activity);
 		return defaultActivityDelay;
 	}
@@ -513,9 +513,9 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * Delays cause the time generator to increment the corresponding internal case time
 	 * by more than just the activity duration.<br>
 	 * @param delay Default delay for all process activities.
-	 * @throws ParameterException 
+	 * @ 
 	 */
-	public void setDefaultDelay(TimeValue delay) throws ParameterException{
+	public void setDefaultDelay(TimeValue delay) {
 		Validate.notNull(delay);
 		setDefaultDelay(delay.getValue(), delay.getScale());
 	}
@@ -527,9 +527,9 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * Delays cause the time generator to increment the corresponding internal case time
 	 * by more than just the activity duration.<br>
 	 * @param defaultAcivityDelay Default delay for all process activities.
-	 * @throws ParameterException 
+	 * @ 
 	 */
-	public void setDefaultDelay(Double delay, TimeScale scale) throws ParameterException{
+	public void setDefaultDelay(Double delay, TimeScale scale) {
 		Validate.notNull(delay);
 		Validate.notNull(scale);
 		Validate.notNegative(delay, "Negative delay");
@@ -542,10 +542,10 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * Reports the start of a process trace.<br>
 	 * Interface Implementation: TraceStartListener.<br>
 	 * On trace start, a new case is started and time information added to the storage map.
-	 * @throws ParameterException 
+	 * @ 
 	 */
 	@Override
-	public void traceStarted(int caseNumber) throws ParameterException {
+	public void traceStarted(int caseNumber)  {
 		Validate.bigger(caseNumber, 0);
 		if(dayCaseStartingTimes.isEmpty()){
 			prepareDay();
@@ -565,7 +565,7 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 	 * for actual trace times are deleted.
 	 */
 	@Override
-	public void traceCompleted(int caseNumber) throws ParameterException {
+	public void traceCompleted(int caseNumber)  {
 		Validate.bigger(caseNumber, 0);
 		caseTimes.remove(caseNumber);
 	}
@@ -584,7 +584,7 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 		public long endTime = 0L;
 		public long duration = 0L;
 		
-		public ExecutionTime(long start, long duration) throws ParameterException{
+		public ExecutionTime(long start, long duration) {
 			Validate.notNegative(start);
 			Validate.notNegative(duration);
 			startTime = start;
@@ -598,7 +598,7 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 		}
 	}
 	
-	protected void fillProperties(TimeProperties properties) throws ParameterException{
+	protected void fillProperties(TimeProperties properties) {
 		properties.setStartTime(getStartTime());
 		properties.setName(getName());
 		properties.setWorkingHours(getDayStart(), getDayEnd());
@@ -609,7 +609,7 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 		properties.setCaseStarttimePrecision(caseStartingTimePrecision);
 	}
 	
-	public TimeProperties getProperties() throws ParameterException{
+	public TimeProperties getProperties() {
 		TimeProperties properties = new TimeProperties();
 		fillProperties(properties);
 		return properties;

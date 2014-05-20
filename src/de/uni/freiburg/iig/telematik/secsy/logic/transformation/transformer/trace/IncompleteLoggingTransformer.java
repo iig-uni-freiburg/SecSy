@@ -36,12 +36,12 @@ public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransform
 
 	private Set<String> skipActivities = new HashSet<String>();
 	
-	public IncompleteLoggingTransformer(IncompleteLoggingTransformerProperties properties) throws ParameterException, PropertyException {
+	public IncompleteLoggingTransformer(IncompleteLoggingTransformerProperties properties) throws PropertyException {
 		super(properties);
 		skipActivities = properties.getSkipActivities();
 	}
 
-	public IncompleteLoggingTransformer(Double activationProbability, Integer maxAppliances) throws ParameterException {
+	public IncompleteLoggingTransformer(Double activationProbability, Integer maxAppliances){
 		super(activationProbability, maxAppliances);
 	}
 	
@@ -79,14 +79,14 @@ public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransform
 		return Collections.unmodifiableSet(skipActivities);
 	}
 	
-	public void setSkipActivities(Set<String> skipActivities) throws ParameterException{
+	public void setSkipActivities(Set<String> skipActivities){
 		SkipActivitiesTransformerProperties.validateSkipActivities(skipActivities);
 		this.skipActivities.clear();
 		this.skipActivities.addAll(skipActivities);
 	}
 	
 	@Override
-	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult){
 		if(skipAllowed(entry.getActivity())){
 			if(trace.removeAllEntries(trace.getEntriesForGroup(entry.getGroup())))
 				addMessageToResult(getCustomSuccessMessage(entry.getActivity()), transformerResult);
@@ -95,13 +95,13 @@ public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransform
 		return false;
 	}
 	
-	protected boolean skipAllowed(String activity) throws ParameterException{
+	protected boolean skipAllowed(String activity){
 		Validate.notNull(activity);
 		return skipActivities.contains(activity);
 	}
 	
 	
-	protected String getCustomSuccessMessage(String activity) throws ParameterException{
+	protected String getCustomSuccessMessage(String activity){
 		Validate.notNull(activity);
 		return getNoticeMessage(String.format(CUSTOM_SUCCESS_FORMAT, activity));
 	}
@@ -112,13 +112,13 @@ public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransform
 	}
 	
 	@Override
-	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws PropertyException {
 		super.fillProperties(properties);
 		((IncompleteLoggingTransformerProperties) properties).setSkipActivities(skipActivities);
 	}
 
 	@Override
-	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+	public AbstractTransformerProperties getProperties() throws PropertyException {
 		IncompleteLoggingTransformerProperties properties = new IncompleteLoggingTransformerProperties();
 		fillProperties(properties);
 		return properties;

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Random;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
@@ -20,12 +19,12 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.prop
 @SuppressWarnings("serial")
 public abstract class AbstractTransformer implements Serializable, Comparable<AbstractTransformer> {
 	
-	protected final String ERROR_FORMAT = "[TRANSFORMER ERROR] %s %%s";
-	protected final String SUCCESS_FORMAT = "[TRANSFORMER SUCCESS] %s %%s";
-	protected final String NOTICE_FORMAT = "[TRANSFORMER NOTICE] %s %%s";
-	protected String name = AbstractTransformerProperties.defaultName;
-	protected boolean includeMessages = AbstractTransformerProperties.defaultIncludeStatusMessages;
-	protected double activationProbability = AbstractTransformerProperties.defaultActivationProbability;
+	private final String ERROR_FORMAT = "[TRANSFORMER ERROR] %s %%s";
+	private final String SUCCESS_FORMAT = "[TRANSFORMER SUCCESS] %s %%s";
+	private final String NOTICE_FORMAT = "[TRANSFORMER NOTICE] %s %%s";
+	private String name = AbstractTransformerProperties.defaultName;
+	private boolean includeMessages = AbstractTransformerProperties.defaultIncludeStatusMessages;
+	private double activationProbability = AbstractTransformerProperties.defaultActivationProbability;
 	
 	private final String toStringFormat = "[%s] %s (%s%%)";
 	
@@ -34,13 +33,13 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 	
 	protected Random rand = new Random();
 	
-	public AbstractTransformer(AbstractTransformerProperties properties) throws ParameterException, PropertyException{
+	public AbstractTransformer(AbstractTransformerProperties properties) throws PropertyException{
 		activationProbability = properties.getActivationProbability();
 		name = properties.getName();
 		includeMessages = properties.getIncludeMessages();
 	}
 	
-	public AbstractTransformer(Double activationProbability) throws ParameterException{
+	public AbstractTransformer(Double activationProbability){
 		setActivationProbability(activationProbability);
 	}
 	
@@ -57,7 +56,7 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 		return name;
 	}
 	
-	public void setName(String name) throws ParameterException{
+	public void setName(String name){
 		Validate.notNull(name);
 		this.name = name;
 	}
@@ -68,7 +67,7 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 		return timeGenerator;
 	}
 	
-	public void setTimeGenerator(CaseTimeGenerator timeGenerator) throws ParameterException{
+	public void setTimeGenerator(CaseTimeGenerator timeGenerator){
 		Validate.notNull(timeGenerator);
 		this.timeGenerator = timeGenerator;
 	}
@@ -79,12 +78,12 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 		return context;
 	}
 	
-	public void setContext(Context context) throws ParameterException{
+	public void setContext(Context context){
 		Validate.notNull(context);
 		this.context = context;
 	}
 	
-	public void setActivationProbability(Double activationProbability) throws ParameterException{
+	public void setActivationProbability(Double activationProbability){
 		Validate.notNull(activationProbability);
 		Validate.probability(activationProbability);
 		this.activationProbability = activationProbability;
@@ -95,13 +94,7 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 			message = "";
 		if(!message.equals(""))
 			message = ": "+message;
-		try {
-			return String.format(String.format(getMessageFormat(MessageType.SUCCESS), this.getClass().getName()), message);
-		} catch (ParameterException e) {
-			// Cannot happen, since the message type is not null.
-			e.printStackTrace();
-		}
-		return null;
+		return String.format(String.format(getMessageFormat(MessageType.SUCCESS), this.getClass().getName()), message);
 	}
 	
 	protected String getNoticeMessage(String message){
@@ -109,13 +102,7 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 			message = "";
 		if(!message.equals(""))
 			message = ": "+message;
-		try {
-			return String.format(String.format(getMessageFormat(MessageType.NOTICE), this.getClass().getName()), message);
-		} catch (ParameterException e) {
-			// Cannot happen, since the message type is not null.
-			e.printStackTrace();
-		}
-		return null;
+		return String.format(String.format(getMessageFormat(MessageType.NOTICE), this.getClass().getName()), message);
 	}
 	
 	protected String getErrorMessage(String message){
@@ -123,12 +110,7 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 			message = "";
 		if(!message.equals(""))
 			message = ": "+message;
-		try {
-			return String.format(String.format(getMessageFormat(MessageType.ERROR), this.getClass().getName()), message);
-		} catch (ParameterException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return String.format(String.format(getMessageFormat(MessageType.ERROR), this.getClass().getName()), message);
 	}
 	
 	/**
@@ -149,7 +131,7 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 		return activationProbability;
 	}
 	
-	protected String getMessageFormat(MessageType messageType) throws ParameterException{
+	protected String getMessageFormat(MessageType messageType){
 		Validate.notNull(messageType);
 		switch(messageType){
 		case ERROR: return ERROR_FORMAT;
@@ -166,7 +148,7 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 	 * @param result
 	 * @throws ParameterException If the given transformer result is <code>null</code>.
 	 */
-	protected void addMessageToResult(String message, AbstractTransformerResult result) throws ParameterException{
+	protected void addMessageToResult(String message, AbstractTransformerResult result){
 		Validate.notNull(result);
 		if(includeMessages && message != null)
 			result.addTransformerMessage(message);
@@ -186,7 +168,7 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 		return String.format(toStringFormat, this.getClass().getSimpleName().replace("Transformer", ""), name, nf.format(activationProbability*100.0));
 	}
 	
-	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException{
+	protected void fillProperties(AbstractTransformerProperties properties) throws PropertyException{
 		Validate.notNull(properties);
 		properties.setName(getName());
 		properties.setActivationProbability(getActivationProbability());

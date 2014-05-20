@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
@@ -41,7 +40,7 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 * @throws ParameterException 
 	 * @throws Exception If this generator is incompatible to the transformer manager.
 	 */
-	public LogEntryGenerator(EntryTransformerManager entryTransformerManager) throws ParameterException{
+	public LogEntryGenerator(EntryTransformerManager entryTransformerManager){
 		setEntryTransformerManager(entryTransformerManager);
 	}
 	
@@ -56,7 +55,7 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 * @throws ParameterException 
 	 * @throws IllegalArgumentException If the log entry generator is incompatible with the transformer manager.
 	 */
-	public void setEntryTransformerManager(EntryTransformerManager entryTransformerManager) throws ParameterException{
+	public void setEntryTransformerManager(EntryTransformerManager entryTransformerManager){
 		Validate.notNull(entryTransformerManager);
 		this.entryTransformerManager = entryTransformerManager;
 		this.entryTransformerManager.setSource(this);
@@ -74,7 +73,7 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 * @throws ParameterException 
 	 * @throws Exception 
 	 */
-	public SimulationLogEntry getLogEntryFor(AbstractTransition<?,?> transition, int caseNumber) throws ParameterException {
+	public SimulationLogEntry getLogEntryFor(AbstractTransition<?,?> transition, int caseNumber) {
 		SimulationLogEntry entry = prepareLogEntry(transition, caseNumber);
 		if(entryTransformerManager != null)
 			entryTransformerManager.applyTransformers(entry, caseNumber);
@@ -91,7 +90,7 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 * @throws ParameterException 
 	 * @throws Exception 
 	 */
-	protected SimulationLogEntry prepareLogEntry(AbstractTransition<?,?> transition, int caseNumber) throws ParameterException {
+	protected SimulationLogEntry prepareLogEntry(AbstractTransition<?,?> transition, int caseNumber) {
 		Validate.notNull(transition);
 		Validate.bigger(caseNumber, 0);
 		SimulationLogEntry entry = new SimulationLogEntry(transition.getLabel());
@@ -113,7 +112,7 @@ public class LogEntryGenerator implements TraceCompletionListener{
 	 * <code>false</code> otherwise.
 	 * @throws ParameterException 
 	 */
-	public boolean providesLogInformation(EntryField field) throws ParameterException{
+	public boolean providesLogInformation(EntryField field){
 		Validate.notNull(field);
 		switch(field){
 		case ACTIVITY: 

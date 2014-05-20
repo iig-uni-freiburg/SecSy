@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
@@ -46,12 +45,12 @@ public abstract class AbstractMultipleTraceTransformer extends AbstractTraceTran
 	
 	protected Set<LogEntry> transformedEntries = new HashSet<LogEntry>();
 	
-	public AbstractMultipleTraceTransformer(AbstractMultipleTraceTransformerProperties properties) throws ParameterException, PropertyException {
+	public AbstractMultipleTraceTransformer(AbstractMultipleTraceTransformerProperties properties) throws PropertyException {
 		super(properties);
 		maxAppliances = properties.getMaxAppliances();
 	}
 
-	public AbstractMultipleTraceTransformer(Double activationProbability, Integer maxAppliances) throws ParameterException {
+	public AbstractMultipleTraceTransformer(Double activationProbability, Integer maxAppliances){
 		super(activationProbability);
 		setMaxAppliances(maxAppliances);
 	}
@@ -64,13 +63,13 @@ public abstract class AbstractMultipleTraceTransformer extends AbstractTraceTran
 		return maxAppliances;
 	}
 	
-	public void setMaxAppliances(Integer maxAppliances) throws ParameterException{
+	public void setMaxAppliances(Integer maxAppliances){
 		Validate.bigger(maxAppliances, 0);
 		this.maxAppliances = maxAppliances;
 	}
 
 	@Override
-	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event) throws ParameterException {
+	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event){
 		transformedEntries.clear();
 		TraceTransformerResult result = new TraceTransformerResult(event.logTrace, true);
 		
@@ -101,16 +100,16 @@ public abstract class AbstractMultipleTraceTransformer extends AbstractTraceTran
 		return result;
 	}
 	
-	protected void determineAppliances(int logEntries, AbstractTransformerResult result) throws ParameterException{
+	protected void determineAppliances(int logEntries, AbstractTransformerResult result){
 		Validate.notNull(logEntries);
 		while((targetAppliances=rand.nextInt(maxAppliances)+1)>logEntries){}
 		addMessageToResult(getNoticeMessage(String.format(TARGET_APPLIANCES_FORMAT, targetAppliances)), result);
 	}
 	
-	protected abstract boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult) throws ParameterException;
+	protected abstract boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult);
 
 	@Override
-	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws PropertyException {
 		super.fillProperties(properties);
 		((AbstractMultipleTraceTransformerProperties) properties).setMaxAppliances(maxAppliances);
 	}

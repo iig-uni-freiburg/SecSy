@@ -40,12 +40,12 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 	LogEntryGenerator entryGenerator = null;
 	Set<EntryField> excludedFields = new HashSet<EntryField>(Arrays.asList(ObfuscationTransformerProperties.defaultExcludedFields));
 	
-	public ObfuscationTransformer(ObfuscationTransformerProperties properties) throws ParameterException, PropertyException {
+	public ObfuscationTransformer(ObfuscationTransformerProperties properties) throws PropertyException {
 		super(properties);
 		excludedFields = properties.getExcludedFields();
 	}
 
-	public ObfuscationTransformer(Double activationProbability, Integer maxAppliance) throws ParameterException {
+	public ObfuscationTransformer(Double activationProbability, Integer maxAppliance){
 		super(activationProbability, maxAppliance);
 	}
 	
@@ -84,7 +84,7 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 		return Collections.unmodifiableSet(excludedFields);
 	}
 	
-	public void setExcludedFields(Set<EntryField> excludedFields) throws ParameterException{
+	public void setExcludedFields(Set<EntryField> excludedFields){
 		Validate.notNull(excludedFields);
 		Validate.noNullElements(excludedFields);
 		this.excludedFields.clear();
@@ -92,14 +92,14 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 	}
 
 	@Override
-	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event) throws ParameterException {
+	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event){
 		Validate.notNull(event);
 		entryGenerator = (LogEntryGenerator) event.sender;
 		return super.applyTransformation(event);
 	}
 
 	@Override
-	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult){
 		//Find all fields that can be obfuscated
 		List<EntryField> possibleFields = new ArrayList<EntryField>();
 		possibleFields.remove(EntryField.ORIGINATOR_CANDIDATES);
@@ -126,7 +126,7 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 		return false;
 	}
 	
-	protected Obfuscation applyObfuscation(EntryField field, SimulationLogEntry entry) throws ParameterException{
+	protected Obfuscation applyObfuscation(EntryField field, SimulationLogEntry entry){
 		Validate.notNull(field);
 		Validate.notNull(entry);
 		Obfuscation result = new Obfuscation(field, entry.getFieldValue(field));
@@ -136,7 +136,7 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 		
 	}
 	
-	protected boolean appliancePossible(EntryField field, SimulationLogEntry entry) throws ParameterException{
+	protected boolean appliancePossible(EntryField field, SimulationLogEntry entry){
 		Validate.notNull(field);
 		Validate.notNull(entry);
 		switch (field) {
@@ -153,7 +153,7 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 		}
 	}
 	
-	protected boolean setNewValueFor(EntryField field, SimulationLogEntry entry) throws ParameterException{
+	protected boolean setNewValueFor(EntryField field, SimulationLogEntry entry){
 		Validate.notNull(field);
 		Validate.notNull(entry);
 		try{
@@ -193,14 +193,14 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 		private Object newValue;
 		private boolean success;
 		
-		public Obfuscation(EntryField field, Object oldValue, Object newValue) throws ParameterException {
+		public Obfuscation(EntryField field, Object oldValue, Object newValue){
 			Validate.notNull(field);
 			this.field = field;
 			this.oldValue = oldValue;
 			setNewValue(newValue);
 		}
 		
-		public Obfuscation(EntryField field, Object oldValue) throws ParameterException {
+		public Obfuscation(EntryField field, Object oldValue){
 			Validate.notNull(field);
 			this.field = field;
 			this.oldValue = oldValue;
@@ -237,13 +237,13 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 	}
 
 	@Override
-	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws PropertyException {
 		super.fillProperties(properties);
 		((ObfuscationTransformerProperties) properties).setExcludedFields(excludedFields);
 	}
 
 	@Override
-	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+	public AbstractTransformerProperties getProperties() throws PropertyException {
 		ObfuscationTransformerProperties properties = new ObfuscationTransformerProperties();
 		fillProperties(properties);
 		return properties;

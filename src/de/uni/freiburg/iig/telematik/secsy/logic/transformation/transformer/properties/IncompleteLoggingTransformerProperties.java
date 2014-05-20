@@ -9,7 +9,6 @@ import java.util.StringTokenizer;
 import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
@@ -23,12 +22,12 @@ public class IncompleteLoggingTransformerProperties  extends AbstractMultipleTra
 		super(fileName);
 	}
 	
-	public void setSkipActivities(String... activities) throws ParameterException {
+	public void setSkipActivities(String... activities){
 		validateSkipActivities(activities);
 		props.setProperty(IncompleteLoggingTransformerProperty.SKIP_ACTIVITIES.toString(), ArrayUtils.toString(activities));
 	}
 	
-	public void setSkipActivities(Set<String> activities) throws ParameterException {
+	public void setSkipActivities(Set<String> activities){
 		validateSkipActivities(activities);
 		props.setProperty(IncompleteLoggingTransformerProperty.SKIP_ACTIVITIES.toString(), ArrayUtils.toString(activities.toArray()));
 	}
@@ -44,13 +43,13 @@ public class IncompleteLoggingTransformerProperties  extends AbstractMultipleTra
 		return result;
 	}
 	
-	public static void validateSkipActivities(String... activities) throws ParameterException{
+	public static void validateSkipActivities(String... activities){
 		Validate.notNull(activities);
 		Validate.notEmpty(activities);
 		Validate.noNullElements(activities);
 	}
 	
-	public static void validateSkipActivities(Collection<String> activities) throws ParameterException{
+	public static void validateSkipActivities(Collection<String> activities){
 		Validate.notNull(activities);
 		Validate.notEmpty(activities);
 		Validate.noNullElements(activities);

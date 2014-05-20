@@ -8,8 +8,8 @@ import de.invation.code.toval.constraint.AbstractConstraint;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.traversal.PNTraverser;
@@ -25,7 +25,7 @@ public class CaseGenerator {
 	protected int caseNumber = 0;
 	
 
-	public void setPetriNet(AbstractPetriNet<?,?,?,?,?> petriNet, PNTraverser<?> traverser) throws ParameterException{
+	public void setPetriNet(AbstractPetriNet<?,?,?,?,?> petriNet, PNTraverser<?> traverser){
 		Validate.notNull(petriNet);
 		Validate.notNull(traverser);
 		if(petriNet != traverser.getPetriNet())
@@ -36,17 +36,17 @@ public class CaseGenerator {
 		this.traverser = traverser;
 	}
 	
-	public void setContext(Context context) throws ParameterException{
+	public void setContext(Context context){
 		Validate.notNull(context);
 		this.context = context;
 	}
 	
-	public void setCaseDataContainer(CaseDataContainer caseDataContainer) throws ParameterException{
+	public void setCaseDataContainer(CaseDataContainer caseDataContainer){
 		Validate.notNull(caseDataContainer);
 		this.caseDataContainer = caseDataContainer;
 	}
 	
-	public AbstractTransition<?,?> getNextTransition() throws InconsistencyException, ParameterException, ValueGenerationException{
+	public AbstractTransition<?,?> getNextTransition() throws InconsistencyException, ValueGenerationException{
 		checkValidity();
 		if(isCaseCompleted())
 			throw new InconsistencyException("Case is completed, please call reset() to start new case.");
@@ -55,7 +55,7 @@ public class CaseGenerator {
 		return result;
 	}
 	
-	private void findNextTransition() throws ParameterException, ValueGenerationException{
+	private void findNextTransition() throws ValueGenerationException{
 		checkValidity();
 		if(context == null){
 			nextTransition = traverser.chooseNextTransition((List<AbstractTransition<?,?>>) net.getEnabledTransitions());
@@ -88,7 +88,7 @@ public class CaseGenerator {
 		}
 	}
 	
-	public boolean isCaseCompleted() throws ParameterException, ValueGenerationException{
+	public boolean isCaseCompleted() throws ValueGenerationException{
 		if(nextTransition == null)
 			findNextTransition();
 		return nextTransition == null;
@@ -99,11 +99,7 @@ public class CaseGenerator {
 		net.reset();
 		this.caseNumber = caseNumber;
 		if(caseDataContainer != null){
-			try {
-				caseDataContainer.setActualGuardCase(caseNumber);
-			} catch (ParameterException e) {
-				e.printStackTrace();
-			}
+			caseDataContainer.setActualGuardCase(caseNumber);
 		}
 	}
 	

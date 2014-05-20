@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import de.invation.code.toval.time.TimeScale;
 import de.invation.code.toval.time.TimeValue;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties;
 
@@ -44,11 +43,11 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	 * 
 	 * @param startTime Day for the start time of the first Case.
 	 * @param passesPerDay Number of cases to be generated per day.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see #dayStart
 	 * @see #setWorkingHours(int, int)
 	 */
-	public AdjustableCaseTimeGenerator(long startTime, int passesPerDay) throws ParameterException {
+	public AdjustableCaseTimeGenerator(long startTime, int passesPerDay)  {
 		super(startTime, passesPerDay);
 	}
 	
@@ -62,10 +61,10 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	 * @param activity Activity name.
 	 * @param value Time value.
 	 * @param scale Scale for the interpretation of the time value.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDuration(String activity, Integer value, TimeScale scale) throws ParameterException{
+	public void setDuration(String activity, Integer value, TimeScale scale) {
 		setDuration(activity, value.doubleValue(), scale);
 	}
 	
@@ -77,10 +76,10 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	 * @param activity Activity name.
 	 * @param value Time value.
 	 * @param scale Scale for the interpretation of the time value.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDuration(String activity, TimeValue duration) throws ParameterException{
+	public void setDuration(String activity, TimeValue duration) {
 		Validate.notNull(duration);
 		setDuration(activity, duration.getValue(), duration.getScale());
 	}
@@ -93,10 +92,10 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	 * @param activity Activity name.
 	 * @param value Time value.
 	 * @param scale Scale for the interpretation of the time value.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDuration(String activity, Double value, TimeScale scale) throws ParameterException{
+	public void setDuration(String activity, Double value, TimeScale scale) {
 		Validate.notNull(activity);
 		Validate.notNegative(value);
 		Validate.notNull(scale);
@@ -113,10 +112,10 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	 * @param activity Activity name.
 	 * @param value Time value.
 	 * @param scale Scale for the interpretation of the time value.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDelay(String activity, Integer value, TimeScale scale) throws ParameterException{
+	public void setDelay(String activity, Integer value, TimeScale scale) {
 		setDelay(activity, value.doubleValue(), scale);
 	}
 	
@@ -130,10 +129,10 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	 * @param activity Activity name.
 	 * @param value Time value.
 	 * @param scale Scale for the interpretation of the time value.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDelay(String activity, TimeValue delay) throws ParameterException{
+	public void setDelay(String activity, TimeValue delay) {
 		Validate.notNull(delay);
 		setDelay(activity, delay.getValue(), delay.getScale());
 	}
@@ -148,10 +147,10 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	 * @param activity Activity name.
 	 * @param value Time value.
 	 * @param scale Scale for the interpretation of the time value.
-	 * @throws ParameterException 
+	 * @ 
 	 * @see TimeScale
 	 */
-	public void setDelay(String activity, Double value, TimeScale scale) throws ParameterException{
+	public void setDelay(String activity, Double value, TimeScale scale) {
 		Validate.notNull(activity);
 		Validate.notNegative(value);
 		Validate.notNull(scale);
@@ -165,10 +164,10 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	 * Overrides the superclass method to consider adjusted activity durations.
 	 * In case no adjustment was made for the given activity,
 	 * the method returns the default activity duration.
-	 * @throws ParameterException 
+	 * @ 
 	 */
 	@Override
-	public TimeValue getDurationFor(String activity) throws ParameterException{
+	public TimeValue getDurationFor(String activity) {
 		Validate.notNull(activity);
 		if(!activityDurations.containsKey(activity))
 			return super.getDurationFor(activity);
@@ -181,10 +180,10 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	 * Overrides the superclass method to consider adjusted activity delays.
 	 * In case no adjustment was made for the given activity,
 	 * the method returns the default activity delay.
-	 * @throws ParameterException 
+	 * @ 
 	 */
 	@Override
-	public TimeValue getDelayFor(String activity) throws ParameterException{
+	public TimeValue getDelayFor(String activity) {
 		Validate.notNull(activity);
 		if(!activityDelays.containsKey(activity))
 			return super.getDelayFor(activity);
@@ -192,7 +191,7 @@ public class AdjustableCaseTimeGenerator extends CaseTimeGenerator{
 	}
 
 	@Override
-	protected void fillProperties(TimeProperties properties) throws ParameterException {
+	protected void fillProperties(TimeProperties properties)  {
 		super.fillProperties(properties);
 		
 		for(String activity: activityDurations.keySet()){

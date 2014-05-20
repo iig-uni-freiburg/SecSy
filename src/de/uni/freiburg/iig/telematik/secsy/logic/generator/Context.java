@@ -19,8 +19,8 @@ import de.invation.code.toval.types.DataUsage;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.properties.ContextProperties;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
@@ -87,7 +87,7 @@ public class Context {
 	 * @throws ParameterException 
 	 * @throws Exception If activity list is <code>null</code> or empty.
 	 */
-	public Context(String name, Set<String> activities) throws ParameterException {
+	public Context(String name, Set<String> activities){
 		setName(name);
 		Validate.notNull(activities);
 		Validate.notEmpty(activities);
@@ -102,7 +102,7 @@ public class Context {
 	 * @throws Exception If activity list is <code>null</code> or empty.
 	 * @see {@link #getNameListFromTransitions(Collection)}
 	 */
-	public Context(String name, Collection<AbstractTransition<?,?>> transitions) throws ParameterException {
+	public Context(String name, Collection<AbstractTransition<?,?>> transitions){
 		this(name, PNUtils.getLabelSetFromTransitions(transitions, false));
 	}
 	
@@ -120,7 +120,7 @@ public class Context {
 	 * Sets the name of the context.
 	 * @throws ParameterException 
 	 */
-	public void setName(String name) throws ParameterException{
+	public void setName(String name){
 		Validate.notNull(name);
 		this.name = name;
 	}
@@ -137,11 +137,11 @@ public class Context {
 		return !activities.isEmpty();
 	}
 	
-	public void addActivities(Collection<String> activities) throws InconsistencyException, ParameterException{
+	public void addActivities(Collection<String> activities) throws InconsistencyException{
 		addActivities(activities, false);
 	}
 	
-	public void addActivities(Collection<String> activities, boolean addToACModel) throws InconsistencyException, ParameterException{
+	public void addActivities(Collection<String> activities, boolean addToACModel) throws InconsistencyException{
 		Validate.notNull(activities);
 		Validate.notEmpty(activities);
 		
@@ -158,11 +158,11 @@ public class Context {
 		this.activities.addAll(activities);
 	}
 	
-	public void removeActivities(Collection<String> activities) throws ParameterException{
+	public void removeActivities(Collection<String> activities){
 		removeActivities(activities, false);
 	}
 	
-	public void removeActivities(Collection<String> activities, boolean removeFromACModel) throws ParameterException{
+	public void removeActivities(Collection<String> activities, boolean removeFromACModel){
 		Validate.notNull(activities);
 		Validate.noNullElements(activities);
 		
@@ -193,7 +193,7 @@ public class Context {
 	 * @throws ParameterException 
 	 * @see #clearAttributes()
 	 */
-	public void setAttributes(Set<String> attributes) throws ParameterException{
+	public void setAttributes(Set<String> attributes){
 		Validate.notNull(attributes);
 		Validate.notEmpty(attributes);
 		clearAttributes();
@@ -209,11 +209,11 @@ public class Context {
 		activityDataUsage.clear();
 	}
 	
-	public void addAttributes(Collection<String> attributes) throws InconsistencyException, ParameterException{
+	public void addAttributes(Collection<String> attributes) throws InconsistencyException{
 		addAttributes(attributes, false);
 	}
 	
-	public void addAttributes(Collection<String> attributes, boolean addToACModel) throws InconsistencyException, ParameterException{
+	public void addAttributes(Collection<String> attributes, boolean addToACModel) throws InconsistencyException{
 		Validate.notNull(attributes);
 		Validate.notEmpty(attributes);
 		
@@ -230,11 +230,11 @@ public class Context {
 		this.attributes.addAll(attributes);
 	}
 	
-	public void removeAttributes(Collection<String> attributes) throws ParameterException{
+	public void removeAttributes(Collection<String> attributes){
 		removeActivities(attributes, false);
 	}
 	
-	public void removeAttributes(Collection<String> attributes, boolean removeFromACModel) throws ParameterException{
+	public void removeAttributes(Collection<String> attributes, boolean removeFromACModel){
 		Validate.notNull(attributes);
 		Validate.noNullElements(attributes);
 		
@@ -284,18 +284,18 @@ public class Context {
 	 * @param subjects A list of subject names.
 	 * @throws ParameterException 
 	 */
-	public void setSubjects(Set<String> subjects) throws ParameterException{
+	public void setSubjects(Set<String> subjects){
 		Validate.notNull(subjects);
 		Validate.notEmpty(subjects);
 		this.subjects.clear();
 		this.subjects.addAll(subjects);
 	}
 	
-	public void addSubjects(Collection<String> subjects) throws InconsistencyException, ParameterException{
+	public void addSubjects(Collection<String> subjects) throws InconsistencyException{
 		addSubjects(subjects, false);
 	}
 	
-	public void addSubjects(Collection<String> subjects, boolean addToACModel) throws InconsistencyException, ParameterException{
+	public void addSubjects(Collection<String> subjects, boolean addToACModel) throws InconsistencyException{
 		Validate.notNull(subjects);
 		Validate.notEmpty(subjects);
 		
@@ -312,11 +312,11 @@ public class Context {
 		this.subjects.addAll(subjects);
 	}
 	
-	public void removeSubjects(Collection<String> subjects) throws ParameterException{
+	public void removeSubjects(Collection<String> subjects){
 		removeSubjects(subjects, false);
 	}
 	
-	public void removeSubjects(Collection<String> subjects, boolean removeFromACModel) throws ParameterException{
+	public void removeSubjects(Collection<String> subjects, boolean removeFromACModel){
 		Validate.notNull(subjects);
 		Validate.noNullElements(subjects);
 		
@@ -346,7 +346,7 @@ public class Context {
 	 * @param acModel An access control model.
 	 * @throws InconsistencyException, ParameterException 
 	 */
-	public void setACModel(ACModel acModel) throws InconsistencyException, ParameterException {
+	public void setACModel(ACModel acModel) throws InconsistencyException{
 		validateACModel(acModel);
 		this.acModel = acModel;
 	}
@@ -369,7 +369,7 @@ public class Context {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void setValidUsageModes(Collection<DataUsage> validUsageModes) throws ParameterException{
+	public void setValidUsageModes(Collection<DataUsage> validUsageModes){
 		Validate.notNull(validUsageModes);
 		Validate.notEmpty(validUsageModes);
 		Validate.noNullElements(validUsageModes);
@@ -398,7 +398,7 @@ public class Context {
 	//------- Constraints -----------------------------------------------------------------------------------------------
 	
 	
-	public <C extends AbstractConstraint<?>> boolean addRoutingConstraint(String activity, C constraint) throws CompatibilityException, ParameterException{
+	public <C extends AbstractConstraint<?>> boolean addRoutingConstraint(String activity, C constraint) throws CompatibilityException{
 		validateActivity(activity);
 		Validate.notNull(constraint);
 		validateAttribute(constraint.getElement());
@@ -411,12 +411,12 @@ public class Context {
 		return routingConstraints.get(activity).add(constraint);
 	}
 	
-	public boolean hasRoutingConstraints(String activity) throws CompatibilityException, ParameterException{
+	public boolean hasRoutingConstraints(String activity) throws CompatibilityException{
 		validateActivity(activity);
 		return routingConstraints.containsKey(activity);
 	}
 	
-	public Set<AbstractConstraint<?>> getRoutingConstraints(String activity) throws CompatibilityException, ParameterException{
+	public Set<AbstractConstraint<?>> getRoutingConstraints(String activity) throws CompatibilityException{
 		validateActivity(activity);
 		return routingConstraints.get(activity);
 	}
@@ -425,7 +425,7 @@ public class Context {
 		return routingConstraints.keySet();
 	}
 	
-	public <C extends AbstractConstraint<?>> void removeRoutingConstraint(String activity, C constraint) throws CompatibilityException, ParameterException{
+	public <C extends AbstractConstraint<?>> void removeRoutingConstraint(String activity, C constraint) throws CompatibilityException{
 		validateActivity(activity);
 		Validate.notNull(constraint);
 		validateAttribute(constraint.getElement());
@@ -456,7 +456,7 @@ public class Context {
 	 * @see #getAttributes()
 	 * @see #setAttributes(List)
 	 */
-	public void setDataFor(String activity, Set<String> attributes) throws CompatibilityException, ParameterException {
+	public void setDataFor(String activity, Set<String> attributes) throws CompatibilityException{
 		validateActivity(activity);
 		validateAttributes(attributes);
 		if(!attributes.isEmpty()){
@@ -484,13 +484,13 @@ public class Context {
 	 * @see #getAttributes()
 	 * @see #setAttributes(List)
 	 */
-	public void setDataUsageFor(String activity, Map<String, Set<DataUsage>> dataUsage) throws CompatibilityException, ParameterException{
+	public void setDataUsageFor(String activity, Map<String, Set<DataUsage>> dataUsage) throws CompatibilityException{
 		validateActivity(activity);
 		validateDataUsage(dataUsage);
 		activityDataUsage.put(activity, dataUsage);
 	}
 	
-	public void setDataUsageFor(String activity, String attribute, Set<DataUsage> usageModes) throws CompatibilityException, ParameterException{
+	public void setDataUsageFor(String activity, String attribute, Set<DataUsage> usageModes) throws CompatibilityException{
 		validateActivity(activity);
 		validateAttribute(attribute);
 		validateUsageModes(usageModes);
@@ -513,7 +513,7 @@ public class Context {
 	 * @see #getAttributes()
 	 * @see #setAttributes(List)
 	 */
-	public void addDataUsageFor(String activity, String attribute) throws CompatibilityException, ParameterException {
+	public void addDataUsageFor(String activity, String attribute) throws CompatibilityException{
 		setDataUsageFor(activity, attribute, new HashSet<DataUsage>(validUsageModes));
 	}
 	
@@ -532,7 +532,7 @@ public class Context {
 	 * @see #getAttributes()
 	 * @see #setAttributes(List)
 	 */
-	public void addDataUsageFor(String activity, String attribute, DataUsage dataUsage) throws CompatibilityException, ParameterException {
+	public void addDataUsageFor(String activity, String attribute, DataUsage dataUsage) throws CompatibilityException{
 		validateActivity(activity);
 		validateAttribute(attribute);
 		Validate.notNull(dataUsage);
@@ -545,7 +545,7 @@ public class Context {
 		activityDataUsage.get(activity).get(attribute).add(dataUsage);
 	}
 	
-	public void removeDataUsageFor(String activity, String attribute, DataUsage dataUsage) throws CompatibilityException, ParameterException {
+	public void removeDataUsageFor(String activity, String attribute, DataUsage dataUsage) throws CompatibilityException{
 		validateActivity(activity);
 		validateAttribute(attribute);
 		Validate.notNull(dataUsage);
@@ -556,7 +556,7 @@ public class Context {
 		activityDataUsage.get(activity).get(attribute).remove(dataUsage);
 	}
 	
-	public void removeDataUsageFor(String activity, String attribute) throws CompatibilityException, ParameterException {
+	public void removeDataUsageFor(String activity, String attribute) throws CompatibilityException{
 		validateActivity(activity);
 		validateAttribute(attribute);
 		if(!activityDataUsage.containsKey(activity))
@@ -578,7 +578,7 @@ public class Context {
 	 * @see #getAttributes()
 	 * @see #setAttributes(List)
 	 */
-	public void addDataUsageForAll(Collection<String> activities, String attribute, DataUsage dataUsage) throws ParameterException {
+	public void addDataUsageForAll(Collection<String> activities, String attribute, DataUsage dataUsage){
 		Validate.notNull(activities);
 		Validate.notEmpty(activities);
 		for(String activity: activities){
@@ -601,7 +601,7 @@ public class Context {
 	 * @see {@link #getActivities()}
 	 * @see #getAttributes()
 	 */
-	public Set<DataUsage> getDataUsageFor(String activity, String attribute) throws CompatibilityException, ParameterException {
+	public Set<DataUsage> getDataUsageFor(String activity, String attribute) throws CompatibilityException{
 		validateActivity(activity);
 		validateAttribute(attribute);
 		if(activityDataUsage.get(activity) == null)
@@ -627,7 +627,7 @@ public class Context {
 	 * @throws IllegalArgumentException IllegalArgumentException If the given activity is not known.
 	 * @see {@link #getActivities()}
 	 */
-	public Map<String, Set<DataUsage>> getDataUsageFor(String activity) throws CompatibilityException, ParameterException{
+	public Map<String, Set<DataUsage>> getDataUsageFor(String activity) throws CompatibilityException{
 		validateActivity(activity);
 		if(activityDataUsage.get(activity) == null)
 			return new HashMap<String, Set<DataUsage>>(); //No input data elements for this activity
@@ -638,7 +638,7 @@ public class Context {
 		return !activityDataUsage.isEmpty();
 	}
 	
-	public boolean hasDataUsage(String activity) throws CompatibilityException, ParameterException{
+	public boolean hasDataUsage(String activity) throws CompatibilityException{
 		validateActivity(activity);
 		return activityDataUsage.containsKey(activity);
 	}
@@ -655,7 +655,7 @@ public class Context {
 	 * @throws IllegalArgumentException IllegalArgumentException If the given activity is not known.
 	 * @see {@link #getActivities()}
 	 */
-	public Set<String> getAttributesFor(String activity) throws CompatibilityException, ParameterException{
+	public Set<String> getAttributesFor(String activity) throws CompatibilityException{
 		validateActivity(activity);
 		if(activityDataUsage.get(activity) == null)
 			return new HashSet<String>(); //No input data elements for this activity
@@ -677,7 +677,7 @@ public class Context {
 	 * @throws Exception If the activity or subject are not known,<br>
 	 * or if the access control model throws an exception.
 	 */
-	public boolean isAuthorized(String subject, String activity) throws CompatibilityException, ParameterException {
+	public boolean isAuthorized(String subject, String activity) throws CompatibilityException{
 		if(!subjects.contains(subject))
 			throw new CompatibilityException("Unknown subject: " + subject);
 		validateActivity(activity);
@@ -695,7 +695,7 @@ public class Context {
 		return true;
 	}
 	
-	public Set<String> getAuthorizedSubjects(String activity) throws CompatibilityException, ParameterException{
+	public Set<String> getAuthorizedSubjects(String activity) throws CompatibilityException{
 		validateActivity(activity);
 		Set<String> authorizedSubjects = new HashSet<String>();
 		for(String subject: getSubjects()){
@@ -719,7 +719,7 @@ public class Context {
 	 * @throws Exception If the activity is not known,<br>
 	 * or if the access control model throws an exception.
 	 */
-	public boolean isExecutable(String activity) throws CompatibilityException, ParameterException {
+	public boolean isExecutable(String activity) throws CompatibilityException{
 		validateActivity(activity);
 		return acModel != null && acModel.isExecutable(activity);
 	}
@@ -740,9 +740,6 @@ public class Context {
 		} catch (CompatibilityException e) {
 			// Cannot happen, since only activities of the context are used.
 			e.printStackTrace();
-		} catch (ParameterException e) {
-			// Cannot happen, since context does not accept "null" activities.
-			e.printStackTrace();
 		}
 		return true;
 	}
@@ -756,7 +753,7 @@ public class Context {
 	 * @throws CompatibilityException, ParameterException 
 	 * @throws IllegalArgumentException If the given activity is not known.
 	 */
-	protected void validateActivity(String activity) throws CompatibilityException, ParameterException {
+	protected void validateActivity(String activity) throws CompatibilityException{
 		Validate.notNull(activity);
 		if(!activities.contains(activity))
 			throw new CompatibilityException("Unknown activity: " + activity);
@@ -767,7 +764,7 @@ public class Context {
 	 * @param attribute Attribute to be checked.
 	 * @throws IllegalArgumentException If the given attribute is not known.
 	 */
-	protected void validateAttribute(String attribute) throws CompatibilityException, ParameterException {
+	protected void validateAttribute(String attribute) throws CompatibilityException{
 		Validate.notNull(attribute);
 		if(!attributes.contains(attribute))
 			throw new CompatibilityException("Unknown attribute: " + attribute);
@@ -778,13 +775,13 @@ public class Context {
 	 * @param attributes Attributes to be checked.
 	 * @throws IllegalArgumentException If not all given attribute are known.
 	 */
-	protected void validateAttributes(Collection<String> attributes) throws CompatibilityException, ParameterException{
+	protected void validateAttributes(Collection<String> attributes) throws CompatibilityException{
 		Validate.notNull(attributes);
 		if(!this.attributes.containsAll(attributes))
 			throw new CompatibilityException("Unknown attributes");
 	}
 	
-	protected void validateDataUsage(Map<String, Set<DataUsage>> dataUsage) throws ParameterException{
+	protected void validateDataUsage(Map<String, Set<DataUsage>> dataUsage){
 		Validate.notNull(dataUsage);
 		Validate.noNullElements(dataUsage.keySet());
 		Validate.noNullElements(dataUsage.values());
@@ -792,7 +789,7 @@ public class Context {
 			validateUsageModes(usageModes);
 	}
 	
-	public void validateACModel(ACModel acModel) throws InconsistencyException, ParameterException{
+	public void validateACModel(ACModel acModel) throws InconsistencyException{
 		validateACModel(acModel, getSubjects(), getActivities(), getAttributes(), validUsageModes);
 	}
 	
@@ -801,7 +798,7 @@ public class Context {
 								 Collection<String> subjects, 
 								 Collection<String> activities, 
 								 Collection<String> attributes, 
-								 List<DataUsage> dataUsageModes) throws ParameterException, InconsistencyException{
+								 List<DataUsage> dataUsageModes) throws InconsistencyException{
 		Validate.notNull(acModel);
 		if(!acModel.getSubjects().containsAll(subjects))
 			throw new InconsistencyException("Incompatible access control model: Missing subjects.");
@@ -813,7 +810,7 @@ public class Context {
 			throw new InconsistencyException("Incompatible access control model: Different set of valid data usage modes.");
 	}
 	
-	protected void validateUsageModes(Collection<DataUsage> usageModes) throws ParameterException{
+	protected void validateUsageModes(Collection<DataUsage> usageModes){
 		Validate.notNull(usageModes);
 		Validate.notEmpty(usageModes);
 		Validate.noNullElements(usageModes);
@@ -835,7 +832,7 @@ public class Context {
 	 * @throws ParameterException 
 	 * @throws Exception 
 	 */
-	public static Context createRandomContext(Collection<AbstractTransition<?,?>> transitions, int originatorCount, List<String> roles) throws ParameterException {
+	public static Context createRandomContext(Collection<AbstractTransition<?,?>> transitions, int originatorCount, List<String> roles){
 		return createRandomContext(PNUtils.getLabelSetFromTransitions(transitions, false), originatorCount, roles);
 	}
 	
@@ -849,7 +846,7 @@ public class Context {
 	 * @return A new randomly generated Context.
 	 * @throws Exception 
 	 */
-	public static Context createRandomContext(Set<String> activities, int originatorCount, List<String> roles) throws ParameterException {
+	public static Context createRandomContext(Set<String> activities, int originatorCount, List<String> roles){
 		Validate.notNull(activities);
 		Validate.noNullElements(activities);
 		Validate.notNegative(originatorCount);
@@ -870,7 +867,7 @@ public class Context {
 	 * @return A list of subject names.
 	 * @throws ParameterException 
 	 */
-	public static List<String> createSubjectList(int number) throws ParameterException{
+	public static List<String> createSubjectList(int number){
 		return createSubjectList(number, "%s");
 	}
 	
@@ -881,7 +878,7 @@ public class Context {
 	 * @return A list of subject names.
 	 * @throws ParameterException 
 	 */
-	public static List<String> createSubjectList(int number, String stringFormat) throws ParameterException{
+	public static List<String> createSubjectList(int number, String stringFormat){
 		Validate.notNegative(number);
 		Validate.notNull(stringFormat);
 		List<String> result = new ArrayList<String>(number);
@@ -953,8 +950,6 @@ public class Context {
 					builder.append(getACModel().getAuthorizedSubjectsForTransaction(activity));
 				} catch (CompatibilityException e) {
 					e.printStackTrace();
-				} catch (ParameterException e) {
-					e.printStackTrace();
 				}
 				builder.append('\n');
 			}
@@ -980,8 +975,6 @@ public class Context {
 					}
 				} catch (CompatibilityException e) {
 					e.printStackTrace();
-				} catch (ParameterException e) {
-					e.printStackTrace();
 				}
 				builder.append('\n');
 			}
@@ -997,8 +990,6 @@ public class Context {
 					builder.append(getAuthorizedSubjects(activity));
 				} catch (CompatibilityException e) {
 					e.printStackTrace();
-				} catch (ParameterException e) {
-					e.printStackTrace();
 				}
 				builder.append('\n');
 			}
@@ -1007,7 +998,7 @@ public class Context {
 		return builder.toString();
 	}
 	
-	public ContextProperties getProperties() throws ParameterException, PropertyException{
+	public ContextProperties getProperties() throws PropertyException{
 		if(!isValid())
 			throw new ParameterException(ErrorCode.INCONSISTENCY, "Cannot extract properties in invalid state!");
 		
@@ -1042,7 +1033,7 @@ public class Context {
 		return result;
 	}
 	
-	public void takeOverValues(Context context) throws ParameterException{
+	public void takeOverValues(Context context){
 		Validate.notNull(context);
 		
 		name = ContextProperties.defaultName;
@@ -1143,7 +1134,7 @@ public class Context {
 		return result;
 	}
 	
-	public static void main(String[] args) throws ParameterException, PropertyException, IOException {
+	public static void main(String[] args) throws PropertyException, IOException {
 		Map<String, Set<DataUsage>> usage1 = new HashMap<String, Set<DataUsage>>();
 		Set<DataUsage> modes1 = new HashSet<DataUsage>(Arrays.asList(DataUsage.READ, DataUsage.WRITE));
 		usage1.put("attribute1", modes1);

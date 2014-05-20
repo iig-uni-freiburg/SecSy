@@ -8,7 +8,6 @@ import java.util.Set;
 
 import de.invation.code.toval.misc.SetUtils;
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntryUtils;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntryUtils;
@@ -45,20 +44,20 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 									  "<p>The transformer fails, if originators cannot be chosen adequately.</p></html>";
 
 	
-	public SoDPropertyTransformer(SoDTransformerProperties properties) throws ParameterException, PropertyException {
+	public SoDPropertyTransformer(SoDTransformerProperties properties) throws PropertyException {
 		super(properties);
 	}
 	
-	public SoDPropertyTransformer(Double violationProbability) throws ParameterException {
+	public SoDPropertyTransformer(Double violationProbability){
 		super(violationProbability);
 	}
 	
-	public SoDPropertyTransformer() throws ParameterException {
+	public SoDPropertyTransformer(){
 		super();
 	}
 
 	@Override
-	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
+	protected EnforcementResult ensureProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult){
 		EnforcementResult trivialResult = super.ensureProperty(activityGroup, entries, transformerResult);
 		if(trivialResult.equals(EnforcementResult.SUCCESSFUL) || trivialResult.equals(EnforcementResult.NOTNECESSARY))
 			return trivialResult;
@@ -123,7 +122,7 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 	}
 	
 	@Override
-	protected EnforcementResult violateProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult) throws ParameterException {
+	protected EnforcementResult violateProperty(Set<String> activityGroup, List<SimulationLogEntry> entries, AbstractTransformerResult transformerResult){
 		EnforcementResult trivialResult = super.violateProperty(activityGroup, entries, transformerResult);
 		if(trivialResult.equals(EnforcementResult.SUCCESSFUL) || trivialResult.equals(EnforcementResult.NOTNECESSARY))
 			return trivialResult;
@@ -171,7 +170,7 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 	}
 
 	@Override
-	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+	public AbstractTransformerProperties getProperties() throws PropertyException {
 		SoDTransformerProperties properties = new SoDTransformerProperties();
 		fillProperties(properties);
 		return properties;

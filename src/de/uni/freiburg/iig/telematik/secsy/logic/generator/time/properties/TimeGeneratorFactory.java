@@ -6,7 +6,6 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.time.TimeScale;
 import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.time.Weekday;
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.AdjustableCaseTimeGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.RandomCaseTimeGenerator;
@@ -14,7 +13,7 @@ import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.RandomCaseTimeGe
 
 public class TimeGeneratorFactory {
 	
-	public static CaseTimeGenerator createCaseTimeGenerator(TimeProperties properties) throws ParameterException, PropertyException{
+	public static CaseTimeGenerator createCaseTimeGenerator(TimeProperties properties) throws PropertyException{
 		CaseTimeGenerator timeGenerator;
 		boolean randomSettings = 	properties.existDefaultActivityDelayBounds() ||
 								 	properties.existsDayCaseDeviation() ||
@@ -95,7 +94,7 @@ public class TimeGeneratorFactory {
 		return timeGenerator;
 	}
 	
-	public static CaseTimeGenerator parse(String propertyFile) throws IOException, ParameterException, PropertyException{
+	public static CaseTimeGenerator parse(String propertyFile) throws IOException, PropertyException{
 		return createCaseTimeGenerator(new TimeProperties(propertyFile));
 	}
 	

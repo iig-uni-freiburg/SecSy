@@ -17,7 +17,6 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.time.TimeScale;
 import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.time.Weekday;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
@@ -51,11 +50,11 @@ public class TimeProperties extends AbstractProperties{
 	public static final TimeValue defaultMaxDuration = new TimeValue();
 	public static final Double defaultDayCasesDeviation = 0.7;
 	
-	public TimeProperties() throws ParameterException {
+	public TimeProperties()  {
 		super();
 	}
 
-	public TimeProperties(String fileName) throws IOException, ParameterException {
+	public TimeProperties(String fileName) throws IOException{
 		super(fileName);
 	}
 	
@@ -63,7 +62,7 @@ public class TimeProperties extends AbstractProperties{
 		super(properties);
 	}
 	
-//	private void initialize() throws ParameterException{
+//	private void initialize() {
 //		setName(defaultName);
 //		setDefaultActivityDuration(defaultActivityDuration.getValue(), defaultActivityDuration.getScale(), defaultActivityDurationDeviation);
 //		setDefaultActivityDelay(defaultActivityDelay.getValue(), defaultActivityDelay.getScale(), defaultActivityDelayDeviation);
@@ -89,7 +88,7 @@ public class TimeProperties extends AbstractProperties{
 	
 	//-- Generator name
 	
-	public void setName(String name) throws ParameterException{
+	public void setName(String name) {
 		Validate.notNull(name);
 		Validate.notEmpty(name);
 		setProperty(TimeProperty.GENERATOR_NAME, name);
@@ -104,13 +103,13 @@ public class TimeProperties extends AbstractProperties{
 
 	//-- Start Time
 	
-	public void setStartTime(Long startTime) throws ParameterException{
+	public void setStartTime(Long startTime) {
 		Validate.notNull(startTime);
 		Validate.notNegative(startTime);
 		setProperty(TimeProperty.START_TIME, startTime);
 	}
 	
-	public Long getStartTime() throws PropertyException, ParameterException{
+	public Long getStartTime() throws PropertyException{
 		String propertyValue = getProperty(TimeProperty.START_TIME);
 		Long result = null;
 		if(propertyValue == null)
@@ -126,11 +125,11 @@ public class TimeProperties extends AbstractProperties{
 	
 	//-- Skip Days
 	
-	public void setSkipDays(Weekday... weekdays) throws ParameterException {
+	public void setSkipDays(Weekday... weekdays)  {
 		setSkipDays(Arrays.asList(weekdays));
 	}
 	
-	public void setSkipDays(Collection<Weekday> weekdays) throws ParameterException {
+	public void setSkipDays(Collection<Weekday> weekdays)  {
 		validateWeekdays(weekdays);
 		setProperty(TimeProperty.SKIP_DAYS, ArrayUtils.toString(weekdays.toArray()));
 	}
@@ -155,23 +154,23 @@ public class TimeProperties extends AbstractProperties{
 	
 	//-- Default Activity Duration
 	
-	public void setDefaultActivityDuration(TimeValue duration) throws ParameterException{
+	public void setDefaultActivityDuration(TimeValue duration) {
 		Validate.notNull(duration);
 		setDefaultActivityDuration(duration.getValue(), duration.getScale());
 	}
 	
-	public void setDefaultActivityDuration(Integer duration, TimeScale scale) throws ParameterException{
+	public void setDefaultActivityDuration(Integer duration, TimeScale scale) {
 		setDefaultActivityDuration(duration.doubleValue(), scale); 
 	}
 	
-	public void setDefaultActivityDuration(Double duration, TimeScale scale) throws ParameterException{
+	public void setDefaultActivityDuration(Double duration, TimeScale scale) {
 		validateDuration(duration);
 		Validate.notNull(scale);
 		setProperty(TimeProperty.DEFAULT_ACTIVITY_DURATION, duration);
 		setProperty(TimeProperty.DEFAULT_ACTIVITY_DURATION_SCALE, scale);
 	}
 	
-	public TimeValue getDefaultActivityDuration() throws PropertyException, ParameterException{
+	public TimeValue getDefaultActivityDuration() throws PropertyException{
 		String propertyValueDefaultActivityDuration = getProperty(TimeProperty.DEFAULT_ACTIVITY_DURATION);
 		String propertyValueDefaultActivityDurationScale = getProperty(TimeProperty.DEFAULT_ACTIVITY_DURATION_SCALE);
 		
@@ -193,7 +192,7 @@ public class TimeProperties extends AbstractProperties{
 		return new TimeValue(defaultActivityDuration, defaultActivityDurationScale);
 	}
 	
-	public Double getDefaultActivityDurationDeviation() throws PropertyException, ParameterException{
+	public Double getDefaultActivityDurationDeviation() throws PropertyException{
 		String propertyValue = getProperty(TimeProperty.DEFAULT_ACTIVITY_DURATION_DEVIATION);
 		if(propertyValue == null)
 			return null;
@@ -224,16 +223,16 @@ public class TimeProperties extends AbstractProperties{
 		return true;
 	}
 	
-	public void setDefaultActivityDuration(TimeValue duration, Double deviationPercentage) throws ParameterException{
+	public void setDefaultActivityDuration(TimeValue duration, Double deviationPercentage) {
 		Validate.notNull(duration);
 		setDefaultActivityDuration(duration.getValue(), duration.getScale(), deviationPercentage);
 	}
 	
-	public void setDefaultActivityDuration(Integer duration, TimeScale scale, Double deviationPercentage) throws ParameterException{
+	public void setDefaultActivityDuration(Integer duration, TimeScale scale, Double deviationPercentage) {
 		setDefaultActivityDuration(duration.doubleValue(), scale, deviationPercentage);
 	}
 	
-	public void setDefaultActivityDuration(Double delay, TimeScale scale, Double deviationPercentage) throws ParameterException{
+	public void setDefaultActivityDuration(Double delay, TimeScale scale, Double deviationPercentage) {
 		setDefaultActivityDuration(delay, scale);
 		Validate.notNull(deviationPercentage);
 		Validate.probability(deviationPercentage);
@@ -242,23 +241,23 @@ public class TimeProperties extends AbstractProperties{
 	
 	//-- Default Delay
 	
-	public void setDefaultActivityDelay(TimeValue delay) throws ParameterException{
+	public void setDefaultActivityDelay(TimeValue delay) {
 		Validate.notNull(delay);
 		setDefaultActivityDelay(delay.getValue(), delay.getScale());
 	}
 	
-	public void setDefaultActivityDelay(Integer delay, TimeScale scale) throws ParameterException{
+	public void setDefaultActivityDelay(Integer delay, TimeScale scale) {
 		setDefaultActivityDelay(delay.doubleValue(), scale);
 	}
 	
-	public void setDefaultActivityDelay(Double delay, TimeScale scale) throws ParameterException{
+	public void setDefaultActivityDelay(Double delay, TimeScale scale) {
 		validateDuration(delay);
 		Validate.notNull(scale);
 		setProperty(TimeProperty.DEFAULT_ACTIVITY_DELAY, delay);
 		setProperty(TimeProperty.DEFAULT_ACTIVITY_DELAY_SCALE, scale);
 	}
 	
-	public TimeValue getDefaultActivityDelay() throws PropertyException, ParameterException{
+	public TimeValue getDefaultActivityDelay() throws PropertyException{
 		String propertyValueDefaultActivityDelay = getProperty(TimeProperty.DEFAULT_ACTIVITY_DELAY);
 		String propertyValueDefaultActivityDelayScale = getProperty(TimeProperty.DEFAULT_ACTIVITY_DELAY_SCALE);
 		
@@ -280,7 +279,7 @@ public class TimeProperties extends AbstractProperties{
 		return new TimeValue(defaultActivityDelay, defaultActivityDelayScale);
 	}
 	
-	public Double getDefaultActivityDelayDeviation() throws PropertyException, ParameterException{
+	public Double getDefaultActivityDelayDeviation() throws PropertyException{
 		String propertyValue = getProperty(TimeProperty.DEFAULT_ACTIVITY_DELAY_DEVIATION);
 		if(propertyValue == null)
 			return null;
@@ -295,16 +294,16 @@ public class TimeProperties extends AbstractProperties{
 		return result;
 	}
 	
-	public void setDefaultActivityDelay(TimeValue delay, Double deviationPercentage) throws ParameterException{
+	public void setDefaultActivityDelay(TimeValue delay, Double deviationPercentage) {
 		Validate.notNull(delay);
 		setDefaultActivityDelay(delay.getValue(), delay.getScale(), deviationPercentage);
 	}
 	
-	public void setDefaultActivityDelay(Integer delay, TimeScale scale, Double deviationPercentage) throws ParameterException{
+	public void setDefaultActivityDelay(Integer delay, TimeScale scale, Double deviationPercentage) {
 		setDefaultActivityDelay(delay.doubleValue(), scale, deviationPercentage);
 	}
 	
-	public void setDefaultActivityDelay(Double delay, TimeScale scale, Double deviationPercentage) throws ParameterException{
+	public void setDefaultActivityDelay(Double delay, TimeScale scale, Double deviationPercentage) {
 		setDefaultActivityDelay(delay, scale);
 		Validate.notNull(deviationPercentage);
 		Validate.probability(deviationPercentage);
@@ -314,21 +313,21 @@ public class TimeProperties extends AbstractProperties{
 	
 	//-- Working Hours
 	
-	public void setWorkingHours(Integer startTime, Integer endTime) throws ParameterException{
+	public void setWorkingHours(Integer startTime, Integer endTime) {
 		validateWorkingHours(startTime, endTime);
 		setProperty(TimeProperty.DAY_START, startTime);
 		setProperty(TimeProperty.DAY_END, endTime);
 	}
 	
-	public Integer getOfficeHoursStart() throws PropertyException, ParameterException{
+	public Integer getOfficeHoursStart() throws PropertyException{
 		return getWorkingTime(WorkingHourProperty.DAY_START);
 	}
 	
-	public Integer getOfficeHoursEnd() throws PropertyException, ParameterException{
+	public Integer getOfficeHoursEnd() throws PropertyException{
 		return getWorkingTime(WorkingHourProperty.DAY_END);
 	}
 	
-	private Integer getWorkingTime(WorkingHourProperty dayTime) throws PropertyException, ParameterException{
+	private Integer getWorkingTime(WorkingHourProperty dayTime) throws PropertyException{
 		String dayStart = getProperty(TimeProperty.DAY_START);
 		String dayEnd = getProperty(TimeProperty.DAY_END);
 		Integer startTime = null;
@@ -353,12 +352,12 @@ public class TimeProperties extends AbstractProperties{
 	
 	//-- Cases Per Day
 	
-	public void setCasesPerDay(Integer cases) throws ParameterException{
+	public void setCasesPerDay(Integer cases) {
 		validateCasesPerDay(cases);
 		setProperty(TimeProperty.CASES_PER_DAY, cases);
 	}
 	
-	public Integer getCasesPerDay() throws PropertyException, ParameterException{
+	public Integer getCasesPerDay() throws PropertyException{
 		String propertyValue = getProperty(TimeProperty.CASES_PER_DAY);
 		Integer result = null;
 		try{
@@ -372,7 +371,7 @@ public class TimeProperties extends AbstractProperties{
 	
 	//-- Time Precision
 	
-	public void setCaseStarttimePrecision(CaseStartPrecision precision) throws ParameterException {
+	public void setCaseStarttimePrecision(CaseStartPrecision precision)  {
 		validateTimePrecision(precision);
 		setProperty(TimeProperty.CASE_STARTTIME_PRECISION, precision);
 	}
@@ -388,16 +387,16 @@ public class TimeProperties extends AbstractProperties{
 	
 	//--------Property Setting Adjustable Time Generator
 	
-	public void setActivityDuration(String activity, TimeValue duration) throws ParameterException{
+	public void setActivityDuration(String activity, TimeValue duration) {
 		Validate.notNull(duration);
 		setActivityDuration(activity, duration.getValue(), duration.getScale());
 	}
 	
-	public void setActivityDuration(String activity, Integer duration, TimeScale scale) throws ParameterException{
+	public void setActivityDuration(String activity, Integer duration, TimeScale scale) {
 		setActivityDuration(activity, duration.doubleValue(), scale);
 	}
 	
-	public void setActivityDuration(String activity, Double duration, TimeScale scale) throws ParameterException{
+	public void setActivityDuration(String activity, Double duration, TimeScale scale) {
 		Validate.notNull(activity);
 		validateDuration(duration);
 		Validate.notNull(scale);
@@ -406,7 +405,7 @@ public class TimeProperties extends AbstractProperties{
 		addActivityWithIndividualDuration(activity);
 	}
 	
-	private void addActivityWithIndividualDuration(String activity) throws ParameterException{
+	private void addActivityWithIndividualDuration(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> currentActivities = getActivitiesWithIndividualDuration();
@@ -414,13 +413,13 @@ public class TimeProperties extends AbstractProperties{
 		setProperty(TimeProperty.ACTIVITIES_WITH_INDIVIDUAL_DURATION, ArrayUtils.toString(currentActivities.toArray()));
 	}
 	
-	public boolean hasIndivivualDuration(String activity) throws ParameterException{
+	public boolean hasIndivivualDuration(String activity) {
 		Validate.notNull(activity);
 		String propertyValue = props.getProperty(String.format(DURATION_FORMAT, activity));
 		return propertyValue != null;
 	}
 
-	public TimeValue getIndividualActivityDuration(String activity) throws ParameterException, PropertyException{
+	public TimeValue getIndividualActivityDuration(String activity) throws PropertyException{
 		Validate.notNull(activity);
 		String propertyValueActivityDuration = props.getProperty(String.format(DURATION_FORMAT, activity));
 		String propertyValueActivityDurationScale = props.getProperty(String.format(DURATION_SCALE_FORMAT, activity));
@@ -463,7 +462,7 @@ public class TimeProperties extends AbstractProperties{
 		return !getActivitiesWithIndividualDuration().isEmpty();
 	}
 	
-	private void removeActivityWithIndividualDuration(String activity) throws ParameterException{
+	private void removeActivityWithIndividualDuration(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> currentActivities = getActivitiesWithIndividualDuration();
@@ -471,16 +470,16 @@ public class TimeProperties extends AbstractProperties{
 		setProperty(TimeProperty.ACTIVITIES_WITH_INDIVIDUAL_DURATION, ArrayUtils.toString(currentActivities.toArray()));
 	}
 	
-	public void setActivityDelay(String activity, TimeValue delay) throws ParameterException{
+	public void setActivityDelay(String activity, TimeValue delay) {
 		Validate.notNull(delay);
 		setActivityDelay(activity, delay.getValue(), delay.getScale());
 	}
 	
-	public void setActivityDelay(String activity, Integer delay, TimeScale scale) throws ParameterException{
+	public void setActivityDelay(String activity, Integer delay, TimeScale scale) {
 		setActivityDelay(activity, delay.doubleValue(), scale);
 	}
 
-	public void setActivityDelay(String activity, Double delay, TimeScale scale) throws ParameterException{
+	public void setActivityDelay(String activity, Double delay, TimeScale scale) {
 		Validate.notNull(activity);
 		validateDuration(delay);
 		Validate.notNull(scale);
@@ -489,7 +488,7 @@ public class TimeProperties extends AbstractProperties{
 		addActivityWithIndividualDelay(activity);
 	}
 	
-	private void addActivityWithIndividualDelay(String activity) throws ParameterException{
+	private void addActivityWithIndividualDelay(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> currentActivities = getActivitiesWithIndividualDelay();
@@ -497,13 +496,13 @@ public class TimeProperties extends AbstractProperties{
 		setProperty(TimeProperty.ACTIVITIES_WITH_INDIVIDUAL_DELAY, ArrayUtils.toString(currentActivities.toArray()));
 	}
 	
-	public boolean hasIndividualDelay(String activity) throws ParameterException{
+	public boolean hasIndividualDelay(String activity) {
 		Validate.notNull(activity);
 		String propertyValue = props.getProperty(String.format(DELAY_FORMAT, activity));
 		return propertyValue != null;
 	}
 	
-	public TimeValue getIndividualActivityDelay(String activity) throws ParameterException, PropertyException{
+	public TimeValue getIndividualActivityDelay(String activity) throws PropertyException{
 		Validate.notNull(activity);
 		String propertyValueActivityDelay = props.getProperty(String.format(DELAY_FORMAT, activity));
 		String propertyValueActivityDelayScale = props.getProperty(String.format(DELAY_SCALE_FORMAT, activity));
@@ -546,7 +545,7 @@ public class TimeProperties extends AbstractProperties{
 		return !getActivitiesWithIndividualDelay().isEmpty();
 	}
 	
-	private void removeActivityWithIndividualDelay(String activity) throws ParameterException{
+	private void removeActivityWithIndividualDelay(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		
@@ -558,16 +557,16 @@ public class TimeProperties extends AbstractProperties{
 	
 	//--------Property Setting Randomized Time Generator
 	
-	public void setActivityDuration(String activity, TimeValue duration, Double deviationPercentage) throws ParameterException{
+	public void setActivityDuration(String activity, TimeValue duration, Double deviationPercentage) {
 		Validate.notNull(duration);
 		setActivityDuration(activity, duration.getValue(), duration.getScale(), deviationPercentage);
 	}
 	
-	public void setActivityDuration(String activity, Integer duration, TimeScale scale, Double deviationPercentage) throws ParameterException{
+	public void setActivityDuration(String activity, Integer duration, TimeScale scale, Double deviationPercentage) {
 		setActivityDuration(activity, duration.doubleValue(), scale, deviationPercentage);
 	}
 	
-	public void setActivityDuration(String activity, Double duration, TimeScale scale, Double deviationPercentage) throws ParameterException{
+	public void setActivityDuration(String activity, Double duration, TimeScale scale, Double deviationPercentage) {
 		setActivityDuration(activity, duration, scale);
 		Validate.notNull(deviationPercentage);
 		Validate.probability(deviationPercentage);
@@ -575,7 +574,7 @@ public class TimeProperties extends AbstractProperties{
 		addActivityWithIndividualDurationDeviation(activity);
 	}
 	
-	private void addActivityWithIndividualDurationDeviation(String activity) throws ParameterException{
+	private void addActivityWithIndividualDurationDeviation(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> currentActivities = getActivitiesWithIndividualDurationDeviation();
@@ -595,13 +594,13 @@ public class TimeProperties extends AbstractProperties{
 		return result;
 	}
 	
-	public boolean hasIndividualDurationDeviation(String activity) throws ParameterException{
+	public boolean hasIndividualDurationDeviation(String activity) {
 		Validate.notNull(activity);
 		String propertyValue = props.getProperty(String.format(DURATION_DEVIATION_FORMAT, activity));
 		return propertyValue != null;
 	}
 	
-	public Double getIndividualActivityDurationDeviation(String activity) throws PropertyException, ParameterException{
+	public Double getIndividualActivityDurationDeviation(String activity) throws PropertyException{
 		Validate.notNull(activity);
 		String propertyValue = props.getProperty(String.format(DURATION_DEVIATION_FORMAT, activity));
 		if(propertyValue == null){
@@ -622,7 +621,7 @@ public class TimeProperties extends AbstractProperties{
 		return !getActivitiesWithIndividualDurationDeviation().isEmpty();
 	}
 	
-	private void removeActivityWithIndividualDurationDeviation(String activity) throws ParameterException{
+	private void removeActivityWithIndividualDurationDeviation(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> currentActivities = getActivitiesWithIndividualDurationDeviation();
@@ -630,16 +629,16 @@ public class TimeProperties extends AbstractProperties{
 		setProperty(TimeProperty.ACTIVITIES_WITH_INDIVIDUAL_DURATION_DEVIATION, ArrayUtils.toString(currentActivities.toArray()));
 	}
 	
-	public void setActivityDelay(String activity, TimeValue delay, Double deviationPercentage) throws ParameterException{
+	public void setActivityDelay(String activity, TimeValue delay, Double deviationPercentage) {
 		Validate.notNull(delay);
 		setActivityDelay(activity, delay.getValue(), delay.getScale(), deviationPercentage);
 	}
 	
-	public void setActivityDelay(String activity, Integer delay, TimeScale scale, Double deviationPercentage) throws ParameterException{
+	public void setActivityDelay(String activity, Integer delay, TimeScale scale, Double deviationPercentage) {
 		setActivityDelay(activity, delay.doubleValue(), scale, deviationPercentage);
 	}
 	
-	public void setActivityDelay(String activity, Double delay, TimeScale scale, Double deviationPercentage) throws ParameterException{
+	public void setActivityDelay(String activity, Double delay, TimeScale scale, Double deviationPercentage) {
 		setActivityDelay(activity, delay, scale);
 		Validate.notNull(deviationPercentage);
 		Validate.probability(deviationPercentage);
@@ -647,7 +646,7 @@ public class TimeProperties extends AbstractProperties{
 		addActivityWithIndividualDelayDeviation(activity);
 	}
 	
-	private void addActivityWithIndividualDelayDeviation(String activity) throws ParameterException{
+	private void addActivityWithIndividualDelayDeviation(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> currentActivities = getActivitiesWithIndividualDelayDeviation();
@@ -667,13 +666,13 @@ public class TimeProperties extends AbstractProperties{
 		return result;
 	}
 	
-	public boolean hasIndividualDelayDeviation(String activity) throws ParameterException{
+	public boolean hasIndividualDelayDeviation(String activity) {
 		Validate.notNull(activity);
 		String propertyValue = props.getProperty(String.format(DELAY_DEVIATION_FORMAT, activity));
 		return propertyValue != null;
 	}
 	
-	public Double getIndividualActivityDelayDeviation(String activity) throws PropertyException, ParameterException{
+	public Double getIndividualActivityDelayDeviation(String activity) throws PropertyException{
 		Validate.notNull(activity);
 		String propertyValue = props.getProperty(String.format(DELAY_DEVIATION_FORMAT, activity));
 		if(propertyValue == null){
@@ -694,7 +693,7 @@ public class TimeProperties extends AbstractProperties{
 		return !getActivitiesWithIndividualDelayDeviation().isEmpty();
 	}
 	
-	private void removeActivityWithIndividualDelayDeviation(String activity) throws ParameterException{
+	private void removeActivityWithIndividualDelayDeviation(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		Set<String> currentActivities = getActivitiesWithIndividualDelayDeviation();
@@ -702,17 +701,17 @@ public class TimeProperties extends AbstractProperties{
 		setProperty(TimeProperty.ACTIVITIES_WITH_INDIVIDUAL_DELAY_DEVIATION, ArrayUtils.toString(currentActivities.toArray()));
 	}
 	
-	public void setDefaultActivityDelayBounds(TimeValue minDelay, TimeValue maxDelay) throws ParameterException {
+	public void setDefaultActivityDelayBounds(TimeValue minDelay, TimeValue maxDelay)  {
 		Validate.notNull(minDelay);
 		Validate.notNull(minDelay);
 		setDefaultActivityDelayBounds(minDelay.getValue(), minDelay.getScale(), maxDelay.getValue(), maxDelay.getScale());
 	}
 	
-	public void setDefaultActivityDelayBounds(Integer minDelay,  TimeScale minDelayScale, Integer maxDelay, TimeScale maxDelayScale) throws ParameterException {
+	public void setDefaultActivityDelayBounds(Integer minDelay,  TimeScale minDelayScale, Integer maxDelay, TimeScale maxDelayScale)  {
 		setDefaultActivityDelayBounds(minDelay.doubleValue(), minDelayScale, maxDelay.doubleValue(), maxDelayScale); 
 	}
 	
-	public void setDefaultActivityDelayBounds(Double minDelay,  TimeScale minDelayScale, Double maxDelay, TimeScale maxDelayScale) throws ParameterException {
+	public void setDefaultActivityDelayBounds(Double minDelay,  TimeScale minDelayScale, Double maxDelay, TimeScale maxDelayScale)  {
 		validateDelayBounds(minDelay, minDelayScale, maxDelay, maxDelayScale);
 		setProperty(TimeProperty.MIN_DELAY, minDelay);
 		setProperty(TimeProperty.MIN_DELAY_SCALE, minDelayScale);
@@ -720,15 +719,15 @@ public class TimeProperties extends AbstractProperties{
 		setProperty(TimeProperty.MAX_DELAY_SCALE, maxDelayScale);
 	}
 	
-	public TimeValue getDefaultActivityMinDelay() throws PropertyException, ParameterException{
+	public TimeValue getDefaultActivityMinDelay() throws PropertyException{
 		return getDelay(DelayBound.MIN_DELAY);
 	}
 	
-	public TimeValue getDefaultActivityMaxDelay() throws PropertyException, ParameterException{
+	public TimeValue getDefaultActivityMaxDelay() throws PropertyException{
 		return getDelay(DelayBound.MAX_DELAY);
 	}
 	
-	private TimeValue getDelay(DelayBound bound) throws PropertyException, ParameterException{
+	private TimeValue getDelay(DelayBound bound) throws PropertyException{
 		String minDelayString = getProperty(TimeProperty.MIN_DELAY);
 		String maxDelayString = getProperty(TimeProperty.MAX_DELAY);
 		if(minDelayString == null && maxDelayString != null)
@@ -779,17 +778,17 @@ public class TimeProperties extends AbstractProperties{
 		}
 	}
 	
-	public void setDefaultActivityDurationBounds(TimeValue minDuration, TimeValue maxDuration) throws ParameterException {
+	public void setDefaultActivityDurationBounds(TimeValue minDuration, TimeValue maxDuration)  {
 		Validate.notNull(minDuration);
 		Validate.notNull(minDuration);
 		setDefaultActivityDurationBounds(minDuration.getValue(), minDuration.getScale(), maxDuration.getValue(), maxDuration.getScale());
 	}
 	
-	public void setDefaultActivityDurationBounds(Integer minDuration,  TimeScale minDurationScale, Integer maxDuration, TimeScale maxDurationScale) throws ParameterException {
+	public void setDefaultActivityDurationBounds(Integer minDuration,  TimeScale minDurationScale, Integer maxDuration, TimeScale maxDurationScale)  {
 		setDefaultActivityDurationBounds(minDuration.doubleValue(), minDurationScale, maxDuration.doubleValue(), maxDurationScale); 
 	}
 	
-	public void setDefaultActivityDurationBounds(Double minDuration, TimeScale minDurationScale, Double maxDuration, TimeScale maxDurationScale) throws ParameterException {
+	public void setDefaultActivityDurationBounds(Double minDuration, TimeScale minDurationScale, Double maxDuration, TimeScale maxDurationScale)  {
 		validateDelayBounds(minDuration, minDurationScale, maxDuration, maxDurationScale);
 		setProperty(TimeProperty.MIN_DURATION, minDuration);
 		setProperty(TimeProperty.MIN_DURATION_SCALE, minDurationScale);
@@ -797,15 +796,15 @@ public class TimeProperties extends AbstractProperties{
 		setProperty(TimeProperty.MAX_DURATION_SCALE, maxDurationScale);
 	}
 	
-	public TimeValue getDefaultActivityMinDuration() throws PropertyException, ParameterException{
+	public TimeValue getDefaultActivityMinDuration() throws PropertyException{
 		return getDuration(DurationBound.MIN_DURATION);
 	}
 	
-	public TimeValue getDefaultActivityMaxDuration() throws PropertyException, ParameterException{
+	public TimeValue getDefaultActivityMaxDuration() throws PropertyException{
 		return getDuration(DurationBound.MAX_DURATION);
 	}
 	
-	private TimeValue getDuration(DurationBound bound) throws PropertyException, ParameterException{
+	private TimeValue getDuration(DurationBound bound) throws PropertyException{
 		String minDurationString = getProperty(TimeProperty.MIN_DURATION);
 		String maxDurationString = getProperty(TimeProperty.MAX_DURATION);
 		if(minDurationString == null && maxDurationString != null)
@@ -856,7 +855,7 @@ public class TimeProperties extends AbstractProperties{
 		}
 	}
 	
-	public void removeIndividualActivityDuration(String activity) throws ParameterException{
+	public void removeIndividualActivityDuration(String activity) {
 		Validate.notNull(activity);	
 		Validate.notEmpty(activity);
 		props.remove(String.format(DURATION_FORMAT, activity));
@@ -864,14 +863,14 @@ public class TimeProperties extends AbstractProperties{
 		removeIndividualActivityDurationDeviation(activity);
 	}
 	
-	public void removeIndividualActivityDurationDeviation(String activity) throws ParameterException{
+	public void removeIndividualActivityDurationDeviation(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		props.remove(String.format(DURATION_DEVIATION_FORMAT, activity));
 		removeActivityWithIndividualDurationDeviation(activity);
 	}
 	
-	public void removeIndividualActivityDelay(String activity) throws ParameterException{
+	public void removeIndividualActivityDelay(String activity) {
 		Validate.notNull(activity);	
 		Validate.notEmpty(activity);
 		props.remove(String.format(DELAY_FORMAT, activity));
@@ -879,7 +878,7 @@ public class TimeProperties extends AbstractProperties{
 		removeIndividualActivityDelayDeviation(activity);
 	}
 	
-	public void removeIndividualActivityDelayDeviation(String activity) throws ParameterException{
+	public void removeIndividualActivityDelayDeviation(String activity) {
 		Validate.notNull(activity);
 		Validate.notEmpty(activity);
 		props.remove(String.format(DELAY_DEVIATION_FORMAT, activity));
@@ -916,7 +915,7 @@ public class TimeProperties extends AbstractProperties{
 		return true;
 	}
 	
-	public void setDayCasesDeviation(Double dayCasesDeviation) throws ParameterException{
+	public void setDayCasesDeviation(Double dayCasesDeviation) {
 		Validate.probability(dayCasesDeviation);
 		setProperty(TimeProperty.DAY_CASES_DEVIATION, dayCasesDeviation);
 	}
@@ -942,21 +941,21 @@ public class TimeProperties extends AbstractProperties{
 	
 	//------- Validation -------------------------------------------------------------------
 	
-	public static void validateWeekdays(Collection<Weekday> weekdays) throws ParameterException{
+	public static void validateWeekdays(Collection<Weekday> weekdays) {
 		Validate.noNullElements(weekdays);
 	}
 	
-	public static void validateDuration(Double duration) throws ParameterException{
+	public static void validateDuration(Double duration) {
 		Validate.notNull(duration);
 		Validate.notNegative(duration);
 	}
 	
-	public static void validateDelay(Double delay) throws ParameterException{
+	public static void validateDelay(Double delay) {
 		Validate.notNull(delay);
 		Validate.notNegative(delay);
 	}
 	
-	public static void validateWorkingHours(Integer startTime, Integer endTime) throws ParameterException{
+	public static void validateWorkingHours(Integer startTime, Integer endTime) {
 		Validate.notNull(startTime);
 		Validate.notNull(endTime);
 		Validate.inclusiveBetween(0, 23, startTime);
@@ -965,7 +964,7 @@ public class TimeProperties extends AbstractProperties{
 		Validate.minMax(startTime, endTime);
 	}
 	
-	public static void validateDelayBounds(Double minDelay,  TimeScale minDelayScale, Double maxDelay, TimeScale maxDelayScale) throws ParameterException{
+	public static void validateDelayBounds(Double minDelay,  TimeScale minDelayScale, Double maxDelay, TimeScale maxDelayScale) {
 		Validate.notNull(minDelay);
 		Validate.notNull(maxDelay);
 		Validate.notNegative(minDelay);
@@ -980,12 +979,12 @@ public class TimeProperties extends AbstractProperties{
 		Validate.isFalse(minDelayV.isBiggerThan(maxDelayV));
 	}
 	
-	public static void validateCasesPerDay(Integer casesPerDay) throws ParameterException{
+	public static void validateCasesPerDay(Integer casesPerDay) {
 		Validate.notNull(casesPerDay);
 		Validate.notNegative(casesPerDay);
 	}
 	
-	public static void validateTimePrecision(CaseStartPrecision precision) throws ParameterException{
+	public static void validateTimePrecision(CaseStartPrecision precision) {
 		Validate.notNull(precision);
 	}
 	

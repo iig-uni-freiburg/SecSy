@@ -10,8 +10,8 @@ import de.invation.code.toval.misc.valuegeneration.StochasticValueGenerator;
 import de.invation.code.toval.properties.AbstractProperties;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.AttributeValueGenerator;
 
 
@@ -36,7 +36,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 		
 	//-- Container name
 		
-	public void setName(String name) throws ParameterException{
+	public void setName(String name) {
 		validateStringValue(name);
 		setProperty(CaseDataContainerProperty.CONTAINER_NAME, name);
 	}
@@ -51,7 +51,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 	
 //	//-- Context name
 //
-//	public void setContextName(String contextName) throws ParameterException{
+//	public void setContextName(String contextName) {
 //		Validate.notNull(contextName);
 //		Validate.notEmpty(contextName);
 //		setProperty(CaseDataContainerProperty.CONTEXT_NAME, contextName);
@@ -70,7 +70,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 	
 	//-- Attribute value generator
 	
-	public void setAttributeValueGenerator(AttributeValueGenerator generator) throws ParameterException{
+	public void setAttributeValueGenerator(AttributeValueGenerator generator) {
 		Validate.notNull(generator);
 		
 		setDefaultValue(generator.getDefaultValue());
@@ -80,7 +80,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 		}
 	}
 	
-	public AttributeValueGenerator getAttributeValueGenerator() throws PropertyException, ParameterException{
+	public AttributeValueGenerator getAttributeValueGenerator() throws PropertyException{
 		AttributeValueGenerator result = new AttributeValueGenerator();
 		
 		result.setDefaultValue(getDefaultValue());
@@ -100,7 +100,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 	
 	//-- Default value
 	
-	private void setDefaultValue(Object defaultValue) throws ParameterException{
+	private void setDefaultValue(Object defaultValue) {
 		if(defaultValue == null){
 			setProperty(CaseDataContainerProperty.DEFAULT_VALUE, "null");
 			setProperty(CaseDataContainerProperty.DEFAULT_VALUE_TYPE, Object.class.getName().toString());
@@ -110,7 +110,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 		}
 	}
 	
-	private Object getDefaultValue() throws PropertyException, ParameterException {
+	private Object getDefaultValue() throws PropertyException {
 		String propertyValue = getProperty(CaseDataContainerProperty.DEFAULT_VALUE);
 		String propertyValueType = getProperty(CaseDataContainerProperty.DEFAULT_VALUE_TYPE);
 		if(propertyValue == null)
@@ -134,7 +134,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 	
 	//-- Value generator
 	
-	private void addValueGenerator(String attribute, StochasticValueGenerator<?> valueGenerator) throws ParameterException{
+	private void addValueGenerator(String attribute, StochasticValueGenerator<?> valueGenerator) {
 		Validate.notNull(attribute);
 		Validate.notNull(valueGenerator);
 		if(!valueGenerator.isValid())
@@ -168,7 +168,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 		return result;
 	}
 	
-	private StochasticValueGenerator<?> getValueGenerator(String valueGeneratorName) throws ParameterException, PropertyException{
+	private StochasticValueGenerator<?> getValueGenerator(String valueGeneratorName) throws PropertyException{
 		Validate.notNull(valueGeneratorName);
 		
 		String propertyValue = props.getProperty(valueGeneratorName);

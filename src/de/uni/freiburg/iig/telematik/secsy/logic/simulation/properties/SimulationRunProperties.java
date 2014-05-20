@@ -9,7 +9,6 @@ import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.AbstractProperties;
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.format.LogFormatType;
 
@@ -24,11 +23,11 @@ public class SimulationRunProperties extends AbstractProperties{
 	public static final LogFormatType defaultLogFormat = LogFormatType.MXML;
 	
 	
-	public SimulationRunProperties() throws ParameterException {
+	public SimulationRunProperties(){
 		super();
 	}
 
-	public SimulationRunProperties(String fileName) throws IOException, ParameterException {
+	public SimulationRunProperties(String fileName) throws IOException{
 		super(fileName);
 	}
 	
@@ -44,7 +43,7 @@ public class SimulationRunProperties extends AbstractProperties{
 	
 	//-- Simulation run name
 	
-	public void setName(String name) throws ParameterException{
+	public void setName(String name){
 		Validate.notNull(name);
 		Validate.notEmpty(name);
 		setProperty(SimulationRunProperty.SIMULATION_RUN_NAME, name);
@@ -60,7 +59,7 @@ public class SimulationRunProperties extends AbstractProperties{
 	
 	//-- Net name
 	
-	public void setNetName(String name) throws ParameterException{
+	public void setNetName(String name){
 		Validate.notNull(name);
 		Validate.notEmpty(name);
 		setProperty(SimulationRunProperty.NET_NAME, name);
@@ -76,7 +75,7 @@ public class SimulationRunProperties extends AbstractProperties{
 
 	//-- Passes
 	
-	public void setPasses(Integer passes) throws ParameterException{
+	public void setPasses(Integer passes){
 		Validate.notNull(passes);
 		setProperty(SimulationRunProperty.PASSES, passes);
 	}
@@ -98,7 +97,7 @@ public class SimulationRunProperties extends AbstractProperties{
 	
 	//-- Transformer names
 	
-	public void setTransformerNames(Set<String> transformerNames) throws ParameterException{
+	public void setTransformerNames(Set<String> transformerNames){
 		Validate.notNull(transformerNames);
 		Validate.noNullElements(transformerNames);
 		

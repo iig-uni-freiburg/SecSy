@@ -38,12 +38,12 @@ public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer 
 
 	private Set<String> skipActivities = new HashSet<String>();
 	
-	public SkipActivitiesTransformer(SkipActivitiesTransformerProperties properties) throws ParameterException, PropertyException {
+	public SkipActivitiesTransformer(SkipActivitiesTransformerProperties properties) throws PropertyException {
 		super(properties);
 		skipActivities = properties.getSkipActivities();
 	}
 
-	public SkipActivitiesTransformer(Double activationProbability, Integer maxAppliances) throws ParameterException {
+	public SkipActivitiesTransformer(Double activationProbability, Integer maxAppliances){
 		super(activationProbability, maxAppliances);
 	}
 	
@@ -77,7 +77,7 @@ public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer 
 		return Collections.unmodifiableSet(skipActivities);
 	}
 	
-	public void setSkipActivities(Set<String> skipActivities) throws ParameterException{
+	public void setSkipActivities(Set<String> skipActivities){
 		SkipActivitiesTransformerProperties.validateSkipActivities(skipActivities);
 		this.skipActivities.clear();
 		this.skipActivities.addAll(skipActivities);
@@ -88,7 +88,7 @@ public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer 
 	}
 	
 	@Override
-	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event) throws ParameterException {
+	protected TraceTransformerResult applyTransformation(TraceTransformerEvent event){
 		TraceTransformerResult result = super.applyTransformation(event);
 		if(result.isSuccess()){
 			for(LogEntry transformedEntry: transformedEntries){
@@ -99,7 +99,7 @@ public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer 
 	}
 	
 	@Override
-	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult) throws ParameterException {
+	protected boolean applyEntryTransformation(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, TraceTransformerResult transformerResult){
 		if(!isValid()){
 			addMessageToResult(getErrorMessage("Cannot apply transformer in invalid state: No time generator reference."), transformerResult);
 			return false;
@@ -192,7 +192,7 @@ public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer 
 		return false;
 	}
 	
-	protected void correctSuccessorTime(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, long timeCorrection) throws ParameterException, LockingException{
+	protected void correctSuccessorTime(LogTrace<SimulationLogEntry> trace, SimulationLogEntry entry, long timeCorrection) throws LockingException{
 		
 		if(timeCorrection == 0)
 			return;
@@ -207,12 +207,12 @@ public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer 
 		}
 	}
 	
-	protected boolean skipAllowed(String activity) throws ParameterException{
+	protected boolean skipAllowed(String activity){
 		Validate.notNull(activity);
 		return skipActivities.contains(activity);
 	}
 	
-	protected String getCustomSuccessMessage(String activity) throws ParameterException{
+	protected String getCustomSuccessMessage(String activity){
 		Validate.notNull(activity);
 		return getNoticeMessage(String.format(CUSTOM_SUCCESS_FORMAT, activity));
 	}
@@ -223,13 +223,13 @@ public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer 
 	}
 
 	@Override
-	protected void fillProperties(AbstractTransformerProperties properties) throws ParameterException, PropertyException {
+	protected void fillProperties(AbstractTransformerProperties properties) throws PropertyException {
 		super.fillProperties(properties);
 		((SkipActivitiesTransformerProperties) properties).setSkipActivities(skipActivities);
 	}
 
 	@Override
-	public AbstractTransformerProperties getProperties() throws ParameterException, PropertyException {
+	public AbstractTransformerProperties getProperties() throws PropertyException {
 		SkipActivitiesTransformerProperties properties = new SkipActivitiesTransformerProperties();
 		fillProperties(properties);
 		return properties;

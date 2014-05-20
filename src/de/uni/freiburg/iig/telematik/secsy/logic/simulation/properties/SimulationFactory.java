@@ -3,13 +3,12 @@ package de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties;
 import java.io.IOException;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
 
 
 public class SimulationFactory {
 	
-	public static Simulation createSimulation(SimulationProperties properties) throws ParameterException, PropertyException{
+	public static Simulation createSimulation(SimulationProperties properties) throws PropertyException{
 		Simulation simulation = new Simulation();
 
 		//TODO
@@ -60,11 +59,11 @@ public class SimulationFactory {
 		return simulation;
 	}
 	
-	public static SimulationProperties parseProperties(String propertyFile) throws IOException, ParameterException, PropertyException{
+	public static SimulationProperties parseProperties(String propertyFile) throws IOException, PropertyException{
 		return new SimulationProperties(propertyFile);
 	}
 	
-	public static Simulation parseSimulation(String propertyFile) throws IOException, ParameterException, PropertyException{
+	public static Simulation parseSimulation(String propertyFile) throws IOException, PropertyException{
 		return createSimulation(parseProperties(propertyFile));
 	}
 	

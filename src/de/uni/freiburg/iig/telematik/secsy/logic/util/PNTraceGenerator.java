@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
@@ -26,8 +25,7 @@ public class PNTraceGenerator {
 	   M extends AbstractMarking<S>, 
 	   S extends Object> 
 
-	   TraceGenerationResult generateTraces(AbstractPetriNet<P,T,F,M,S> net, int numTraces, Integer maxEventsPerTrace, boolean useLabelNames) 
-                   throws ParameterException{
+	   TraceGenerationResult generateTraces(AbstractPetriNet<P,T,F,M,S> net, int numTraces, Integer maxEventsPerTrace, boolean useLabelNames) {
 
 		Validate.notNull(net);
 		ArrayList<LogTrace<LogEntry>> traces = new ArrayList<LogTrace<LogEntry>>(numTraces);

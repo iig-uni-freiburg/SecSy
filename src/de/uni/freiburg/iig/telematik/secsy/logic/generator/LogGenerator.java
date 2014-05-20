@@ -32,8 +32,6 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TransformerListe
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 
-
-
 public abstract class LogGenerator implements TransformerListener{
 	
 	public static final String DEFAULT_LOG_PATH = "logs/";
@@ -63,17 +61,17 @@ public abstract class LogGenerator implements TransformerListener{
 	//------- Constructors -------------------------------------------------------------------
 	
 	public LogGenerator(AbstractLogFormat logFormat, LogPerspective logPerspective) 
-			throws ParameterException, PerspectiveException, IOException {
+			throws PerspectiveException, IOException {
 		this(logFormat, logPerspective, DEFAULT_LOG_PATH, DEFAULT_FILE_NAME);
 	}
 	
 	public LogGenerator(AbstractLogFormat logFormat, LogPerspective logPerspective, String fileName) 
-			throws ParameterException, PerspectiveException, IOException {
+			throws PerspectiveException, IOException {
 		this(logFormat, logPerspective, DEFAULT_LOG_PATH, fileName);
 	}
 	
 	public LogGenerator(AbstractLogFormat logFormat, LogPerspective logPerspective, String logPath, String fileName) 
-			throws ParameterException, PerspectiveException, IOException {
+			throws PerspectiveException, IOException {
 		initialize(logFormat, logPerspective, logPath, fileName);
 		
 	}
@@ -114,47 +112,47 @@ public abstract class LogGenerator implements TransformerListener{
 		return fileName;
 	}
 	
-	public void registerTraceStartListener(TraceStartListener listener) throws ParameterException{
+	public void registerTraceStartListener(TraceStartListener listener){
 		Validate.notNull(listener);
 		traceStartListeners.add(listener);
 	}
 	
-	public void removeTraceStartListener(TraceStartListener listener) throws ParameterException{
+	public void removeTraceStartListener(TraceStartListener listener){
 		Validate.notNull(listener);
 		traceStartListeners.remove(listener);
 	}
 	
-	public void registerTraceCompletionListener(TraceCompletionListener listener) throws ParameterException{
+	public void registerTraceCompletionListener(TraceCompletionListener listener){
 		Validate.notNull(listener);
 		traceCompletionListeners.add(listener);
 	}
 	
-	public void removeTraceCompletionListener(TraceCompletionListener listener) throws ParameterException{
+	public void removeTraceCompletionListener(TraceCompletionListener listener){
 		Validate.notNull(listener);
 		traceCompletionListeners.remove(listener);
 	}
 	
-	public void registerTraceListener(TraceListener listener) throws ParameterException{
+	public void registerTraceListener(TraceListener listener){
 		Validate.notNull(listener);
 		traceListeners.add(listener);
 	}
 	
-	public void removeTraceListener(TraceListener listener) throws ParameterException{
+	public void removeTraceListener(TraceListener listener){
 		Validate.notNull(listener);
 		traceListeners.remove(listener);
 	}
 	
-	public void registerEntryListener(EntryListener listener) throws ParameterException{
+	public void registerEntryListener(EntryListener listener){
 		Validate.notNull(listener);
 		entryListeners.add(listener);
 	}
 	
-	public void removeEntryListener(EntryListener listener) throws ParameterException{
+	public void removeEntryListener(EntryListener listener){
 		Validate.notNull(listener);
 		entryListeners.remove(listener);
 	}
 	
-	public void addSimulationListener(SimulationListener listener) throws ParameterException{
+	public void addSimulationListener(SimulationListener listener){
 		simulationListenerSupport.addSimulationListener(listener);
 	}
 	
@@ -165,7 +163,7 @@ public abstract class LogGenerator implements TransformerListener{
 	//------- Methods to set up the log generator --------------------------------------------
 	
 	protected void initialize(AbstractLogFormat logFormat, LogPerspective logPerspective, String logPath, String fileName) 
-			throws ParameterException, PerspectiveException,  IOException {
+			throws PerspectiveException,  IOException {
 		this.logFormat = logFormat;
 		setLogPerspective(logPerspective);
 		prepareLogWriter(logFormat, logPath, fileName);
@@ -173,7 +171,7 @@ public abstract class LogGenerator implements TransformerListener{
 		this.logPath = logPath;
 	}
 	
-	public void setLogPath(String path) throws CompatibilityException, PerspectiveException, ParameterException, IOException{
+	public void setLogPath(String path) throws CompatibilityException, PerspectiveException, IOException{
 		prepareLogWriter(getLogFormat(), path, fileName);
 		this.logPath = path;
 	}
@@ -186,7 +184,7 @@ public abstract class LogGenerator implements TransformerListener{
 	 * @throws ParameterException - if some parameters are null or file name is an empty string.
 	 * @throws IOException - if output file creation or header writing cause an exception.
 	 */
-	protected void prepareLogWriter(AbstractLogFormat logFormat, String logPath, String fileName) throws CompatibilityException, PerspectiveException, ParameterException, IOException {
+	protected void prepareLogWriter(AbstractLogFormat logFormat, String logPath, String fileName) throws CompatibilityException, PerspectiveException, IOException {
 		if(logWriter != null){
 			logWriter.closeFile();
 		}
@@ -199,13 +197,13 @@ public abstract class LogGenerator implements TransformerListener{
 	 * @throws PerspectiveException  if the given log perspective is incompatible with the generators' log format.
 	 * @throws ParameterException if the given log perspective is <code>null</code>.
 	 */
-	protected void setLogPerspective(LogPerspective logPerspective) throws PerspectiveException, ParameterException{
+	protected void setLogPerspective(LogPerspective logPerspective) throws PerspectiveException{
 		Validate.notNull(logPerspective);
 		this.logPerspective = logPerspective;
 		logFormat.setLogPerspective(logPerspective);
 	}
 	
-	public void setCaseTimeGenerator(CaseTimeGenerator caseTimeGenerator) throws ParameterException{
+	public void setCaseTimeGenerator(CaseTimeGenerator caseTimeGenerator){
 		Validate.notNull(caseTimeGenerator);
 		if(this.caseTimeGenerator != null){
 			removeTraceStartListener(this.caseTimeGenerator);
@@ -216,7 +214,7 @@ public abstract class LogGenerator implements TransformerListener{
 		this.caseTimeGenerator = caseTimeGenerator;
 	}
 	
-	public void setLogEntryGenerator(LogEntryGenerator logEntryGenerator) throws ParameterException{
+	public void setLogEntryGenerator(LogEntryGenerator logEntryGenerator){
 		Validate.notNull(logEntryGenerator);
 		if(this.logEntryGenerator != null){
 			removeTraceCompletionListener(this.logEntryGenerator);
@@ -244,26 +242,21 @@ public abstract class LogGenerator implements TransformerListener{
 	
 	//------- Functionality ------------------------------------------------------------------
 	
-	public void addSimulationRuns(SimulationRun... runs) throws ParameterException {
+	public void addSimulationRuns(SimulationRun... runs){
 		addSimulationRuns(Arrays.asList(runs));
 	}
 	
-	public void addSimulationRuns(Collection<SimulationRun> runs) throws ParameterException{
+	public void addSimulationRuns(Collection<SimulationRun> runs){
 		Validate.notNull(runs);
 		for(SimulationRun simulationRun: runs){
 			addSimulationRun(simulationRun);
 		}
 	}
 	
-	public void addSimulationRun(SimulationRun simulationRun) throws ParameterException{
+	public void addSimulationRun(SimulationRun simulationRun){
 		Validate.notNull(simulationRun);
 		if(simulationRuns.add(simulationRun)){
-			try {
-				registerTraceCompletionListener(simulationRun);
-			} catch (ParameterException e) {
-				// Cannot happen, since simulation run is not null
-				e.printStackTrace();
-			}
+			registerTraceCompletionListener(simulationRun);
 			simulationRun.getTraceTransformerManager().registerTransformerListener(this);
 		}
 	}
@@ -277,13 +270,8 @@ public abstract class LogGenerator implements TransformerListener{
 	}
 	
 	public void removeAllSimulationRuns(){
-		try {
-			for (SimulationRun run : simulationRuns)
-				removeTraceCompletionListener(run);
-		} catch (ParameterException e) {
-			// Cannot happen, since all runs are taken from the list simulationRuns and thus are not null
-			e.printStackTrace();
-		}
+		for (SimulationRun run : simulationRuns)
+			removeTraceCompletionListener(run);
 		simulationRuns.clear();
 	}
 	
@@ -373,23 +361,13 @@ public abstract class LogGenerator implements TransformerListener{
 	public Integer startNextCase() {
 		startedTraces++;
 		for (TraceStartListener listener : traceStartListeners)
-			try {
-				listener.traceStarted(startedTraces);
-			} catch (ParameterException e) {
-				// Cannot happen, since startedTraces is always positive.
-				e.printStackTrace();
-			}
+			listener.traceStarted(startedTraces);
 		return startedTraces;
 	}
 
 	public void completeCase(int caseNumber) {
 		for (TraceCompletionListener listener : traceCompletionListeners)
-			try {
-				listener.traceCompleted(caseNumber);
-			} catch (ParameterException e) {
-				// Cannot happen, since startedTraces is always positive.
-				e.printStackTrace();
-			}
+			listener.traceCompleted(caseNumber);
 	}
 	
 	/**

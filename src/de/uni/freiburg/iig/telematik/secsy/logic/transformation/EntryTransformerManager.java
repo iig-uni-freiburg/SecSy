@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
@@ -47,19 +46,13 @@ public class EntryTransformerManager {
 	 * @throws ParameterException 
 	 * @throws IllegalArgumentException If the given log entry generator is incompatible to one of the managed transformers.
 	 */
-	public void setSource(LogEntryGenerator source) throws ParameterException {
+	public void setSource(LogEntryGenerator source){
 		Validate.notNull(source);
-		try{
-			for(AbstractEntryTransformer transformer: entryTransformers){
-				for(EntryField contextType: transformer.requiredEntryFields()){
-					if(!source.providesLogInformation(contextType))
-						throw new IllegalArgumentException("Transformer requirement ("+contextType+") cannot be provided by source.");
-				}
+		for (AbstractEntryTransformer transformer : entryTransformers) {
+			for (EntryField contextType : transformer.requiredEntryFields()) {
+				if (!source.providesLogInformation(contextType))
+					throw new IllegalArgumentException("Transformer requirement (" + contextType + ") cannot be provided by source.");
 			}
-		}catch(ParameterException e){
-			// Cannot happen, since transformers are required to never return null-values
-			// in the method transformer.requiredContextInformation().
-			e.printStackTrace();
 		}
 		this.entryGenerator = source;
 	}
@@ -82,17 +75,14 @@ public class EntryTransformerManager {
 	 *             If the given entry transformer is incompatible with the transformer
 	 *             manager source.
 	 */
-	public void addTransformer(AbstractEntryTransformer entryTransformer) throws MissingRequirementException, ParameterException {
+	public void addTransformer(AbstractEntryTransformer entryTransformer) throws MissingRequirementException{
 		Validate.notNull(entryTransformer);
-		try {
-			if (entryGenerator != null)
-				for (EntryField contextType : entryTransformer.requiredEntryFields())
-					if (!entryGenerator.providesLogInformation(contextType))
-						throw new MissingRequirementException(contextType);
-		} catch (ParameterException e) {
-			// Cannot happen, since transformers are required to never return
-			// null-values in the method transformer.requiredContextInformation().
-			e.printStackTrace();
+		if (entryGenerator != null) {
+			for (EntryField contextType : entryTransformer.requiredEntryFields()) {
+				if (!entryGenerator.providesLogInformation(contextType)) {
+					throw new MissingRequirementException(contextType);
+				}
+			}
 		}
 		this.entryTransformers.add(entryTransformer);
 	}
@@ -110,7 +100,7 @@ public class EntryTransformerManager {
 	 * @param caseNumber
 	 * @throws ParameterException 
 	 */
-	public void applyTransformers(LogEntry logEntry, int caseNumber) throws ParameterException{
+	public void applyTransformers(LogEntry logEntry, int caseNumber){
 		EntryTransformerEvent event = new EntryTransformerEvent(logEntry, caseNumber, entryGenerator);
 		for(AbstractEntryTransformer tl: entryTransformers){
 			AbstractTransformerResult transformerResult = tl.transformLogEntry(event);

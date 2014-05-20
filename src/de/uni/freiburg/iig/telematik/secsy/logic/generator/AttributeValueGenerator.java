@@ -7,7 +7,6 @@ import java.util.Set;
 
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerator;
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
@@ -58,7 +57,7 @@ public class AttributeValueGenerator {
 	 * @param valueGenerator Value generator for the attribute.
 	 * @throws ParameterException 
 	 */
-	public void setValueGeneration(String attribute, ValueGenerator<?> valueGenerator) throws ParameterException{
+	public void setValueGeneration(String attribute, ValueGenerator<?> valueGenerator){
 		Validate.notNull(attribute);
 		Validate.notNull(valueGenerator);
 //		if(!valueGenerator.isValid())
@@ -70,7 +69,7 @@ public class AttributeValueGenerator {
 		valueGenerators.remove(attribute);
 	}
 	
-	public ValueGenerator<?> getValueGenerator(String attribute) throws ParameterException{
+	public ValueGenerator<?> getValueGenerator(String attribute){
 		Validate.notNull(attribute);
 		return valueGenerators.get(attribute);
 	}
@@ -79,7 +78,7 @@ public class AttributeValueGenerator {
 		return Collections.unmodifiableSet(valueGenerators.keySet());
 	}
 	
-	public Class getAttributeValueClass(String attribute) throws ParameterException{
+	public Class getAttributeValueClass(String attribute){
 		Validate.notNull(attribute);
 		if(!valueGenerators.containsKey(attribute))
 			return null;
@@ -100,7 +99,7 @@ public class AttributeValueGenerator {
 	 * @throws Exception If the value generator throws an Exception.
 	 * @see {@link #setDefaultValue(Object)}
 	 */
-	public Object getNewValueFor(String attribute) throws ParameterException {
+	public Object getNewValueFor(String attribute){
 		Validate.notNull(attribute);
 		if(!valueGenerators.containsKey(attribute)){
 			return defaultValue;
@@ -119,12 +118,8 @@ public class AttributeValueGenerator {
 	public AttributeValueGenerator clone(){
 		AttributeValueGenerator result = new AttributeValueGenerator();
 		result.setDefaultValue(defaultValue);
-		try{
-			for(String attribute: getAttributes()){
-				result.setValueGeneration(attribute, getValueGenerator(attribute).clone());
-			}
-		}catch(ParameterException e){
-			return null;
+		for(String attribute: getAttributes()){
+			result.setValueGeneration(attribute, getValueGenerator(attribute).clone());
 		}
 		return result;
 	}
@@ -137,9 +132,7 @@ public class AttributeValueGenerator {
 		for(String attribute: getAttributes()){
 			builder.append("attribute: " + attribute);
 			builder.append('\n');
-			try {
-				builder.append(getValueGenerator(attribute));
-			} catch (ParameterException e) {}
+			builder.append(getValueGenerator(attribute));
 		}
 		return builder.toString();
 	}

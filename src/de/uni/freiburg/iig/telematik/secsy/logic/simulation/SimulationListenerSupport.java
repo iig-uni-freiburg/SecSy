@@ -3,7 +3,6 @@ package de.uni.freiburg.iig.telematik.secsy.logic.simulation;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
@@ -11,7 +10,7 @@ public class SimulationListenerSupport {
 	
 	private Set<SimulationListener> listeners = new HashSet<SimulationListener>();
 	
-	public void addSimulationListener(SimulationListener listener) throws ParameterException{
+	public void addSimulationListener(SimulationListener listener){
 		Validate.notNull(listener);
 		this.listeners.add(listener);
 	}

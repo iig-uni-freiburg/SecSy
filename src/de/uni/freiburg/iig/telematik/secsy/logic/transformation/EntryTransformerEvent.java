@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.transformation;
 
-import de.invation.code.toval.validate.ParameterException;
+
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 
@@ -10,7 +10,7 @@ public class EntryTransformerEvent {
 	public int caseNumber;
 	public Object sender;
 	
-	public EntryTransformerEvent(LogEntry logEntry, int caseNumber, Object sender) throws ParameterException {
+	public EntryTransformerEvent(LogEntry logEntry, int caseNumber, Object sender){
 		Validate.notNull(logEntry);
 		Validate.notNull(sender);
 		Validate.bigger(caseNumber, 0);
