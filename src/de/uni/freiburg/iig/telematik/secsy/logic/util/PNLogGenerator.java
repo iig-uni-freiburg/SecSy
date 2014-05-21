@@ -13,13 +13,22 @@ import de.uni.freiburg.iig.telematik.jawl.format.PlainTraceLogFormat;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import de.uni.freiburg.iig.telematik.jawl.writer.LogWriter;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 
 public class PNLogGenerator {
 	
 	private static final String doneformat = "done [%s]";
 
-	public static TraceGenerationResult generateLog(AbstractPetriNet net, int numTraces, Integer maxEventsPerTrace, boolean useLabelNames, String logPath, String logName, LogFormatType... logFormatTypes) throws Exception{
+	public static <P extends AbstractPlace<F,S>, 
+	   			   T extends AbstractTransition<F,S>, 
+	   			   F extends AbstractFlowRelation<P,T,S>, 
+	   			   M extends AbstractMarking<S>, 
+	   			   S extends Object> 
+	TraceGenerationResult generateLog(AbstractPetriNet<P,T,F,M,S> net, int numTraces, Integer maxEventsPerTrace, boolean useLabelNames, String logPath, String logName, LogFormatType... logFormatTypes) throws Exception{
 		Debug.message("Generating Log... ");
 		List<LogWriter> logWriters = new ArrayList<LogWriter>();
 		for(LogFormatType formatType: logFormatTypes){

@@ -167,7 +167,7 @@ public class SimulationComponents {
 			}
 		}
 		MessageDialog.getInstance().newLine();
-		
+
 		// Load contexts
 		MessageDialog.getInstance().addMessage(loadingStep++ + ". Searching for contexts:");
 		List<String> contextFiles = null;
@@ -342,7 +342,6 @@ public class SimulationComponents {
 			}
 		}
 		MessageDialog.getInstance().newLine();
-		
 	}
 	
 	private ACModel loadACModel(String acFile) throws PropertyException, ParameterException, IOException {

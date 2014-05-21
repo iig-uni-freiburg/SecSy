@@ -114,11 +114,11 @@ public class TraceLogGenerator extends LogGenerator{
 			}
 		} catch (PerspectiveException e) {
 			//Cannot happen since TraceLogGenerator enforces trace perspective.
-			e.printStackTrace();
+			throw new SimulationException("Cannot write generated log trace [perspective exception].<br>Reason: " + e.getMessage());
 		} catch (PNException e) {
-			e.printStackTrace();
+			throw new SimulationException("Exception during Petri net execution.<br>Reason: " + e.getMessage());
 		} catch (ValueGenerationException e) {
-			e.printStackTrace();
+			throw new SimulationException("Exception during attribute value generation.<br>Reason: " + e.getMessage());
 		}
 	}
 	

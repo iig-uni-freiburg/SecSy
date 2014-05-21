@@ -8,10 +8,12 @@ import java.util.Map;
 
 import de.invation.code.toval.misc.CollectionUtils;
 import de.invation.code.toval.misc.FormatUtils;
+import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.exception.MissingRequirementException;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
 
@@ -78,7 +80,7 @@ public class TraceTransformerManager {
 		traceTransformers.add(traceTransformer);
 	}
 	
-	public void applyTransformers(LogTrace logTrace){
+	public void applyTransformers(LogTrace<SimulationLogEntry> logTrace){
 		if(!traceTransformers.isEmpty()){
 			TraceTransformerEvent event = new TraceTransformerEvent(logTrace, source);
 			for(AbstractTraceTransformer traceTransformer: traceTransformers){

@@ -72,8 +72,6 @@ public class Simulator extends JFrame {
 			//There is no path and it is either not possible to set a path or the user aborted the corresponding dialog.
 			System.exit(0);
 		}
-		//Trigger the loading of simulation components
-		SimulationComponents.getInstance();
 		
 		setPreferredSize(PREFERRED_SIZE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

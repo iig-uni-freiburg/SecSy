@@ -41,7 +41,7 @@ public class SimulationRun implements TraceCompletionListener{
 
 	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 			   								   int passes,
-			   								   PNTraverser traverser){
+			   								   PNTraverser<T> traverser){
 		setPasses(passes);
 		setPetriNet(petriNet);
 		setPNTraverser(traverser);

@@ -47,7 +47,7 @@ public class TransformerFactory {
 		String transformerClassName = properties.getType();
 		try {
 			Class<?> transformerClass = Class.forName(transformerClassName);
-			Constructor constructor = transformerClass.getConstructor(propertiesClass.get(transformerClass));
+			Constructor<?> constructor = transformerClass.getConstructor(propertiesClass.get(transformerClass));
 			properties = (AbstractTransformerProperties) propertiesClass.get(transformerClass).newInstance();
 			properties.load(file);
 			Object newTransformer = constructor.newInstance((propertiesClass.get(transformerClass)).cast(properties));
