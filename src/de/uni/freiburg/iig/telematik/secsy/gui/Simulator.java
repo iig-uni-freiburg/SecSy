@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.secsy.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -54,7 +55,7 @@ public class Simulator extends JFrame {
 
 	private static final long serialVersionUID = -8445477529677450528L;
 	
-	private static final Dimension PREFERRED_SIZE = new Dimension(500,500);
+	public static final Dimension PREFERRED_SIZE = new Dimension(500,500);
 	
 	private final CloseAction closeAction = new CloseAction();
 	
@@ -77,9 +78,11 @@ public class Simulator extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setUpGUI();
+		Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
+		int wdwLeft = (int) ((screenSize.width/2.0) - ((PREFERRED_SIZE.width + MessageDialog.PREFERRED_SIZE.width + 10)/2.0));
+	    int wdwTop = screenSize.height / 2 - PREFERRED_SIZE.height / 2; 
 		pack();
-		
-		setLocationRelativeTo(null);
+	    setLocation(wdwLeft, wdwTop);
 	}
 	
 	private boolean checkSimulationDirectory(){

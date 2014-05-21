@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,16 +11,19 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 
-public class MessageDialog extends JFrame {
+import de.uni.freiburg.iig.telematik.secsy.gui.Simulator;
+
+public class MessageDialog extends JDialog {
 
 	private static final long serialVersionUID = 463955903504300506L;
+	public static final Dimension PREFERRED_SIZE = new Dimension(500,500);
 	
 	private static MessageDialog instance = null;
 	
@@ -29,7 +33,7 @@ public class MessageDialog extends JFrame {
 		setTitle("Message Dialog");
 		
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setPreferredSize(new Dimension(600,500));
+		setPreferredSize(PREFERRED_SIZE);
 		
 		getContentPane().setLayout(new BorderLayout());
 		
@@ -81,8 +85,11 @@ public class MessageDialog extends JFrame {
 		bottomPanel.add(Box.createHorizontalGlue());
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		
+		Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
+		int wdwLeft = (int) ((screenSize.width/2.0) + ((PREFERRED_SIZE.width + Simulator.PREFERRED_SIZE.width + 10)/2.0)) - PREFERRED_SIZE.width;
+	    int wdwTop = screenSize.height / 2 - PREFERRED_SIZE.height / 2; 
 		pack();
-		setLocationRelativeTo(null);
+	    setLocation(wdwLeft, wdwTop);
 		setVisible(true);
 	}
 	
