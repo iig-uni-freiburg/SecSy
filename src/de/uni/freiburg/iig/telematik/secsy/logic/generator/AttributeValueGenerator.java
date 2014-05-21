@@ -27,6 +27,7 @@ public class AttributeValueGenerator {
 	 * The default value for attributes without value generator.
 	 */
 	private Object defaultValue = null;
+	@SuppressWarnings("rawtypes")
 	private Class defaultValueType = Object.class;
 	
 	/**
@@ -45,6 +46,11 @@ public class AttributeValueGenerator {
 	
 	public Object getDefaultValue(){
 		return defaultValue;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public Class getDefaultValueType(){
+		return defaultValueType;
 	}
 	
 	public Map<String, ValueGenerator<?>> getValueGenerators(){
@@ -78,6 +84,7 @@ public class AttributeValueGenerator {
 		return Collections.unmodifiableSet(valueGenerators.keySet());
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public Class getAttributeValueClass(String attribute){
 		Validate.notNull(attribute);
 		if(!valueGenerators.containsKey(attribute))

@@ -1,16 +1,12 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import de.invation.code.toval.constraint.AbstractConstraint;
-import de.invation.code.toval.constraint.NumberConstraint;
-import de.invation.code.toval.constraint.NumberOperator;
-import de.invation.code.toval.misc.valuegeneration.StochasticValueGenerator;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerator;
 import de.invation.code.toval.validate.CompatibilityException;
@@ -125,6 +121,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 		return context;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setContext(Context context){
 		Validate.notNull(context);
 		// Check if the value type of routing constraints is compatible with the type of generated values for attributes.
@@ -148,6 +145,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <O extends Object> boolean checkConstraint(int caseNumber, AbstractConstraint<O> constraint) throws CompatibilityException{
 		context.validateAttribute(constraint.getElement());
 		if(!caseAttributeValues.containsKey(caseNumber))
@@ -234,21 +232,6 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 		caseAttributeValues.remove(caseNumber);
 	}
 	
-	public static void main(String[] args) throws Exception{
-		Set<String> activities = new HashSet<String>(Arrays.asList("A","B","C"));
-		Context c = new Context("Context 01", activities);
-		c.setAttributes(new HashSet<String>(Arrays.asList("credit")));
-		c.addRoutingConstraint("A", new NumberConstraint("credit", NumberOperator.EQUAL, 20));
-		
-		AttributeValueGenerator gen = new AttributeValueGenerator();
-		StochasticValueGenerator<Integer> g = new StochasticValueGenerator<Integer>(1000);
-		g.addProbability(20, 1.0);
-		gen.setValueGeneration("credit", g);
-		
-		CaseDataContainer cont = new CaseDataContainer(c, gen);
-		
-	}
-	
 	//------- Implemented methods for interface GuardDataContainer --------------------------------------------
 
 	@Override
@@ -263,6 +246,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 		return getValueForAttribute(attribute, actualGuardCase);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Class getAttributeValueClass(String attribute){
 		if(!getAttributes().contains(attribute))

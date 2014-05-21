@@ -150,6 +150,7 @@ public class Simulation implements SimulationListener{
 			if(((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext() == null){
 				throw new ConfigurationException(ErrorCode.NO_CONTEXT, "Cannot add simulation runs without context.");
 			}
+			@SuppressWarnings("unchecked")
 			Set<String> labelSet = PNUtils.getLabelSetFromTransitions(simulationRun.getPetriNet().getTransitions(), false);
 			Set<String> contextActivities = ((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext().getActivities();
 			if(!contextActivities.containsAll(labelSet)){

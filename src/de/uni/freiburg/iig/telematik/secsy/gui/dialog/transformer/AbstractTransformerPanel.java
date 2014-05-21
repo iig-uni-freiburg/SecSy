@@ -4,7 +4,6 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.AbstractTransformer;
 

@@ -1155,6 +1155,7 @@ public class SimulationDialog extends AbstractDialog {
 //		btnEditSimulationRun.setEnabled(comboContext.getModel().getSelectedItem() != null);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Set<SimulationRun> getIncompatibleSimulationRuns(){
 		String contextName = comboContext.getSelectedItem().toString();
 		Context context = null;
@@ -1186,6 +1187,7 @@ public class SimulationDialog extends AbstractDialog {
 	 * the union of all transitions of all Petri nets within all simulation runs.
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private Set<String> getAllKnownProcessActivities(){
 		Set<String> allKnownProcessActivities = new HashSet<String>();
 		for(SimulationRun simulationRun: simulationRuns.values()){
@@ -1245,6 +1247,7 @@ public class SimulationDialog extends AbstractDialog {
 		if (btnShowActivities == null) {
 			btnShowActivities = new JButton("Show activities");
 			btnShowActivities.addActionListener(new ActionListener() {
+				@SuppressWarnings("unchecked")
 				public void actionPerformed(ActionEvent e) {
 					if(listSimulationRuns.getSelectedValue() == null){
 						return;

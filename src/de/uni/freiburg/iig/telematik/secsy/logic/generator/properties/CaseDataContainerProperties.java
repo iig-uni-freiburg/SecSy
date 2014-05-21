@@ -110,6 +110,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 		}
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Object getDefaultValue() throws PropertyException {
 		String propertyValue = getProperty(CaseDataContainerProperty.DEFAULT_VALUE);
 		String propertyValueType = getProperty(CaseDataContainerProperty.DEFAULT_VALUE_TYPE);
@@ -168,6 +169,7 @@ public class CaseDataContainerProperties extends AbstractProperties {
 		return result;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private StochasticValueGenerator<?> getValueGenerator(String valueGeneratorName) throws PropertyException{
 		Validate.notNull(valueGeneratorName);
 		

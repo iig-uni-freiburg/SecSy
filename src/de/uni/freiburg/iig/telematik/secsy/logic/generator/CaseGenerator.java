@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
 import de.invation.code.toval.constraint.AbstractConstraint;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.validate.InconsistencyException;
@@ -57,6 +55,7 @@ public class CaseGenerator {
 		return result;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void findNextTransition() throws ValueGenerationException{
 		checkValidity();
 		if(context == null){

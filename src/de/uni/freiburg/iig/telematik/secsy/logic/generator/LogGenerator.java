@@ -22,6 +22,7 @@ import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import de.uni.freiburg.iig.telematik.jawl.writer.LogWriter;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException.ErrorCode;
@@ -386,7 +387,7 @@ public abstract class LogGenerator implements TransformerListener{
 	 * It is assumed that the caller ensures parameter validity.
 	 * @param entry The newly generated log trace.
 	 */
-	protected void notifyTraceListeners(LogTrace trace){
+	protected void notifyTraceListeners(LogTrace<SimulationLogEntry> trace){
 		for(TraceListener listener: traceListeners){
 			listener.traceGenerated(trace);
 		}

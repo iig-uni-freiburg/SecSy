@@ -3,8 +3,6 @@ package de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties;
 import java.io.IOException;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.time.TimeScale;
-import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.time.Weekday;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.AdjustableCaseTimeGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
@@ -96,17 +94,6 @@ public class TimeGeneratorFactory {
 	
 	public static CaseTimeGenerator parse(String propertyFile) throws IOException, PropertyException{
 		return createCaseTimeGenerator(new TimeProperties(propertyFile));
-	}
-	
-	public static void main(String[] args) throws Exception {
-		TimeProperties props = new TimeProperties();
-		props.setDefaultActivityDuration(20, TimeScale.MINUTES);
-//		System.out.println(props.getDefaultActivityDelay());
-		props.setActivityDuration("Act01", 20, TimeScale.MINUTES);
-		props.setDefaultActivityDelayBounds(new TimeValue(10,TimeScale.MINUTES), new TimeValue(20,TimeScale.MINUTES));
-		props.setStartTime(System.currentTimeMillis());
-		props.setCasesPerDay(20);
-		CaseTimeGenerator time = TimeGeneratorFactory.createCaseTimeGenerator(props);
 	}
 
 }
