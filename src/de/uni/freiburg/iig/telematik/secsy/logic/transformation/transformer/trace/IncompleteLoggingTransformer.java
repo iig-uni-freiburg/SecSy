@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -108,7 +109,7 @@ public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransform
 	
 	@Override
 	public List<EntryField> requiredEntryFields() {
-		return Arrays.asList();
+		return new ArrayList<EntryField>();
 	}
 	
 	@Override

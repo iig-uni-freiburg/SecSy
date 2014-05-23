@@ -27,8 +27,8 @@ public class SimulationRun implements TraceCompletionListener{
 	private static final String toStringFormat = "%s: %s, %s passes%s";
 	private static final String transformerformat = "--- %s\n";
 	
-	protected AbstractPetriNet<?,?,?,?,?> petriNet = null;
-	protected PNTraverser<?> pnTraverser = null;
+	protected AbstractPetriNet petriNet = null;
+	protected PNTraverser pnTraverser = null;
 	protected TraceTransformerManager traceTransformerManager = new TraceTransformerManager();
 	protected EntryTransformerManager entryTransformerManager = new EntryTransformerManager();
 	
@@ -39,7 +39,7 @@ public class SimulationRun implements TraceCompletionListener{
 	
 	//------- Constructors ----------------------------------------------------------------------------------
 
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
 			   								   int passes,
 			   								   PNTraverser<T> traverser){
 		setPasses(passes);
@@ -47,13 +47,13 @@ public class SimulationRun implements TraceCompletionListener{
 		setPNTraverser(traverser);
 	}
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
 														   int passes) {
 		this(petriNet, passes, new RandomPNTraverser<T>(petriNet));
 	}
 	
 
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
 														   int passes,
 														   PNTraverser<T> traverser,
 														   TraceTransformerManager traceTransformerManager){
@@ -61,13 +61,13 @@ public class SimulationRun implements TraceCompletionListener{
 		setTraceTransformerManager(traceTransformerManager);
 	}
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
 			   												int passes,
 			   												TraceTransformerManager traceTransformerManager){
 		this(petriNet, passes, new RandomPNTraverser<T>(petriNet), traceTransformerManager);
 	}
 
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
 			   												int passes,
 			   												PNTraverser<T> traverser,
 			   												EntryTransformerManager entryTransformerManager){
@@ -76,13 +76,13 @@ public class SimulationRun implements TraceCompletionListener{
 	}
 
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
 														   int passes,
 														   EntryTransformerManager entryTransformerManager){
 		this(petriNet, passes, new RandomPNTraverser<T>(petriNet), entryTransformerManager);
 	}
 
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
 														   int passes,
 														   TraceTransformerManager traceTransformerManager,
 														   EntryTransformerManager entryTransformerManager){
@@ -91,14 +91,14 @@ public class SimulationRun implements TraceCompletionListener{
 		setTraceTransformerManager(traceTransformerManager);
 	}
 
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?, ?, ?> petriNet, 
 														   PNTraverser<T> pnTraverser, 
 														   int passes){
 		this(petriNet, passes);
 		setPNTraverser(pnTraverser);
 	}
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?, ?, ?> petriNet, 
 														   PNTraverser<T> pnTraverser, 
 														   int passes, 
 														   TraceTransformerManager traceTransformerManager){
@@ -106,7 +106,7 @@ public class SimulationRun implements TraceCompletionListener{
 		setPNTraverser(pnTraverser);
 	}
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?, ?, ?> petriNet, 
 														   PNTraverser<T> pnTraverser, 
 														   int passes, 
 														   EntryTransformerManager entryTransformerManager){
@@ -114,7 +114,7 @@ public class SimulationRun implements TraceCompletionListener{
 		setPNTraverser(pnTraverser);
 	}
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?, ?, ?> petriNet, 
 														   PNTraverser<T> pnTraverser, 
 														   int passes, 
 														   TraceTransformerManager traceTransformerManager, 
@@ -134,12 +134,11 @@ public class SimulationRun implements TraceCompletionListener{
 		this.name = name;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public AbstractPetriNet getPetriNet() {
 		return petriNet;
 	}
 	
-	public void setPetriNet(AbstractPetriNet<?,?,?,?,?> petriNet){
+	public void setPetriNet(AbstractPetriNet petriNet){
 		Validate.notNull(petriNet);
 		this.petriNet = petriNet;
 	}
@@ -162,12 +161,11 @@ public class SimulationRun implements TraceCompletionListener{
 		this.entryTransformerManager = entryTransformerManager;
 	}
 	
-	public void setPNTraverser(PNTraverser<?> pnTraverser){
+	public void setPNTraverser(PNTraverser pnTraverser){
 		Validate.notNull(pnTraverser);
 		this.pnTraverser = pnTraverser;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public PNTraverser getPNTraverser(){
 		return pnTraverser;
 	}

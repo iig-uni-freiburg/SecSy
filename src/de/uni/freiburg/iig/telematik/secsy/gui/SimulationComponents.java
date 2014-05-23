@@ -198,7 +198,7 @@ public class SimulationComponents {
 		for(String netFile: netFiles){
 			MessageDialog.getInstance().addMessage("Loading Petri net: " + netFile.substring(netFile.lastIndexOf('/') + 1) + "...   ");
 			try{
-				AbstractPetriNet<?, ?, ?, ?, ?> loadedNet = null;
+				AbstractPetriNet<?, ?, ?, ?, ?, ?, ?> loadedNet = null;
 				loadedNet = new PNMLParser().parse(netFile, false, false).getPetriNet();
 				
 				if(!(loadedNet instanceof PTNet))
@@ -286,7 +286,7 @@ public class SimulationComponents {
 				for (String customTransformerFile : customTransformerFiles) {
 					MessageDialog.getInstance().addMessage("Loading custom transformer: " + customTransformerFile.substring(customTransformerFile.lastIndexOf('/') + 1) + "...   ");
 					try {
-						addTransformer((AbstractTraceTransformer) TransformerFactory.loadCustomTransformer(customTransformerFile), false);
+						addTransformer(TransformerFactory.loadCustomTransformer(customTransformerFile), false);
 						MessageDialog.getInstance().addMessage("Done.");
 					} catch (Exception e) {
 						MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
@@ -313,7 +313,7 @@ public class SimulationComponents {
 		for(String transformerFile: transformerFiles){
 			MessageDialog.getInstance().addMessage("Loading transformer: " + transformerFile.substring(transformerFile.lastIndexOf('/') + 1) + "...   ");
 			try{
-				addTransformer((AbstractTraceTransformer) TransformerFactory.loadTransformer(transformerFile), false);
+				addTransformer(TransformerFactory.loadTransformer(transformerFile), false);
 				MessageDialog.getInstance().addMessage("Done.");
 			} catch(Exception e){
 				MessageDialog.getInstance().addMessage("Error: "+e.getMessage());

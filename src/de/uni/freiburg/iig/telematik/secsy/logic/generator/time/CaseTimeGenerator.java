@@ -428,10 +428,13 @@ public class CaseTimeGenerator implements TraceStartListener, TraceCompletionLis
 			switch(caseStartingTimePrecision){
 			case HOUR:
 				calendar.set(Calendar.MINUTE, 0);
+				break;
 			case MINUTE:
 				calendar.set(Calendar.SECOND, 0);
+				break;
 			case SECOND:
 				calendar.set(Calendar.MILLISECOND, 0);
+				break;
 			case MILLISECOND:
 			}
 			startTime = calendar.getTimeInMillis();

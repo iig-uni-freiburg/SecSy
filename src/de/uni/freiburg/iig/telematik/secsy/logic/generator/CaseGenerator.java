@@ -16,7 +16,7 @@ import de.uni.freiburg.iig.telematik.sepia.traversal.PNTraverser;
 
 public class CaseGenerator {
 	
-	protected AbstractPetriNet<?,?,?,?,?> net = null;
+	protected AbstractPetriNet net = null;
 	protected PNTraverser<?> traverser = null;
 	protected Context context = null;
 	protected CaseDataContainer caseDataContainer = null;
@@ -25,7 +25,7 @@ public class CaseGenerator {
 	protected int caseNumber = 0;
 	
 
-	public void setPetriNet(AbstractPetriNet<?,?,?,?,?> petriNet, PNTraverser<?> traverser){
+	public <T extends AbstractTransition<?,?>> void setPetriNet(AbstractPetriNet petriNet, PNTraverser traverser){
 		Validate.notNull(petriNet);
 		Validate.notNull(traverser);
 		if(petriNet != traverser.getPetriNet())
@@ -46,11 +46,11 @@ public class CaseGenerator {
 		this.caseDataContainer = caseDataContainer;
 	}
 	
-	public AbstractTransition<?,?> getNextTransition() throws InconsistencyException, ValueGenerationException{
+	public AbstractTransition getNextTransition() throws InconsistencyException, ValueGenerationException{
 		checkValidity();
 		if(isCaseCompleted())
 			throw new InconsistencyException("Case is completed, please call reset() to start new case.");
-		AbstractTransition<?,?> result = nextTransition;
+		AbstractTransition result = nextTransition;
 		nextTransition = null;
 		return result;
 	}
@@ -59,10 +59,11 @@ public class CaseGenerator {
 	private void findNextTransition() throws ValueGenerationException{
 		checkValidity();
 		if(context == null){
-			nextTransition = traverser.chooseNextTransition((List<AbstractTransition<?,?>>) net.getEnabledTransitions());
+			nextTransition = traverser.chooseNextTransition(net.getEnabledTransitions());
 		} else {
-			List<AbstractTransition<?,?>> enabledTransitionsWithSatisfiedConstraints = new ArrayList<AbstractTransition<?,?>>();
-			for(AbstractTransition<?,?> enabledTransition: net.getEnabledTransitions()){
+			List enabledTransitionsWithSatisfiedConstraints = new ArrayList<AbstractTransition>();
+			for(Object object: net.getEnabledTransitions()){
+				AbstractTransition enabledTransition = (AbstractTransition) object;
 				if(enabledTransition.isSilent()){
 					enabledTransitionsWithSatisfiedConstraints.add(enabledTransition);
 					continue;

@@ -86,7 +86,7 @@ public class PetriNetDialog extends JDialog {
 							File file = fc.getSelectedFile();
 
 							// Try to import the Petri net.
-							AbstractPetriNet<?, ?, ?, ?, ?> loadedNet = null;
+							AbstractPetriNet<?, ?, ?, ?, ?, ?, ?> loadedNet = null;
 							try {
 								loadedNet = new PNMLParser().parse(file.getAbsolutePath(), false, false).getPetriNet();
 							} catch (Exception ex) {

@@ -29,10 +29,15 @@ public class ConfigurationException extends Exception {
 		String message = null;
 		switch(errorCode){
 			case NO_CONTEXT: message = msg_NoContext;
+			break;
 			case NO_LOGGENERATOR: message = msg_NoLogGenerator;
+			break;
 			case NO_ENTRYGENERATOR: message = msg_NoEntryGenerator;
+			break;
 			case NO_TIMEGENERATOR: message = msg_NoTimeGenerator;
+			break;
 			case CONTEXT_INCONSISTENCY: message = msg_ContextInconsistency;
+			break;
 			case TRANSFORMER_MISCONFIGURATION: message = msg_TransformerMisconfiguration;
 		}
 		if(message != null && reason != null){

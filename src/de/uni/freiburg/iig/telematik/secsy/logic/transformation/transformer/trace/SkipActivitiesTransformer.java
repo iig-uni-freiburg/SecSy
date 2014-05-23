@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -219,7 +219,7 @@ public class SkipActivitiesTransformer extends AbstractMultipleTraceTransformer 
 	
 	@Override
 	public List<EntryField> requiredEntryFields() {
-		return Arrays.asList();
+		return new ArrayList<EntryField>();
 	}
 
 	@Override

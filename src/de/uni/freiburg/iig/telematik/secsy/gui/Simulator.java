@@ -68,11 +68,6 @@ public class Simulator extends JFrame {
 	private JPanel contentPanel = new JPanel(new BorderLayout());
 
 	public Simulator() {
-		//Check if there is a path to a simulation directory.
-		if(!checkSimulationDirectory()){
-			//There is no path and it is either not possible to set a path or the user aborted the corresponding dialog.
-			System.exit(0);
-		}
 		
 		setPreferredSize(PREFERRED_SIZE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,55 +78,6 @@ public class Simulator extends JFrame {
 	    int wdwTop = screenSize.height / 2 - PREFERRED_SIZE.height / 2; 
 		pack();
 	    setLocation(wdwLeft, wdwTop);
-	}
-	
-	private boolean checkSimulationDirectory(){
-		try {
-			GeneralProperties.getInstance().getSimulationDirectory();
-			return true;
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Internal exception: Cannot load/create general property file:\n" + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
-			return false;
-		} catch (PropertyException e) {
-			// There is no recent simulation directory
-			// -> Let the user choose a path for the simulation directory
-			return chooseSimulationDirectory();
-		} catch (ParameterException e) {
-			// Value for simulation directory is invalid, possibly due to moved directories
-			// -> Remove entry for actual simulation directory
-			try {
-				GeneralProperties.getInstance().removeSimulationDirectory();
-			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(null, "Internal exception: Cannot fix corrupt property entries:\n" + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
-				return false;
-			}
-			// -> Let the user choose a path for the simulation directory
-			return chooseSimulationDirectory();
-		}
-	}
-	
-	private boolean chooseSimulationDirectory(){
-		String simulationDirectory = null;
-		try {
-			simulationDirectory = SimulationDirectoryDialog.showDialog(null);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "<html>Cannot start simulation directory dialog.<br>Reason: "+e.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-		}
-		if(simulationDirectory == null)
-			return false;
-		try {
-			GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory);
-			return true;
-		} catch (ParameterException e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-			return false;
-		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage(), "I/O Exception", JOptionPane.ERROR_MESSAGE);
-			return false;
-		} catch (PropertyException e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage(), "Property Exception", JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
 	}
 	
 	private void setUpGUI() {
@@ -230,7 +176,7 @@ public class Simulator extends JFrame {
 				}
 				try {
 					if(!GeneralProperties.getInstance().getSimulationDirectory().equals(simulationDirectory)){
-						GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory);
+						GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory, true);
 					}
 				} catch (Exception e1) {
 					return;

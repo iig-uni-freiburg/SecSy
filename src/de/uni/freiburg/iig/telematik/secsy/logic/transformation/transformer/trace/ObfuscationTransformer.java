@@ -184,7 +184,7 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 	
 	@Override
 	public List<EntryField> requiredEntryFields() {
-		return Arrays.asList();
+		return new ArrayList<EntryField>();
 	}
 	
 	protected class Obfuscation{
