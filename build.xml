@@ -24,7 +24,7 @@
 
 	<!-- Project details -->
 	<property name="artifact.name" value="secsy" />
-	<property name="version.name" value="0.1.6" />
+	<property name="version.name" value="0.1.7" />
 	<property name="main-class" value="de.uni.freiburg.iig.telematik.secsy.gui.Startup" />
 
 	<!-- Names for generated files -->

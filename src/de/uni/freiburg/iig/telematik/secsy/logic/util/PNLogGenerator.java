@@ -13,8 +13,11 @@ import de.uni.freiburg.iig.telematik.jawl.format.PlainTraceLogFormat;
 import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import de.uni.freiburg.iig.telematik.jawl.writer.LogWriter;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.mg.abstr.AbstractMarkingGraphRelation;
 import de.uni.freiburg.iig.telematik.sepia.mg.abstr.AbstractMarkingGraphState;
+import de.uni.freiburg.iig.telematik.sepia.parser.PNParsing;
+import de.uni.freiburg.iig.telematik.sepia.parser.PNParsingFormat;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
@@ -61,6 +64,11 @@ public class PNLogGenerator {
 		runtime.adjustScale();
 		Debug.message(String.format(doneformat, runtime));
 		return generationResult;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		AbstractGraphicalPN net = PNParsing.parse("/Users/stocker/Desktop/PNPNPN.pnml", PNParsingFormat.PNML);
+		PNLogGenerator.generateLog(net.getPetriNet(), 300, 75, true, "/Users/stocker/Desktop/", "PNMLSAMPLE", LogFormatType.PLAIN);
 	}
 
 }
