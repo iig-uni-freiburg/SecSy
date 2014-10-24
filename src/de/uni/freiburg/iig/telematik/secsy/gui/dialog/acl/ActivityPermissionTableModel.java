@@ -26,7 +26,7 @@ public class ActivityPermissionTableModel extends AbstractTableModel implements 
 	public ActivityPermissionTableModel(ACLModel aclModel){
 		rowNames = new ArrayList<String>(aclModel.getSubjects());
 		Collections.sort(rowNames);
-		colNames = new ArrayList<String>(aclModel.getTransactions());
+		colNames = new ArrayList<String>(aclModel.getActivities());
 		Collections.sort(colNames);
 		this.aclModel = aclModel;
 

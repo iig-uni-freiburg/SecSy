@@ -18,14 +18,14 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
  * This class is used to generate Log entries from fired transitions.<br>
  * It inherits from {@link LogEntryGenerator} to include more information
  * in generated log entries. This additional information has to be provided
- * by a log context ({@link Context}) and a case data container ({@link CaseDataContainer}).<br>
+ * by a log context ({@link SynthesisContext}) and a case data container ({@link CaseDataContainer}).<br>
  * <br>
  * <ul>
  * <li>Context: Authorized subjects -> Entry originator candidates</li>
  * <li>CaseDataContainer: Data attributes used on activity execution -> Entry input and output data</li>
  * </ul>
  * 
- * @see Context
+ * @see SynthesisContext
  * @see CaseDataContainer
  * @author Thomas Stocker
  */
@@ -37,7 +37,7 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	/**
 	 * The log context that holds required information about authorized subjects for activity execution.
 	 */
-	protected Context context = null;
+	protected SynthesisContext context = null;
 
 	/**
 	 * Creates a new detailed log entry generator using the given context and case data generator.<br>
@@ -52,10 +52,10 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	 * @param caseDataContainer Case data container.
 	 * @throws ConfigurationException 
 	 * @throws ParameterException 
-	 * @see Context
+	 * @see SynthesisContext
 	 * @see CaseDataContainer
 	 */
-	public DetailedLogEntryGenerator(Context context, CaseDataContainer caseDataContainer) 
+	public DetailedLogEntryGenerator(SynthesisContext context, CaseDataContainer caseDataContainer) 
 			throws ConfigurationException{
 		super();
 		Validate.notNull(context);
@@ -85,7 +85,7 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	 * @throws ConfigurationException 
 	 * @throws Exception If this generator is incompatible to the transformer manager.
 	 */
-	public DetailedLogEntryGenerator(Context context, CaseDataContainer caseDataContainer, EntryTransformerManager entryTransformerManager) 
+	public DetailedLogEntryGenerator(SynthesisContext context, CaseDataContainer caseDataContainer, EntryTransformerManager entryTransformerManager) 
 			throws ConfigurationException {
 		super(entryTransformerManager);
 		Validate.notNull(context);
@@ -117,7 +117,7 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 	 * @see LogEntry
 	 * @see LogEntryGenerator#prepareLogEntry(AbstractTransition, int)
 	 * @see CaseDataContainer
-	 * @see Context
+	 * @see SynthesisContext
 	 */
 	@Override
 	protected SimulationLogEntry prepareLogEntry(AbstractTransition<?,?> transition, int caseNumber){
@@ -149,7 +149,7 @@ public class DetailedLogEntryGenerator extends LogEntryGenerator {
 		caseDataContainer.traceCompleted(caseNumber);
 	}
 	
-	public Context getContext(){
+	public SynthesisContext getContext(){
 		return context;
 	}
 	

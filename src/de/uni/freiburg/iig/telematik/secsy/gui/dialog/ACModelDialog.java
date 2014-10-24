@@ -35,7 +35,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl.ACLDialog;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACMValidationException;
@@ -73,10 +73,10 @@ public class ACModelDialog extends JDialog {
 	
 	//---------------------------------------------------
 	
-	private Context context = null;
+	private SynthesisContext context = null;
 	private ACModel acModel = null;
 
-	public ACModelDialog(Window owner, Context context) throws ParameterException {
+	public ACModelDialog(Window owner, SynthesisContext context) throws ParameterException {
 		super(owner);
 		setTitle("Access Control Model");
 		Validate.notNull(context);
@@ -223,7 +223,7 @@ public class ACModelDialog extends JDialog {
 		if(btnEditPermissions == null){
 			btnEditPermissions = new JButton("Edit Permissions");
 			if(acModel!=null){
-				btnEditPermissions.setEnabled(acModel.hasTransactions() && acModel.hasSubjects());
+				btnEditPermissions.setEnabled(acModel.hasActivities() && acModel.hasSubjects());
 			}
 			btnEditPermissions.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -364,7 +364,7 @@ public class ACModelDialog extends JDialog {
 								Set<String> contextNames = SimulationComponents.getInstance().getContextsWithACModel(acModel);
 								if(!contextNames.isEmpty()){
 									for(String contextName: contextNames){
-										Context context = SimulationComponents.getInstance().getContext(contextName);
+										SynthesisContext context = SimulationComponents.getInstance().getContext(contextName);
 										if(!editedSubjects.containsAll(context.getSubjects())){
 											//The edited set of subjects does not contain all context subjects
 											//-> Don't change ac-model subjects to prevent inconsistencies.
@@ -412,7 +412,7 @@ public class ACModelDialog extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					Set<String> editedActivities = null;
 					try {
-						editedActivities = ValueEditingDialog.showDialog(ACModelDialog.this, "AC Model Activities", acModel.getTransactions());
+						editedActivities = ValueEditingDialog.showDialog(ACModelDialog.this, "AC Model Activities", acModel.getActivities());
 					} catch (Exception e2) {
 						JOptionPane.showMessageDialog(ACModelDialog.this, "<html>Cannot launch value editing dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 					}
@@ -421,7 +421,7 @@ public class ACModelDialog extends JDialog {
 							JOptionPane.showMessageDialog(ACModelDialog.this, "Cannot remove all activities from access control model.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						Set<String> activitiesToRemove = new HashSet<String>(acModel.getTransactions());
+						Set<String> activitiesToRemove = new HashSet<String>(acModel.getActivities());
 						activitiesToRemove.removeAll(editedActivities);
 						if(!activitiesToRemove.isEmpty()){
 							//Check if there are contexts referring to this ac-model
@@ -429,7 +429,7 @@ public class ACModelDialog extends JDialog {
 								Set<String> contextNames = SimulationComponents.getInstance().getContextsWithACModel(acModel);
 								if(!contextNames.isEmpty()){
 									for(String contextName: contextNames){
-										Context context = SimulationComponents.getInstance().getContext(contextName);
+										SynthesisContext context = SimulationComponents.getInstance().getContext(contextName);
 										if(!editedActivities.containsAll(context.getActivities())){
 											//The edited set of activities does not contain all context activities
 											//-> Don't change ac-model activities to prevent inconsistencies.
@@ -446,14 +446,14 @@ public class ACModelDialog extends JDialog {
 							//Changing the activity set does not cause any inconsistencies with connected contexts.
 							//Remove the activities from the ac-model.
 							try {
-								acModel.removeTransactions(activitiesToRemove);
+								acModel.removeActivities(activitiesToRemove);
 							} catch (ParameterException e1) {
 								JOptionPane.showMessageDialog(ACModelDialog.this, "Cannot remove activities from access control model\nReason: " + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 								return;
 							}
 						}
 						try {
-							acModel.setTransactions(editedActivities);
+							acModel.setActivities(editedActivities);
 						} catch (ParameterException e1) {
 							JOptionPane.showMessageDialog(ACModelDialog.this, "Cannot set activities of access control model\nReason: " + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 							return;
@@ -494,7 +494,7 @@ public class ACModelDialog extends JDialog {
 								Set<String> contextNames = SimulationComponents.getInstance().getContextsWithACModel(acModel);
 								if(!contextNames.isEmpty()){
 									for(String contextName: contextNames){
-										Context context = SimulationComponents.getInstance().getContext(contextName);
+										SynthesisContext context = SimulationComponents.getInstance().getContext(contextName);
 										if(!editedAttributes.containsAll(context.getAttributes())){
 											//The edited set of attributes does not contain all context attributes
 											//-> Don't change ac-model attributes to prevent inconsistencies.
@@ -536,10 +536,11 @@ public class ACModelDialog extends JDialog {
 	}
 	
 	private void addNewACLModel(String name) throws ParameterException, IOException, PropertyException {
-		ACLModel newACLModel = new ACLModel(name, ACModelDialog.this.context.getSubjects());
+		ACLModel newACLModel = new ACLModel(name);
+		newACLModel.setSubjects(ACModelDialog.this.context.getSubjects());
 		if(ACModelDialog.this.context.hasAttributes())
 			newACLModel.setObjects(ACModelDialog.this.context.getAttributes());
-		newACLModel.setTransactions(ACModelDialog.this.context.getActivities());
+		newACLModel.setActivities(ACModelDialog.this.context.getActivities());
 		SimulationComponents.getInstance().addACModel(newACLModel);
 		updateACModelComboBox(newACLModel.getName());
 		updateVisibility();
@@ -554,12 +555,13 @@ public class ACModelDialog extends JDialog {
 			JOptionPane.showMessageDialog(ACModelDialog.this, "<html>Cannot launch role lattice dialog:<br>Reason: "+e.getMessage()+"</html>", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 		}
 		if(roleLattice != null){
-			RBACModel newRBACModel = new RBACModel(name, roleLattice, ACModelDialog.this.context.getSubjects());
+			RBACModel newRBACModel = new RBACModel(name, roleLattice);
+			newRBACModel.setSubjects(ACModelDialog.this.context.getSubjects());
 			if(ACModelDialog.this.context.hasAttributes()){
 				newRBACModel.setObjects(ACModelDialog.this.context.getAttributes());
 			}
 			if(ACModelDialog.this.context.hasActivities()){
-				newRBACModel.setTransactions(ACModelDialog.this.context.getActivities());
+				newRBACModel.setActivities(ACModelDialog.this.context.getActivities());
 			}
 			SimulationComponents.getInstance().addACModel(newRBACModel);
 			updateACModelComboBox(newRBACModel.getName());
@@ -631,7 +633,7 @@ public class ACModelDialog extends JDialog {
 	}
 	
 	
-	public static ACModel showDialog(Window owner, Context context) throws ParameterException{
+	public static ACModel showDialog(Window owner, SynthesisContext context) throws ParameterException{
 		ACModelDialog activityDialog = new ACModelDialog(owner, context);
 		return activityDialog.getACModel();
 	}

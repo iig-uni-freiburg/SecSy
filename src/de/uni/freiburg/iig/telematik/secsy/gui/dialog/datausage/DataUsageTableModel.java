@@ -10,7 +10,7 @@ import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
 import de.invation.code.toval.types.DataUsage;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemListener;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionListenerSupport;
@@ -28,10 +28,10 @@ public class DataUsageTableModel extends AbstractTableModel implements ObjectPer
 	private List<ObjectPermissionPanel> dataUsagePanels = new ArrayList<ObjectPermissionPanel>();
 	private List<String> attributes = new ArrayList<String>();
 	private ObjectPermissionListenerSupport permissionListenerSupport = new ObjectPermissionListenerSupport();
-	private Context context = null;
+	private SynthesisContext context = null;
 	private String[] columnNames = {"Attribute","Access Mode (R,W,C,D)"};
 	
-	public DataUsageTableModel(Context context){
+	public DataUsageTableModel(SynthesisContext context){
 		this.context = context;
 	}
 	

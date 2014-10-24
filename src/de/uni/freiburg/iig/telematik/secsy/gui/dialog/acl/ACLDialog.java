@@ -18,7 +18,7 @@ import javax.swing.border.Border;
 import de.invation.code.toval.graphic.dialog.AbstractDialog;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.GUIProperties;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
@@ -35,10 +35,10 @@ public class ACLDialog extends AbstractDialog {
 	private AdvancedACLTable aclTable;
 	
 	private ACLModel aclModel;
-	private Context context;
+	private SynthesisContext context;
 
 	
-	public ACLDialog(Window owner, String title, ACModel acModel, Context context) throws Exception {
+	public ACLDialog(Window owner, String title, ACModel acModel, SynthesisContext context) throws Exception {
 		super(owner, true, new Object[]{title,acModel,context});
 	}
 	
@@ -56,7 +56,7 @@ public class ACLDialog extends AbstractDialog {
 		} else if(acModel instanceof RBACModel){
 			this.aclModel = ((RBACModel) acModel).getRolePermissions();
 		}
-		this.context = (Context) parameters[2];
+		this.context = (SynthesisContext) parameters[2];
 	}
 	
 
@@ -152,7 +152,7 @@ public class ACLDialog extends AbstractDialog {
 		return aclModel;
 	}
 	
-	public static ACLModel showDialog(Window owner, String title, ACLModel aclModel, Context context) throws Exception{
+	public static ACLModel showDialog(Window owner, String title, ACLModel aclModel, SynthesisContext context) throws Exception{
 		ACLDialog activityDialog = new ACLDialog(owner, title, aclModel, context);
 		return activityDialog.getACLModel();
 	}

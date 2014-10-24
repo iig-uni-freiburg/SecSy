@@ -39,7 +39,7 @@ import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.panel.Unauthor
 import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.AttributeValueGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGenerator;
@@ -94,7 +94,7 @@ public class SimulationComponents {
 	
 	private Map<String, ACModel> acModels = new HashMap<String, ACModel>();
 	private Map<String, PTNet> petriNets = new HashMap<String, PTNet>();
-	private Map<String, Context> contexts = new HashMap<String, Context>();
+	private Map<String, SynthesisContext> contexts = new HashMap<String, SynthesisContext>();
 	private Map<String, CaseDataContainer> caseDataContainers = new HashMap<String, CaseDataContainer>();
 	private Map<String, AbstractTraceTransformer> transformers = new HashMap<String, AbstractTraceTransformer>();
 	private Map<String, CaseTimeGenerator> caseTimeGenerators = new HashMap<String, CaseTimeGenerator>();
@@ -371,7 +371,7 @@ public class SimulationComponents {
 		}
 	}
 	
-	private Context loadContext(String contextFile) throws ParameterException, PropertyException, IOException{
+	private SynthesisContext loadContext(String contextFile) throws ParameterException, PropertyException, IOException{
 		// Load context properties.
 		ContextProperties properties = new ContextProperties();
 		try {
@@ -379,7 +379,7 @@ public class SimulationComponents {
 		} catch(IOException e){
 			throw new IOException("Cannot load properties file: " + contextFile + ".");
 		}
-		Context result = new Context(properties.getName(), properties.getActivities());
+		SynthesisContext result = new SynthesisContext(properties.getName(), properties.getActivities());
 		Set<String> subjects = properties.getSubjects();
 		if(subjects != null && !subjects.isEmpty())
 			result.addSubjects(subjects);
@@ -523,7 +523,7 @@ public class SimulationComponents {
 		LogEntryGenerator entryGenerator = null;
 		if(generationType.equals(EntryGenerationType.DETAILED)){
 			String contextName = properties.getContextName();
-			Context context = getContext(contextName);
+			SynthesisContext context = getContext(contextName);
 			if(context == null)
 				throw new PropertyException(SimulationProperty.CONTEXT_NAME, contextName, "Unknown context.");
 			
@@ -570,7 +570,7 @@ public class SimulationComponents {
 		for(ACModel acModel: acModels.values()){
 			storeACModel(acModel);
 		}
-		for(Context context: contexts.values()){
+		for(SynthesisContext context: contexts.values()){
 			storeContext(context);
 		}
 		for(CaseDataContainer dataContainer: caseDataContainers.values()){
@@ -598,7 +598,7 @@ public class SimulationComponents {
 	 * @throws PropertyException if the procedure of property extraction fails.
 	 * @throws IOException if the property-representation of the new context cannot be stored.
 	 */
-	public void addContext(Context context) throws ParameterException, IOException, PropertyException{
+	public void addContext(SynthesisContext context) throws ParameterException, IOException, PropertyException{
 		addContext(context, true);
 	}
 	
@@ -611,7 +611,7 @@ public class SimulationComponents {
 	 * @throws PropertyException if the context cannot be stored due to an error during property extraction.
 	 * @throws IOException if the context cannot be stored due to an I/O Error.
 	 */
-	public void addContext(Context context, boolean storeToFile) throws ParameterException, IOException, PropertyException{
+	public void addContext(SynthesisContext context, boolean storeToFile) throws ParameterException, IOException, PropertyException{
 		Validate.notNull(context);
 		Validate.notNull(storeToFile);
 		contexts.put(context.getName(), context);
@@ -628,7 +628,7 @@ public class SimulationComponents {
 	 * @throws IOException if the context cannot be stored due to an I/O Error.
 	 * @throws PropertyException if the context cannot be stored due to an error during property extraction.
 	 */
-	public void storeContext(Context context) throws ParameterException, IOException, PropertyException{
+	public void storeContext(SynthesisContext context) throws ParameterException, IOException, PropertyException{
 		Validate.notNull(context);
 		context.getProperties().store(GeneralProperties.getInstance().getPathForContexts()+context.getName());
 	}
@@ -658,7 +658,7 @@ public class SimulationComponents {
 	 * <code>fasle</code> otherwise.
 	 */
 	public boolean containsContextsWithACModel(ACModel acModel){
-		for(Context context: contexts.values()){
+		for(SynthesisContext context: contexts.values()){
 			if(context.getACModel().equals(acModel))
 				return true;
 		}
@@ -667,7 +667,7 @@ public class SimulationComponents {
 	
 	public Set<String> getContextsWithACModel(ACModel acModel){
 		Set<String> result = new HashSet<String>();
-		for(Context context: contexts.values()){
+		for(SynthesisContext context: contexts.values()){
 			if(context.getACModel().equals(acModel))
 				result.add(context.getName());
 		}
@@ -678,7 +678,7 @@ public class SimulationComponents {
 	 * Returns all contexts, i.e. contexts stored in the simulation directory.
 	 * @return A set containing all contexts.
 	 */
-	public Collection<Context> getContexts(){
+	public Collection<SynthesisContext> getContexts(){
 		return Collections.unmodifiableCollection(contexts.values());
 	}
 	
@@ -688,7 +688,7 @@ public class SimulationComponents {
 	 * @return The context with the given name, or <code>null</code> if there is no such context.
 	 * @throws ParameterException if the given name is <code>null</code>.
 	 */
-	public Context getContext(String name) throws ParameterException{
+	public SynthesisContext getContext(String name) throws ParameterException{
 		Validate.notNull(name);
 		return contexts.get(name);
 	}

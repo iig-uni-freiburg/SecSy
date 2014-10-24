@@ -33,7 +33,7 @@ import javax.swing.event.ListSelectionListener;
 import de.invation.code.toval.graphic.dialog.ValueChooserDialog;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 
 
 public class DataUsageDialog extends JDialog {
@@ -43,13 +43,13 @@ public class DataUsageDialog extends JDialog {
 
 	private JList activityList = null;
 	private DataUsageTable dataUsageTable = null;
-	private Context context = null;
+	private SynthesisContext context = null;
 	private JPanel contentPanel = new JPanel(new BorderLayout(5,0));
 	private JButton addDUButton = null;
 	private JButton removeDUButton = null;
 	private JButton doneButton = null;
 
-	public DataUsageDialog(Window owner, Context context) {
+	public DataUsageDialog(Window owner, SynthesisContext context) {
 		super(owner);
 		this.context = context;
 		setTitle("Activity Data Usage");
@@ -266,7 +266,7 @@ public class DataUsageDialog extends JDialog {
 
 	}
 	
-	public static void showDialog(Window owner, Context context) throws ParameterException{
+	public static void showDialog(Window owner, SynthesisContext context) throws ParameterException{
 		new DataUsageDialog(owner, context);
 	}
 

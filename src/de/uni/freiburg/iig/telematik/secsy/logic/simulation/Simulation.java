@@ -13,7 +13,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogGenerator;
@@ -263,7 +263,7 @@ public class Simulation implements SimulationListener{
 	
 	private String getContextDataContainerString(){
 		if(getLogEntryGenerator() instanceof DetailedLogEntryGenerator){
-			Context context = ((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext();
+			SynthesisContext context = ((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext();
 			CaseDataContainer dataContainer = ((DetailedLogEntryGenerator) getLogEntryGenerator()).getCaseDataContainer();
 			if(context != null && dataContainer != null){
 				return String.format(contextDataContainerFormat, context.toString(), dataContainer.toString());

@@ -38,7 +38,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl.ACLDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.datausage.DataUsageDialog;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
@@ -93,12 +93,12 @@ public class ContextDialog extends JDialog {
 	private boolean attributesAssigned = false;
 	private boolean acModelAssigned = false;
 	
-	private Context context = null;
-	private Context originalContext = null;
+	private SynthesisContext context = null;
+	private SynthesisContext originalContext = null;
 	
 	private boolean editMode = false;
 	
-	public ContextDialog(Window owner, Context context) {
+	public ContextDialog(Window owner, SynthesisContext context) {
 		super(owner);
 		this.originalContext = context;
 		this.context = context.clone();
@@ -705,14 +705,14 @@ public class ContextDialog extends JDialog {
 	
 	//------- FUNCTIONALITY ----------------------------------------------------------------------------------------------
 	
-	public Context getContext(){
+	public SynthesisContext getContext(){
 		return context;
 	}
 	
 	private void newContext(Set<String> activities){
 		resetVisibility();
 		try {
-			context = new Context(txtContextName.getText(), activities);
+			context = new SynthesisContext(txtContextName.getText(), activities);
 			activitiesAssigned = true;
 			updateActivityList(false);
 			updateSubjectList(false);
@@ -912,7 +912,7 @@ public class ContextDialog extends JDialog {
 					// Add activities to the existing context.
 					boolean addToACModel = false;
 					if(context.getACModel() != null){
-						if(!context.getACModel().getTransactions().containsAll(activities)){
+						if(!context.getACModel().getActivities().containsAll(activities)){
 							int option = JOptionPane.showConfirmDialog(ContextDialog.this, INCONSISTENCY_ON_ADDING_ACTIVITIES_MESSAGE, "Consistency Warning", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 							switch(option){
 								case JOptionPane.CANCEL_OPTION: return;
@@ -938,12 +938,12 @@ public class ContextDialog extends JDialog {
 	
 	//------- STARTUP ---------------------------------------------------------------------------------------------------------------
 	
-	public static Context showContextDialog(Window parentWindow){
+	public static SynthesisContext showContextDialog(Window parentWindow){
 	        ContextDialog contextDialog = new ContextDialog(parentWindow);
 	        return contextDialog.getContext();
 	}
 	
-	public static Context showContextDialog(Window parentWindow, Context context){
+	public static SynthesisContext showContextDialog(Window parentWindow, SynthesisContext context){
         ContextDialog contextDialog = new ContextDialog(parentWindow, context);
         return contextDialog.getContext();
 }

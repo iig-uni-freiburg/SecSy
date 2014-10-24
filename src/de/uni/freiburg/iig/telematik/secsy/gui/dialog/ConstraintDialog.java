@@ -39,7 +39,7 @@ import de.invation.code.toval.constraint.StringConstraint;
 import de.invation.code.toval.constraint.StringOperator;
 import de.invation.code.toval.graphic.dialog.ValueChooserDialog;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 
 
 public class ConstraintDialog extends JDialog {
@@ -62,7 +62,7 @@ public class ConstraintDialog extends JDialog {
 	private JTextField txtAttributeName;
 	
 	private JButton btnChoose = null;
-	private Context context = null;
+	private SynthesisContext context = null;
 	
 	private boolean attributeEditable = true;
 	private boolean attributeChoosable = false;
@@ -70,7 +70,7 @@ public class ConstraintDialog extends JDialog {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ConstraintDialog(Window owner, AbstractConstraint<?> constraint, Context context) {
+	public ConstraintDialog(Window owner, AbstractConstraint<?> constraint, SynthesisContext context) {
 		super(owner);
 		this.context = context;
 		this.constraint = constraint;
@@ -92,7 +92,7 @@ public class ConstraintDialog extends JDialog {
 		this(owner, constraint, true);
 	}
 	
-	public ConstraintDialog(Window owner, Context context) {
+	public ConstraintDialog(Window owner, SynthesisContext context) {
 		super(owner);
 		this.context = context;
 		attributeEditable = false;

@@ -18,7 +18,7 @@ import de.invation.code.toval.graphic.renderer.VerticalTableHeaderCellRenderer;
 import de.invation.code.toval.types.DataUsage;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemListener;
@@ -35,9 +35,9 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 	private ObjectPermissionTableModel objectModel = null;
 	private VIEW currentView = VIEW.TRANSACTION;
 	private boolean deriveAttributePermissions = false;
-	private Context context;
+	private SynthesisContext context;
 	
-	private AdvancedACLTable(Context context) throws ParameterException{
+	private AdvancedACLTable(SynthesisContext context) throws ParameterException{
 		Validate.notNull(context);
 		this.context = context;
 		this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -45,23 +45,24 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 		this.setBackground(new Color(243, 244, 244));
 	}
 	
-	public AdvancedACLTable(ACLModel aclModel, Context context) throws ParameterException{
+	public AdvancedACLTable(ACLModel aclModel, SynthesisContext context) throws ParameterException{
 		this(context);
 		Validate.notNull(aclModel);
 		
 		this.aclModel = aclModel;
 		this.setEnabled(deriveAttributePermissions);
-		initialize(aclModel.getSubjects(), aclModel.getObjects(), aclModel.getTransactions());
+		initialize(aclModel.getSubjects(), aclModel.getObjects(), aclModel.getActivities());
 		update();
 	}
 	
-	public AdvancedACLTable(Set<String> subjects, Context context) throws ParameterException{
+	public AdvancedACLTable(Set<String> subjects, SynthesisContext context) throws ParameterException{
 		this(context);
 		Validate.notNull(subjects);
 		Validate.noNullElements(subjects);
 		
-		aclModel = new ACLModel(subjects);
-		aclModel.setTransactions(context.getActivities());
+		aclModel = new ACLModel();
+		aclModel.setSubjects(subjects);
+		aclModel.setActivities(context.getActivities());
 		if(context.hasAttributes())
 			aclModel.setObjects(context.getAttributes());
 		initialize(subjects, context.getActivities(), context.getAttributes());
@@ -181,7 +182,7 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 		String transaction = getModel().getColumnName(getSelectedColumn());
 		try{
 			if(permissionActivated){
-				aclModel.addTransactionPermission(subject, transaction);
+				aclModel.addActivityPermission(subject, transaction);
 				if(deriveAttributePermissions){
 					Map<String, Set<DataUsage>> transactionDataUsage = context.getDataUsageFor(transaction);
 					for(String object: transactionDataUsage.keySet()){
@@ -189,7 +190,7 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 					}
 				}
 			} else {
-				aclModel.removeTransactionPermission(subject, transaction);
+				aclModel.removeActivityPermission(subject, transaction);
 				if(deriveAttributePermissions){
 					deriveObjectPermission(subject);
 				}

@@ -75,7 +75,7 @@ public class GeneralProperties extends AbstractProperties{
 	
 	//-- Simulation Directory
 	
-	public void setSimulationDirectory(String directory, boolean resetComponents) throws ParameterException, IOException, PropertyException {
+	public void setSimulationDirectory(String directory, boolean resetComponents) throws IOException, PropertyException {
 		validateSimulationDirectory(directory, false);
 		setProperty(GeneralProperty.SIMULATION_DIRECTORY, directory);
 		//Check, if the simulation directory is empty
@@ -100,14 +100,6 @@ public class GeneralProperties extends AbstractProperties{
 	}
 	
 	//-- Known SimulationDirectory
-	
-//	public void addNewKnownSimulationDirectory(String simulationDirectory) throws ParameterException{
-//		addKnownSimulationDirectory(simulationDirectory, true);
-//	}
-//	
-//	public void addExistingKnownSimulationDirectory(String simulationDirectory) throws ParameterException{
-//		addKnownSimulationDirectory(simulationDirectory, false);
-//	}
 	
 	public void addKnownSimulationDirectory(String simulationDirectory, boolean createSubdirectories) throws ParameterException{
 		validateSimulationDirectory(simulationDirectory, createSubdirectories);
@@ -146,57 +138,57 @@ public class GeneralProperties extends AbstractProperties{
 	
 	//-- Simulation component paths (not stored in property file)
 	
-	public String getPathForSimulations() throws PropertyException, ParameterException{
+	public String getPathForSimulations() throws PropertyException{
 		return getSimulationDirectory().concat(pathSimulations);
 	}
 	
-	public String getPathForTimeGenerators() throws PropertyException, ParameterException{
+	public String getPathForTimeGenerators() throws PropertyException{
 		return getSimulationDirectory().concat(pathTimeGenerators);
 	}
 	
-	public String getPathForContexts() throws PropertyException, ParameterException {
+	public String getPathForContexts() throws PropertyException{
 		return getSimulationDirectory().concat(pathContexts);
 	}
 	
-	public String getPathForDataContainers() throws PropertyException, ParameterException{
+	public String getPathForDataContainers() throws PropertyException{
 		return getSimulationDirectory().concat(pathDataContainers);
 	}
 	
-	public String getPathForACModels() throws PropertyException, ParameterException{
+	public String getPathForACModels() throws PropertyException{
 		return getSimulationDirectory().concat(pathACModels);
 	}
 	
-	public String getPathForPetriNets() throws PropertyException, ParameterException{
+	public String getPathForPetriNets() throws PropertyException{
 		return getSimulationDirectory().concat(pathPetriNets);
 	}
 	
-	public String getPathForTransformers() throws PropertyException, ParameterException{
+	public String getPathForTransformers() throws PropertyException{
 		return getSimulationDirectory().concat(pathTransformers);
 	}
 	
-	public String getPathForCustomTransformers() throws PropertyException, ParameterException{
+	public String getPathForCustomTransformers() throws PropertyException{
 		return getSimulationDirectory().concat(pathCustomTransformers);
 	}
 	
-	public String getPathForCustomTransformerTypes() throws PropertyException, ParameterException{
+	public String getPathForCustomTransformerTypes() throws PropertyException{
 		return getSimulationDirectory().concat(pathCustomTransformerTypes);
 	}
 	
 	//------- Validation -------------------------------------------------------------------
 	
-	public static void validateStringValue(String value) throws ParameterException{
+	public static void validateStringValue(String value){
 		Validate.notNull(value);
 		Validate.notEmpty(value);
 	}
 	
-	public static void validatePath(String logPath) throws ParameterException {
+	public static void validatePath(String logPath){
 		Validate.notNull(logPath);
 		File cPath = new File(logPath);
 		if(!cPath.isDirectory())
 			throw new ParameterException(ErrorCode.INCOMPATIBILITY, logPath + " is not a valid path!");
 	}
 	
-	public static void validateSimulationDirectory(String directory, boolean createSubdirectories) throws ParameterException{
+	public static void validateSimulationDirectory(String directory, boolean createSubdirectories){
 		validatePath(directory);
 		checkSubDirectory(directory, pathSimulations, createSubdirectories);
 		checkSubDirectory(directory, pathTimeGenerators, createSubdirectories);
@@ -209,7 +201,7 @@ public class GeneralProperties extends AbstractProperties{
 //		checkSubDirectory(directory, pathCustomTransformerTypes, createSubdirectories);
 	}
 	
-	private static void checkSubDirectory(String simulationDirectory, String subDirectoryName, boolean ensureSubdirectory) throws ParameterException{
+	private static void checkSubDirectory(String simulationDirectory, String subDirectoryName, boolean ensureSubdirectory){
 		File dir = new File(simulationDirectory + subDirectoryName);
 		if(!dir.exists()){
 			if(!ensureSubdirectory)

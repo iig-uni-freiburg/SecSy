@@ -10,7 +10,7 @@ import java.util.Random;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.AbstractTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
@@ -29,7 +29,7 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 	private final String toStringFormat = "[%s] %s (%s%%)";
 	
 	private CaseTimeGenerator timeGenerator = null;
-	private Context context = null;
+	private SynthesisContext context = null;
 	
 	protected Random rand = new Random();
 	
@@ -74,11 +74,11 @@ public abstract class AbstractTransformer implements Serializable, Comparable<Ab
 	
 	public abstract boolean requiresContext();
 	
-	protected Context getContext(){
+	protected SynthesisContext getContext(){
 		return context;
 	}
 	
-	public void setContext(Context context){
+	public void setContext(SynthesisContext context){
 		Validate.notNull(context);
 		this.context = context;
 	}

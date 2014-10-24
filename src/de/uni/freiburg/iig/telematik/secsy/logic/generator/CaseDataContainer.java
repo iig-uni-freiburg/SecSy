@@ -23,7 +23,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.GuardDataCont
  * This way it can be ensured that on log creation, the value of the same attribute<br>
  * stays the same during a specific case and no inconsistencies occur between activities
  * using the same attributes.<br>
- * It uses a log context ({@link Context}) to know which attributes are used by which activity<br>
+ * It uses a log context ({@link SynthesisContext}) to know which attributes are used by which activity<br>
  * and provides methods to gather data attributes for specific process activities.<br>
  * To allow subclasses to adjust the creation of new values for different data attributes,<br>
  * it provides the abstract method {@link #getNewValueFor(String)}.<br>
@@ -56,7 +56,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 	/**
 	 * Context that holds required information about the attributes used on activity execution.
 	 */
-	protected Context context = null;
+	protected SynthesisContext context = null;
 	
 	/**
 	 * Indicates the case number used for providing attribute value information for guard evaluation.<br>
@@ -90,7 +90,7 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 		setAttributeValueGenerator(attributeValueGenerator);
 	}
 	
-	public CaseDataContainer(Context context, AttributeValueGenerator attributeValueGenerator){
+	public CaseDataContainer(SynthesisContext context, AttributeValueGenerator attributeValueGenerator){
 		this(attributeValueGenerator);
 		setContext(context);
 	}
@@ -117,12 +117,12 @@ public class CaseDataContainer implements TraceCompletionListener, GuardDataCont
 	 * on activity execution.
 	 * @return The log context of the case data container.
 	 */
-	public Context getContext(){
+	public SynthesisContext getContext(){
 		return context;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void setContext(Context context){
+	public void setContext(SynthesisContext context){
 		Validate.notNull(context);
 		// Check if the value type of routing constraints is compatible with the type of generated values for attributes.
 				for(String activity: context.getActivities()){

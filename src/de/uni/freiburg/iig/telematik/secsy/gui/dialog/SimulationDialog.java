@@ -56,7 +56,7 @@ import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGenerator;
@@ -263,7 +263,7 @@ public class SimulationDialog extends AbstractDialog {
 	
 	private void updateContextBox(){
 		List<String> contextNames = new ArrayList<String>();
-		for(Context context: SimulationComponents.getInstance().getContexts()){
+		for(SynthesisContext context: SimulationComponents.getInstance().getContexts()){
 			contextNames.add(context.getName());
 		}
 		comboContext.setModel(new DefaultComboBoxModel(contextNames.toArray()));
@@ -365,7 +365,7 @@ public class SimulationDialog extends AbstractDialog {
 			btnAddContext.setPreferredSize(DEFAULT_EDIT_BUTTON_DIMENSION);
 			btnAddContext.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Context newContext = ContextDialog.showContextDialog(SimulationDialog.this);
+					SynthesisContext newContext = ContextDialog.showContextDialog(SimulationDialog.this);
 					if(newContext == null){
 						// Happens only when context is null
 						// In this case the user aborted the context dialog.
@@ -404,7 +404,7 @@ public class SimulationDialog extends AbstractDialog {
 					}
 					String chosenContext = comboContext.getSelectedItem().toString();
 					
-					Context context = null;
+					SynthesisContext context = null;
 					try {
 						context = SimulationComponents.getInstance().getContext(chosenContext);
 					} catch (ParameterException e2) {
@@ -418,7 +418,7 @@ public class SimulationDialog extends AbstractDialog {
 					}
 					
 					String oldContextName = context.getName();
-					Context editedContext = ContextDialog.showContextDialog(SimulationDialog.this, context);
+					SynthesisContext editedContext = ContextDialog.showContextDialog(SimulationDialog.this, context);
 					if(editedContext != null){
 						if(!editedContext.getName().equals(oldContextName)){
 							//Context name changed
@@ -517,7 +517,7 @@ public class SimulationDialog extends AbstractDialog {
 			return attributes;
 		}
 		String contextName = comboContext.getSelectedItem().toString();
-		Context context;
+		SynthesisContext context;
 		try {
 			context = SimulationComponents.getInstance().getContext(contextName);
 		} catch (ParameterException e1) {
@@ -928,7 +928,7 @@ public class SimulationDialog extends AbstractDialog {
 				return;
 			}
 			String contextName = comboContext.getSelectedItem().toString();
-			Context context;
+			SynthesisContext context;
 			try {
 				context = SimulationComponents.getInstance().getContext(contextName);
 			} catch (ParameterException e1) {
@@ -1158,7 +1158,7 @@ public class SimulationDialog extends AbstractDialog {
 	@SuppressWarnings("unchecked")
 	private Set<SimulationRun> getIncompatibleSimulationRuns(){
 		String contextName = comboContext.getSelectedItem().toString();
-		Context context = null;
+		SynthesisContext context = null;
 		try {
 			context = SimulationComponents.getInstance().getContext(contextName);
 		} catch (ParameterException e1) {
@@ -1201,7 +1201,7 @@ public class SimulationDialog extends AbstractDialog {
 		return allKnownProcessActivities;
 	}
 	
-	private Context getContext() throws ParameterException{
+	private SynthesisContext getContext() throws ParameterException{
 		if(comboContext.getSelectedItem() == null)
 			return null;
 		return SimulationComponents.getInstance().getContext(comboContext.getSelectedItem().toString());

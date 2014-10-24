@@ -42,7 +42,7 @@ import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
  * 
  * @author Thomas Stocker
  */
-public class Context {
+public class SynthesisContext {
 	/**
 	 * The name of the context.
 	 */
@@ -87,7 +87,7 @@ public class Context {
 	 * @throws ParameterException 
 	 * @throws Exception If activity list is <code>null</code> or empty.
 	 */
-	public Context(String name, Set<String> activities){
+	public SynthesisContext(String name, Set<String> activities){
 		setName(name);
 		Validate.notNull(activities);
 		Validate.notEmpty(activities);
@@ -102,7 +102,7 @@ public class Context {
 	 * @throws Exception If activity list is <code>null</code> or empty.
 	 * @see {@link #getNameListFromTransitions(Collection)}
 	 */
-	public Context(String name, Collection<AbstractTransition<?,?>> transitions){
+	public SynthesisContext(String name, Collection<AbstractTransition<?,?>> transitions){
 		this(name, PNUtils.getLabelSetFromTransitions(transitions, false));
 	}
 	
@@ -152,7 +152,7 @@ public class Context {
 				newActivities.addAll(activities);
 				validateACModel(acModel, subjects, newActivities, attributes, validUsageModes);
 			} else {
-				acModel.addTransactions(activities);
+				acModel.addActivities(activities);
 			}
 		}
 		this.activities.addAll(activities);
@@ -167,7 +167,7 @@ public class Context {
 		Validate.noNullElements(activities);
 		
 		if(acModel != null && removeFromACModel){
-			acModel.removeTransactions(activities);
+			acModel.removeActivities(activities);
 		}
 		this.activities.removeAll(activities);
 		this.activityDataUsage.keySet().removeAll(activities);
@@ -802,7 +802,7 @@ public class Context {
 		Validate.notNull(acModel);
 		if(!acModel.getSubjects().containsAll(subjects))
 			throw new InconsistencyException("Incompatible access control model: Missing subjects.");
-		if(!acModel.getTransactions().containsAll(activities))
+		if(!acModel.getActivities().containsAll(activities))
 			throw new InconsistencyException("Incompatible access control model: Missing activities.");
 		if(!acModel.getObjects().containsAll(attributes))
 			throw new InconsistencyException("Incompatible access control model: Missing attributes.");
@@ -832,7 +832,7 @@ public class Context {
 	 * @throws ParameterException 
 	 * @throws Exception 
 	 */
-	public static Context createRandomContext(Collection<AbstractTransition<?,?>> transitions, int originatorCount, List<String> roles){
+	public static SynthesisContext createRandomContext(Collection<AbstractTransition<?,?>> transitions, int originatorCount, List<String> roles){
 		return createRandomContext(PNUtils.getLabelSetFromTransitions(transitions, false), originatorCount, roles);
 	}
 	
@@ -846,14 +846,14 @@ public class Context {
 	 * @return A new randomly generated Context.
 	 * @throws Exception 
 	 */
-	public static Context createRandomContext(Set<String> activities, int originatorCount, List<String> roles){
+	public static SynthesisContext createRandomContext(Set<String> activities, int originatorCount, List<String> roles){
 		Validate.notNull(activities);
 		Validate.noNullElements(activities);
 		Validate.notNegative(originatorCount);
 		Validate.notNull(roles);
 		Validate.noNullElements(roles);
 		
-		Context newContext = new Context("Random Context", activities);
+		SynthesisContext newContext = new SynthesisContext("Random Context", activities);
 		List<String> cOriginators = createSubjectList(originatorCount);
 		newContext.setSubjects(new HashSet<String>(cOriginators));
 		//Create a new access control model.
@@ -1033,7 +1033,7 @@ public class Context {
 		return result;
 	}
 	
-	public void takeOverValues(Context context){
+	public void takeOverValues(SynthesisContext context){
 		Validate.notNull(context);
 		
 		name = ContextProperties.defaultName;
@@ -1089,12 +1089,12 @@ public class Context {
 	}
 	
 	@Override
-	public Context clone() {
+	public SynthesisContext clone() {
 			
-		Context result = null;
+		SynthesisContext result = null;
 		
 		try{
-			result = new Context(name, activities);
+			result = new SynthesisContext(name, activities);
 			
 			//Set Subjects
 			if(!subjects.isEmpty())
@@ -1146,21 +1146,22 @@ public class Context {
 		Set<String> activities = new HashSet<String>(Arrays.asList("act1", "act2"));
 		Set<String> attributes = new HashSet<String>(Arrays.asList("attribute1", "attribute2"));
 		Set<String> subjects = new HashSet<String>(Arrays.asList("s1", "s2"));
-		Context c = new Context("c1", activities);
+		SynthesisContext c = new SynthesisContext("c1", activities);
 		c.addAttributes(attributes);
 		c.addSubjects(subjects);
 		c.setDataUsageFor("act1", usage1);
 		c.setDataUsageFor("act2", usage2);
 		c.addRoutingConstraint("act1", NumberConstraint.parse("attribute1 < 200"));
 		
-		ACLModel acModel = new ACLModel(subjects);
+		ACLModel acModel = new ACLModel();
+		acModel.setSubjects(subjects);
 		acModel.setName("acmodel1");
-		acModel.addTransactions(activities);
+		acModel.addActivities(activities);
 		acModel.addObjects(attributes);
-		acModel.setTransactionPermission("s1", activities);
+		acModel.setActivityPermission("s1", activities);
 		c.setACModel(acModel);
 		
-		c.getProperties().store("GERD");
+		c.getProperties().store("VIOLA");
 	}
 
 }

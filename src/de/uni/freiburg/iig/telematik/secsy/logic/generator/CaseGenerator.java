@@ -18,7 +18,7 @@ public class CaseGenerator {
 	
 	protected AbstractPetriNet net = null;
 	protected PNTraverser<?> traverser = null;
-	protected Context context = null;
+	protected SynthesisContext context = null;
 	protected CaseDataContainer caseDataContainer = null;
 	protected AbstractTransition<?,?> nextTransition = null;
 	
@@ -36,7 +36,7 @@ public class CaseGenerator {
 		this.traverser = traverser;
 	}
 	
-	public void setContext(Context context){
+	public void setContext(SynthesisContext context){
 		Validate.notNull(context);
 		this.context = context;
 	}

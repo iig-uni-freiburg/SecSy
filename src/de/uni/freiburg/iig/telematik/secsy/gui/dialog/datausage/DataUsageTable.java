@@ -17,7 +17,7 @@ import javax.swing.table.TableCellRenderer;
 import de.invation.code.toval.types.DataUsage;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemListener;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionPanel;
@@ -29,10 +29,10 @@ public class DataUsageTable extends JTable implements ObjectPermissionItemListen
 	
 	private final int HEADER_HEIGHT = 40;
 
-	private Context context = null;
+	private SynthesisContext context = null;
 	private String activity = null;
 	
-	public DataUsageTable(Context context){
+	public DataUsageTable(SynthesisContext context){
 		super(new DataUsageTableModel(context));
 		this.context = context;
 		getModel().addPermissionItemListener(this);

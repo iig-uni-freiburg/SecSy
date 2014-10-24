@@ -6,7 +6,7 @@ import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
 import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.AttributeValueGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGenerator;
@@ -30,7 +30,7 @@ public class SimulatorFactory {
 	}
 	
 	public static Simulation createTraceSimulator(EventHandling eventHandling,
-												 Context context,
+												 SynthesisContext context,
 			 									 AbstractLogFormat logFormat,
 			 									 long startTime,
 			 									 int casesPerDay) 
@@ -42,7 +42,7 @@ public class SimulatorFactory {
 	}
 	
 	public static Simulation createTraceSimulator(EventHandling eventHandling, 
-												 Context context,
+												 SynthesisContext context,
 												 CaseDataContainer caseDataContainer,
 												 AbstractLogFormat logFormat, 
 												 long startTime, 

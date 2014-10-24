@@ -312,7 +312,7 @@ public abstract class LogGenerator implements TransformerListener{
 	 */
 	public void startSimulation() throws SimulationException, IOException, ConfigurationException{
 		if(getLogEntryGenerator() instanceof DetailedLogEntryGenerator){
-			Context context = ((DetailedLogEntryGenerator) logEntryGenerator).getContext();
+			SynthesisContext context = ((DetailedLogEntryGenerator) logEntryGenerator).getContext();
 			try {
 				((DetailedLogEntryGenerator) logEntryGenerator).getCaseDataContainer().setContext(context);
 			} catch (ParameterException e) {
@@ -338,7 +338,7 @@ public abstract class LogGenerator implements TransformerListener{
 		for(AbstractTraceTransformer traceTransformer: run.getTraceTransformerManager().getTraceTransformers()){
 			if(traceTransformer.requiresContext()){
 				if(getLogEntryGenerator() instanceof DetailedLogEntryGenerator){
-					Context context = ((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext();
+					SynthesisContext context = ((DetailedLogEntryGenerator) getLogEntryGenerator()).getContext();
 					try {
 						traceTransformer.setContext(context);
 					} catch (ParameterException e) {

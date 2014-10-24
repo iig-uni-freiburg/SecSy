@@ -29,7 +29,7 @@ import de.invation.code.toval.graphic.dialog.ValueChooserDialog;
 import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 
 public class RoutingConstraintsDialog extends JDialog {
 
@@ -45,11 +45,11 @@ public class RoutingConstraintsDialog extends JDialog {
 	
 	private JButton btnAddConstraint = null;
 	
-	private Context context = null;
+	private SynthesisContext context = null;
 	private List<AbstractConstraint<?>> constraints = new ArrayList<AbstractConstraint<?>>();
 
 
-	public RoutingConstraintsDialog(Window owner, Context context) {
+	public RoutingConstraintsDialog(Window owner, SynthesisContext context) {
 		super(owner);
 		this.context = context;
 		setResizable(false);
@@ -246,7 +246,7 @@ public class RoutingConstraintsDialog extends JDialog {
 			constraintList.setSelectedIndex(0);
 	}
 	
-	public static void showDialog(Window owner, Context context) throws ParameterException{
+	public static void showDialog(Window owner, SynthesisContext context) throws ParameterException{
 		new RoutingConstraintsDialog(owner, context);
 	}
 
