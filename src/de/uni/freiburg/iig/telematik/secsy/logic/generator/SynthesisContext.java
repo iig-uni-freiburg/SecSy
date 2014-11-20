@@ -1153,7 +1153,7 @@ public class SynthesisContext {
 		c.setDataUsageFor("act2", usage2);
 		c.addRoutingConstraint("act1", NumberConstraint.parse("attribute1 < 200"));
 		
-		ACLModel acModel = new ACLModel();
+		ACLModel acModel = new ACLModel("acl1");
 		acModel.setSubjects(subjects);
 		acModel.setName("acmodel1");
 		acModel.addActivities(activities);

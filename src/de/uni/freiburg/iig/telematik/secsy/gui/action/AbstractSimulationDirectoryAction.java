@@ -27,7 +27,7 @@ public abstract class AbstractSimulationDirectoryAction extends AbstractAction {
 	protected void addKnownSimulationDirectory(String simulationDirectory, boolean createSubfolders) throws PropertyException{
 		try {
 			GeneralProperties.getInstance().addKnownSimulationDirectory(simulationDirectory, createSubfolders);
-			GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory, false);
+			GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory, true);
 			GeneralProperties.getInstance().store();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block

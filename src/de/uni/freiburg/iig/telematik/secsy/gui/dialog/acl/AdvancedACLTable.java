@@ -29,7 +29,7 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 
 	private static final long serialVersionUID = 223793804425867377L;
 
-	private ACLModel aclModel = new ACLModel();
+	private ACLModel aclModel = new ACLModel("acl");
 	
 	private ActivityPermissionTableModel transactionModel = null;
 	private ObjectPermissionTableModel objectModel = null;
@@ -60,7 +60,7 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 		Validate.notNull(subjects);
 		Validate.noNullElements(subjects);
 		
-		aclModel = new ACLModel();
+		aclModel = new ACLModel("acl");
 		aclModel.setSubjects(subjects);
 		aclModel.setActivities(context.getActivities());
 		if(context.hasAttributes())
