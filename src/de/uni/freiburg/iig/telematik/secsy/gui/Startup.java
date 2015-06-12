@@ -5,46 +5,44 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import de.invation.code.toval.graphic.misc.AbstractStartup;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.SimulationDirectoryDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 
-public class Startup {
+public class Startup extends AbstractStartup {
 	
-	public static void main(String[] args) {
-		String osType = System.getProperty("os.name");
-		if(osType.equals("Mac OS") || osType.equals("Mac OS X")){
-			System.setProperty("com.apple.mrj.application.apple.menu.about.name", "SecSy");
-			System.setProperty("com.apple.macos.useScreenMenuBar", "true");
-			System.setProperty("apple.laf.useScreenMenuBar", "true");
-			System.setProperty("com.apple.mrj.application.apple.menu.about.name", "SecSy");
-		}
-		
-		//Check if there is a path to a simulation directory.
+	private static final String TOOL_NAME = "SECSY";
+
+	@Override
+	protected String getToolName() {
+		return TOOL_NAME;
+	}
+
+	@Override
+	protected void startApplication() throws Exception {
+		// Check if there is a path to a simulation directory.
 		if (!checkSimulationDirectory()) {
 			// There is no path and it is either not possible to set a path or the user aborted the corresponding dialog.
 			System.exit(0);
 		}
-				
 		MessageDialog.getInstance();
 		try {
-			SwingUtilities.invokeAndWait(new Runnable(){
-
+			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
 					SimulationComponents.getInstance();
 				}
-				
 			});
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Cannot launch SecSy", "Exception during startup:<br>Reason: " + e.getMessage(), JOptionPane.ERROR_MESSAGE);
+			throw new Exception("Exception during startup:<br>Reason: " + e.getMessage(), e);
 		}
 		new Simulator();
 	}
-	
-	private static boolean checkSimulationDirectory(){
+
+	private boolean checkSimulationDirectory() {
 		try {
 			GeneralProperties.getInstance().getSimulationDirectory();
 			return true;
@@ -68,15 +66,15 @@ public class Startup {
 			return chooseSimulationDirectory();
 		}
 	}
-	
-	private static boolean chooseSimulationDirectory(){
+
+	private boolean chooseSimulationDirectory() {
 		String simulationDirectory = null;
 		try {
 			simulationDirectory = SimulationDirectoryDialog.showDialog(null);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "<html>Cannot start simulation directory dialog.<br>Reason: "+e.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "<html>Cannot start simulation directory dialog.<br>Reason: " + e.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 		}
-		if(simulationDirectory == null)
+		if (simulationDirectory == null)
 			return false;
 		try {
 			GeneralProperties.getInstance().setSimulationDirectory(simulationDirectory, false);
@@ -92,5 +90,8 @@ public class Startup {
 			return false;
 		}
 	}
-
+	
+	public static void main(String[] args) {
+		new Startup();
+	}
 }

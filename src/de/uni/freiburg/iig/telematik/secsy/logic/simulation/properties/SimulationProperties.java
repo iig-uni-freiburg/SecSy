@@ -13,9 +13,9 @@ import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.AbstractProperties;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.format.LogFormatType;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.AbstractTransformer;
+import de.uni.freiburg.iig.telematik.sewol.format.LogFormatType;
 
 
 public class SimulationProperties extends AbstractProperties{

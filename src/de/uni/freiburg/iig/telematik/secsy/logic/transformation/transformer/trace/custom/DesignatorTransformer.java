@@ -5,12 +5,12 @@ import java.util.List;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.log.DataAttribute;
-import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
+import de.uni.freiburg.iig.telematik.sewol.log.DataAttribute;
+import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 
 public class DesignatorTransformer extends AbstractTraceTransformer{
 

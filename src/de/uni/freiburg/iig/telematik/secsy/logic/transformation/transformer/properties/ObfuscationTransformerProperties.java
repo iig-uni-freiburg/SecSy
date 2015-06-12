@@ -10,7 +10,7 @@ import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
+import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
 
 
 public class ObfuscationTransformerProperties  extends AbstractMultipleTraceTransformerProperties {

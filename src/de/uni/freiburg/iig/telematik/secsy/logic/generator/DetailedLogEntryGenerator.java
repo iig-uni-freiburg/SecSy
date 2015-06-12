@@ -3,16 +3,16 @@ package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.log.DataAttribute;
-import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
-import de.uni.freiburg.iig.telematik.jawl.log.EventType;
-import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException.ErrorCode;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformerManager;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sewol.log.DataAttribute;
+import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
+import de.uni.freiburg.iig.telematik.sewol.log.EventType;
+import de.uni.freiburg.iig.telematik.sewol.log.LockingException;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 
 /**
  * This class is used to generate Log entries from fired transitions.<br>

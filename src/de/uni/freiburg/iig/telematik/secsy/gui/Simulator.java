@@ -48,7 +48,7 @@ import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationExcepti
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.Simulation;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.parser.graphic.PNParserDialog;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 
 public class Simulator extends JFrame {

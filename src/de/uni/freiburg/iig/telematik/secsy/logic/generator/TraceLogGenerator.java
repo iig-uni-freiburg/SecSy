@@ -5,12 +5,6 @@ import java.util.Date;
 
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.validate.InconsistencyException;
-import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
-import de.uni.freiburg.iig.telematik.jawl.format.LogPerspective;
-import de.uni.freiburg.iig.telematik.jawl.log.EventType;
-import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
-import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
-import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator.ExecutionTime;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
@@ -19,7 +13,13 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformer
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerManager;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.AbstractTransformer;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sewol.format.AbstractLogFormat;
+import de.uni.freiburg.iig.telematik.sewol.format.LogPerspective;
+import de.uni.freiburg.iig.telematik.sewol.log.EventType;
+import de.uni.freiburg.iig.telematik.sewol.log.LockingException;
+import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
+import de.uni.freiburg.iig.telematik.sewol.writer.PerspectiveException;
 
 
 /**

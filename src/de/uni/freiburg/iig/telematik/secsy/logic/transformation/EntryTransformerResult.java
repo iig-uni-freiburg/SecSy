@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.secsy.logic.transformation;
 
 
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 
 public class EntryTransformerResult extends AbstractTransformerResult{
 	

@@ -25,9 +25,9 @@ import javax.swing.SwingUtilities;
 import de.invation.code.toval.graphic.dialog.ValueChooserDialog;
 import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.AbstractTransformerPanel;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.ObfuscationTransformer;
+import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
 
 public class ObfuscationTransformerPanel extends AbstractTransformerPanel<ObfuscationTransformer>{
 

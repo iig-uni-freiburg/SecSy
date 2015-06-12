@@ -7,10 +7,6 @@ import de.invation.code.toval.misc.RandomUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
-import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
-import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
@@ -18,6 +14,10 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.Prop
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.DayDelayTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractMultipleTraceTransformer;
+import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
+import de.uni.freiburg.iig.telematik.sewol.log.LockingException;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 
 
 public class DayDelayTransformer extends AbstractMultipleTraceTransformer implements PropertyAwareTransformer{

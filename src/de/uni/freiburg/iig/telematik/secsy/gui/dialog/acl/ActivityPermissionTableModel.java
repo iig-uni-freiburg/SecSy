@@ -11,7 +11,7 @@ import javax.swing.table.AbstractTableModel;
 
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.ACLModel;
 
 
 public class ActivityPermissionTableModel extends AbstractTableModel implements ItemListener {
@@ -24,9 +24,9 @@ public class ActivityPermissionTableModel extends AbstractTableModel implements 
 	private List<ItemListener> itemListeners = new ArrayList<ItemListener>();
 	
 	public ActivityPermissionTableModel(ACLModel aclModel){
-		rowNames = new ArrayList<String>(aclModel.getSubjects());
+		rowNames = new ArrayList<String>(aclModel.getContext().getSubjects());
 		Collections.sort(rowNames);
-		colNames = new ArrayList<String>(aclModel.getActivities());
+		colNames = new ArrayList<String>(aclModel.getContext().getActivities());
 		Collections.sort(colNames);
 		this.aclModel = aclModel;
 

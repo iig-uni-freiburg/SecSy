@@ -9,8 +9,6 @@ import java.util.Set;
 
 import de.invation.code.toval.misc.SetUtils;
 import de.invation.code.toval.properties.PropertyException;
-import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntryUtils;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntryUtils;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.AbstractTransformerResult;
@@ -18,6 +16,8 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.Prop
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.BoDTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.SoDBoDPropertyTransformer;
+import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntryUtils;
 
 
 public class BoDPropertyTransformer extends SoDBoDPropertyTransformer implements PropertyAwareTransformer{

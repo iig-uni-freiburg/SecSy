@@ -6,18 +6,16 @@ import java.util.List;
 import java.util.Set;
 
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
-import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
-import de.uni.freiburg.iig.telematik.sepia.mg.abstr.AbstractMarkingGraphRelation;
-import de.uni.freiburg.iig.telematik.sepia.mg.abstr.AbstractMarkingGraphState;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractMarking;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.traversal.PNTraverser;
 import de.uni.freiburg.iig.telematik.sepia.traversal.RandomPNTraverser;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 
 public class PNTraceGenerator {
 
@@ -25,11 +23,9 @@ public class PNTraceGenerator {
 	   T extends AbstractTransition<F,S>, 
 	   F extends AbstractFlowRelation<P,T,S>, 
 	   M extends AbstractMarking<S>, 
-	   S extends Object,
-	   X extends AbstractMarkingGraphState<M,S>,
-	   Y extends AbstractMarkingGraphRelation<M,X,S>> 
+	   S extends Object> 
 
-	   TraceGenerationResult generateTraces(AbstractPetriNet<P,T,F,M,S,X,Y> net, int numTraces, Integer maxEventsPerTrace, boolean useLabelNames) {
+	   TraceGenerationResult generateTraces(AbstractPetriNet<P,T,F,M,S> net, int numTraces, Integer maxEventsPerTrace, boolean useLabelNames) {
 
 		Validate.notNull(net);
 		ArrayList<LogTrace<LogEntry>> traces = new ArrayList<LogTrace<LogEntry>>(numTraces);

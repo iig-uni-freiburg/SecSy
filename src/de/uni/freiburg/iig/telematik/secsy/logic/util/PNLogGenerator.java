@@ -6,23 +6,22 @@ import java.util.List;
 import de.invation.code.toval.debug.Debug;
 import de.invation.code.toval.time.TimeScale;
 import de.invation.code.toval.time.TimeValue;
-import de.uni.freiburg.iig.telematik.jawl.format.LogFormatType;
-import de.uni.freiburg.iig.telematik.jawl.format.LogPerspective;
-import de.uni.freiburg.iig.telematik.jawl.format.MXMLLogFormat;
-import de.uni.freiburg.iig.telematik.jawl.format.PlainTraceLogFormat;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
-import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
-import de.uni.freiburg.iig.telematik.jawl.writer.LogWriter;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.mg.abstr.AbstractMarkingGraphRelation;
-import de.uni.freiburg.iig.telematik.sepia.mg.abstr.AbstractMarkingGraphState;
 import de.uni.freiburg.iig.telematik.sepia.parser.PNParsing;
 import de.uni.freiburg.iig.telematik.sepia.parser.PNParsingFormat;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractMarking;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sewol.format.LogFormatType;
+import de.uni.freiburg.iig.telematik.sewol.format.LogPerspective;
+import de.uni.freiburg.iig.telematik.sewol.format.MXMLLogFormat;
+import de.uni.freiburg.iig.telematik.sewol.format.PlainTraceLogFormat;
+import de.uni.freiburg.iig.telematik.sewol.format.XESLogFormat;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
+import de.uni.freiburg.iig.telematik.sewol.writer.LogWriter;
 
 public class PNLogGenerator {
 	
@@ -32,20 +31,21 @@ public class PNLogGenerator {
 	   			   T extends AbstractTransition<F,S>, 
 	   			   F extends AbstractFlowRelation<P,T,S>, 
 	   			   M extends AbstractMarking<S>, 
-	   			   S extends Object,
-	   			   X extends AbstractMarkingGraphState<M,S>,
-	   			   Y extends AbstractMarkingGraphRelation<M,X,S>>
+	   			   S extends Object>
 	
-	TraceGenerationResult generateLog(AbstractPetriNet<P,T,F,M,S,X,Y> net, int numTraces, Integer maxEventsPerTrace, boolean useLabelNames, String logPath, String logName, LogFormatType... logFormatTypes) throws Exception{
+	TraceGenerationResult generateLog(AbstractPetriNet<P,T,F,M,S> net, int numTraces, Integer maxEventsPerTrace, boolean useLabelNames, String logPath, String logName, LogFormatType... logFormatTypes) throws Exception{
 		Debug.message("Generating Log... ");
 		List<LogWriter> logWriters = new ArrayList<LogWriter>();
 		for(LogFormatType formatType: logFormatTypes){
 			switch(formatType){
 			case MXML:
-				logWriters.add(new LogWriter(new MXMLLogFormat(), logPath, logName));
+				logWriters.add(new LogWriter(new MXMLLogFormat(net.getName()), logPath, logName));
 				break;
 			case PLAIN:
 				logWriters.add(new LogWriter(new PlainTraceLogFormat(LogPerspective.TRACE_PERSPECTIVE), logPath, logName));
+				break;
+			case XES:
+				logWriters.add(new LogWriter(new XESLogFormat(logName)));
 				break;
 			}
 		}

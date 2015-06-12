@@ -10,10 +10,10 @@ import javax.swing.table.AbstractTableModel;
 
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.CircularObjectPermissionPanel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemListener;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.permission.CircularObjectPermissionPanel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.permission.ObjectPermissionItemEvent;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.permission.ObjectPermissionItemListener;
 
 
 public class ObjectPermissionTableModel extends AbstractTableModel implements ObjectPermissionItemListener {
@@ -27,9 +27,9 @@ public class ObjectPermissionTableModel extends AbstractTableModel implements Ob
 	private List<ObjectPermissionItemListener> permissionItemListeners = new ArrayList<ObjectPermissionItemListener>();
 	
 	public ObjectPermissionTableModel(ACLModel aclModel){
-		rowNames = new ArrayList<String>(aclModel.getSubjects());
+		rowNames = new ArrayList<String>(aclModel.getContext().getSubjects());
 		Collections.sort(rowNames);
-		colNames = new ArrayList<String>(aclModel.getObjects());
+		colNames = new ArrayList<String>(aclModel.getContext().getObjects());
 		Collections.sort(colNames);
 		this.aclModel = aclModel;
 

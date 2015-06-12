@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import de.invation.code.toval.types.HashList;
-import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntryUtils;
+import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntryUtils;
 
 public class SimulationLogEntryUtils extends LogEntryUtils {
 

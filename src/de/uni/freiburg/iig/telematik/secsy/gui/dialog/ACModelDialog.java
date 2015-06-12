@@ -36,13 +36,13 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl.ACLDialog;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACMValidationException;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.lattice.RoleLattice;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.lattice.graphic.RoleLatticeDialog;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.lattice.graphic.RoleMembershipDialog;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACMValidationException;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.lattice.RoleLattice;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.lattice.graphic.RoleLatticeDialog;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.lattice.graphic.RoleMembershipDialog;
 
 
 
@@ -74,7 +74,7 @@ public class ACModelDialog extends JDialog {
 	//---------------------------------------------------
 	
 	private SynthesisContext context = null;
-	private ACModel acModel = null;
+	private AbstractACModel acModel = null;
 
 	public ACModelDialog(Window owner, SynthesisContext context) throws ParameterException {
 		super(owner);
@@ -608,7 +608,7 @@ public class ACModelDialog extends JDialog {
 		theModel.removeAllElements();
 		Class aclModelType = radioACL.isSelected() ? ACLModel.class : RBACModel.class;
 		
-		for(ACModel acModel: SimulationComponents.getInstance().getACModels()){
+		for(AbstractACModel acModel: SimulationComponents.getInstance().getACModels()){
 //			if(aclModelType.isInstance(acModel) && context.isCompatible(acModel)){
 			if(aclModelType.isInstance(acModel)){
 				theModel.addElement(acModel.getName());
@@ -628,12 +628,12 @@ public class ACModelDialog extends JDialog {
 		}
 	}
 	
-	public ACModel getACModel(){
+	public AbstractACModel getACModel(){
 		return acModel;
 	}
 	
 	
-	public static ACModel showDialog(Window owner, SynthesisContext context) throws ParameterException{
+	public static AbstractACModel showDialog(Window owner, SynthesisContext context) throws ParameterException{
 		ACModelDialog activityDialog = new ACModelDialog(owner, context);
 		return activityDialog.getACModel();
 	}

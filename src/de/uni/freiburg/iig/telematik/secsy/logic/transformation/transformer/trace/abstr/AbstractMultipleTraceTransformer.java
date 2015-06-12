@@ -10,14 +10,14 @@ import java.util.Set;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
-import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.AbstractTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractMultipleTraceTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 
 
 /**

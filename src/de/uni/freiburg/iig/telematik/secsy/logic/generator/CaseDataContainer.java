@@ -13,10 +13,10 @@ import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.log.DataAttribute;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.properties.CaseDataContainerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.GuardDataContainer;
+import de.uni.freiburg.iig.telematik.sewol.log.DataAttribute;
 
 /**
  * This class stores values of data elements (attributes) for each execution case.<br>

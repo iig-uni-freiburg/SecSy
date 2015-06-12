@@ -41,8 +41,8 @@ import de.uni.freiburg.iig.telematik.secsy.gui.dialog.datausage.DataUsageDialog;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.ACLModel;
 
 
 
@@ -266,7 +266,7 @@ public class ContextDialog extends JDialog {
 			attributesAssigned = true;
 		}
 		
-		ACModel acModel = context.getACModel();
+		AbstractACModel acModel = context.getACModel();
 		if(acModel != null){
 			txtACModelName.setText(acModel.getName());
 			acModelAssigned = true;
@@ -336,7 +336,7 @@ public class ContextDialog extends JDialog {
 	private void cancelProcedure(){	
 		if(editMode){
 			//Check if access control model is still compatible.
-			ACModel acModel = originalContext.getACModel();
+			AbstractACModel acModel = originalContext.getACModel();
 			if(acModel != null){
 				try {
 					originalContext.validateACModel(acModel);
@@ -467,7 +467,7 @@ public class ContextDialog extends JDialog {
 			btnSetACModel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						ACModel acModel = ACModelDialog.showDialog(ContextDialog.this, context);
+						AbstractACModel acModel = ACModelDialog.showDialog(ContextDialog.this, context);
 						if(acModel != null){
 							context.setACModel(acModel);
 							acModelAssigned = true;

@@ -11,8 +11,8 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformer
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerManager;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.entry.AbstractEntryTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.traversal.PNTraverser;
 import de.uni.freiburg.iig.telematik.sepia.traversal.RandomPNTraverser;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
@@ -39,7 +39,7 @@ public class SimulationRun implements TraceCompletionListener{
 	
 	//------- Constructors ----------------------------------------------------------------------------------
 
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 			   								   int passes,
 			   								   PNTraverser<T> traverser){
 		setPasses(passes);
@@ -47,13 +47,13 @@ public class SimulationRun implements TraceCompletionListener{
 		setPNTraverser(traverser);
 	}
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 														   int passes) {
 		this(petriNet, passes, new RandomPNTraverser<T>(petriNet));
 	}
 	
 
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 														   int passes,
 														   PNTraverser<T> traverser,
 														   TraceTransformerManager traceTransformerManager){
@@ -61,13 +61,13 @@ public class SimulationRun implements TraceCompletionListener{
 		setTraceTransformerManager(traceTransformerManager);
 	}
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 			   												int passes,
 			   												TraceTransformerManager traceTransformerManager){
 		this(petriNet, passes, new RandomPNTraverser<T>(petriNet), traceTransformerManager);
 	}
 
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 			   												int passes,
 			   												PNTraverser<T> traverser,
 			   												EntryTransformerManager entryTransformerManager){
@@ -76,13 +76,13 @@ public class SimulationRun implements TraceCompletionListener{
 	}
 
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 														   int passes,
 														   EntryTransformerManager entryTransformerManager){
 		this(petriNet, passes, new RandomPNTraverser<T>(petriNet), entryTransformerManager);
 	}
 
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?, ?, ?> petriNet,
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
 														   int passes,
 														   TraceTransformerManager traceTransformerManager,
 														   EntryTransformerManager entryTransformerManager){
@@ -91,14 +91,14 @@ public class SimulationRun implements TraceCompletionListener{
 		setTraceTransformerManager(traceTransformerManager);
 	}
 
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?, ?, ?> petriNet, 
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
 														   PNTraverser<T> pnTraverser, 
 														   int passes){
 		this(petriNet, passes);
 		setPNTraverser(pnTraverser);
 	}
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?, ?, ?> petriNet, 
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
 														   PNTraverser<T> pnTraverser, 
 														   int passes, 
 														   TraceTransformerManager traceTransformerManager){
@@ -106,7 +106,7 @@ public class SimulationRun implements TraceCompletionListener{
 		setPNTraverser(pnTraverser);
 	}
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?, ?, ?> petriNet, 
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
 														   PNTraverser<T> pnTraverser, 
 														   int passes, 
 														   EntryTransformerManager entryTransformerManager){
@@ -114,7 +114,7 @@ public class SimulationRun implements TraceCompletionListener{
 		setPNTraverser(pnTraverser);
 	}
 	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?, ?, ?> petriNet, 
+	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
 														   PNTraverser<T> pnTraverser, 
 														   int passes, 
 														   TraceTransformerManager traceTransformerManager, 

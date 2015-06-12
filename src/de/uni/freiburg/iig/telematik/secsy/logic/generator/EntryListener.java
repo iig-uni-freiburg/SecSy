@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 
 public interface EntryListener {
 	

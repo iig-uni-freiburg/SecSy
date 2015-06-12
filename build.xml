@@ -10,7 +10,7 @@
 	- secsy-0.1.6-javadoc.jar
 	- secsy-0.1.6-consistent.jar
 	
-	The building process starts with cleaning all target files including compiles
+	The building process starts with cleaning all target files including compiled
 	java classes, compiled tests, and test reports (see #clean). Afterwards a
 	timestamp is generated and the target directory structure is created (see #init).
 	Then the project gets compiled (see #compile) and all unit tests are performed

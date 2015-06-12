@@ -19,9 +19,9 @@ import de.invation.code.toval.graphic.dialog.AbstractDialog;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.GUIProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
 
 
 
@@ -38,7 +38,7 @@ public class ACLDialog extends AbstractDialog {
 	private SynthesisContext context;
 
 	
-	public ACLDialog(Window owner, String title, ACModel acModel, SynthesisContext context) throws Exception {
+	public ACLDialog(Window owner, String title, AbstractACModel acModel, SynthesisContext context) throws Exception {
 		super(owner, true, new Object[]{title,acModel,context});
 	}
 	
@@ -50,7 +50,7 @@ public class ACLDialog extends AbstractDialog {
 	@Override
 	protected void initialize(Object... parameters) throws Exception{
 		setTitle((String) parameters[0]);
-		ACModel acModel = (ACModel) parameters[1];
+		AbstractACModel acModel = (AbstractACModel) parameters[1];
 		if(acModel instanceof ACLModel){
 			this.aclModel = (ACLModel) acModel;
 		} else if(acModel instanceof RBACModel){

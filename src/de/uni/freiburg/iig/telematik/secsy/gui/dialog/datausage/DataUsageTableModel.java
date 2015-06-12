@@ -11,10 +11,10 @@ import javax.swing.table.AbstractTableModel;
 
 import de.invation.code.toval.types.DataUsage;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemListener;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionListenerSupport;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionPanel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.permission.ObjectPermissionItemEvent;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.permission.ObjectPermissionItemListener;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.permission.ObjectPermissionListenerSupport;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.permission.ObjectPermissionPanel;
 
 
 

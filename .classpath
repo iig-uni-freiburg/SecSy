@@ -3,9 +3,8 @@
 	<classpathentry kind="src" output="bin/classes" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TOVAL"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/JAWL"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JAGAL"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/SERAM"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SEPIA"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SEWOL"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

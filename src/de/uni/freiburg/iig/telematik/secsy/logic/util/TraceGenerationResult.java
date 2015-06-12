@@ -2,8 +2,8 @@ package de.uni.freiburg.iig.telematik.secsy.logic.util;
 
 import java.util.List;
 
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
-import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 
 public class TraceGenerationResult{
 	

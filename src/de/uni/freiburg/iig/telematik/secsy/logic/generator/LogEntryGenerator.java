@@ -1,11 +1,11 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.EntryTransformerManager;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
 
 /**
  * This class is used to generate Log entries from fired transitions.<br>

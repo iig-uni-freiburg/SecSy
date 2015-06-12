@@ -16,12 +16,6 @@ import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
-import de.uni.freiburg.iig.telematik.jawl.format.LogPerspective;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
-import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
-import de.uni.freiburg.iig.telematik.jawl.writer.LogWriter;
-import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.ConfigurationException;
@@ -31,7 +25,13 @@ import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationListenerSu
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TransformerListener;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sewol.format.AbstractLogFormat;
+import de.uni.freiburg.iig.telematik.sewol.format.LogPerspective;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
+import de.uni.freiburg.iig.telematik.sewol.writer.LogWriter;
+import de.uni.freiburg.iig.telematik.sewol.writer.PerspectiveException;
 
 public abstract class LogGenerator implements TransformerListener{
 	

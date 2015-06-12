@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.exception;
 
-import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
+import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
 
 public class MissingRequirementException extends TransformerException {
 

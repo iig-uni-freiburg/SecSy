@@ -2,8 +2,6 @@ package de.uni.freiburg.iig.telematik.secsy.logic.simulation;
 
 import java.io.IOException;
 
-import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
-import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.AttributeValueGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
@@ -12,6 +10,8 @@ import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.EventHandling;
+import de.uni.freiburg.iig.telematik.sewol.format.AbstractLogFormat;
+import de.uni.freiburg.iig.telematik.sewol.writer.PerspectiveException;
 
 
 public class SimulatorFactory {

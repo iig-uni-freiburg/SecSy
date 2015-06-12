@@ -9,11 +9,11 @@ import java.util.Random;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.log.EntryField;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.CaseTimeGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.AbstractTransformerResult;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
+import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
 
 
 @SuppressWarnings("serial")

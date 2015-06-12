@@ -48,9 +48,6 @@ import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
-import de.uni.freiburg.iig.telematik.jawl.format.LogFormatFactory;
-import de.uni.freiburg.iig.telematik.jawl.format.LogFormatType;
 import de.uni.freiburg.iig.telematik.secsy.gui.GUIProperties;
 import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
@@ -69,6 +66,9 @@ import de.uni.freiburg.iig.telematik.secsy.logic.simulation.SimulationRun;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.EntryGenerationType;
 import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.EventHandling;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
+import de.uni.freiburg.iig.telematik.sewol.format.AbstractLogFormat;
+import de.uni.freiburg.iig.telematik.sewol.format.LogFormatFactory;
+import de.uni.freiburg.iig.telematik.sewol.format.LogFormatType;
 
 
 public class SimulationDialog extends AbstractDialog {

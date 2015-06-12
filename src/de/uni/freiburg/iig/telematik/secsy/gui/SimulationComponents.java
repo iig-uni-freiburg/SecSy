@@ -23,9 +23,6 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jawl.format.AbstractLogFormat;
-import de.uni.freiburg.iig.telematik.jawl.format.LogFormatFactory;
-import de.uni.freiburg.iig.telematik.jawl.writer.PerspectiveException;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.AbstractTransformerPanel;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.TransformerType;
@@ -39,9 +36,9 @@ import de.uni.freiburg.iig.telematik.secsy.gui.dialog.transformer.panel.Unauthor
 import de.uni.freiburg.iig.telematik.secsy.gui.properties.GeneralProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.AttributeValueGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.properties.CaseDataContainerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.properties.ContextProperties;
@@ -69,20 +66,24 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trac
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.UnauthorizedExecutionTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.RandomPTTraverser;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.traverse.RandomPTTraverser;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACLModelProperties;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACMValidationException;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelProperties;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelType;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.RBACModelProperties;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACLModelProperties;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACMValidationException;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACModelProperties;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACModelProperty;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACModelType;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.RBACModelProperties;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.sewol.format.AbstractLogFormat;
+import de.uni.freiburg.iig.telematik.sewol.format.LogFormatFactory;
+import de.uni.freiburg.iig.telematik.sewol.writer.PerspectiveException;
 
 
 public class SimulationComponents {
@@ -92,7 +93,7 @@ public class SimulationComponents {
 	
 	private static SimulationComponents instance = null;
 	
-	private Map<String, ACModel> acModels = new HashMap<String, ACModel>();
+	private Map<String, AbstractACModel> acModels = new HashMap<String, AbstractACModel>();
 	private Map<String, PTNet> petriNets = new HashMap<String, PTNet>();
 	private Map<String, SynthesisContext> contexts = new HashMap<String, SynthesisContext>();
 	private Map<String, CaseDataContainer> caseDataContainers = new HashMap<String, CaseDataContainer>();
@@ -198,7 +199,7 @@ public class SimulationComponents {
 		for(String netFile: netFiles){
 			MessageDialog.getInstance().addMessage("Loading Petri net: " + netFile.substring(netFile.lastIndexOf('/') + 1) + "...   ");
 			try{
-				AbstractPetriNet<?, ?, ?, ?, ?, ?, ?> loadedNet = null;
+				AbstractPetriNet<?,?,?,?,?> loadedNet = null;
 				loadedNet = new PNMLParser().parse(netFile, false, false).getPetriNet();
 				
 				if(!(loadedNet instanceof PTNet))
@@ -344,21 +345,27 @@ public class SimulationComponents {
 		MessageDialog.getInstance().newLine();
 	}
 	
-	private ACModel loadACModel(String acFile) throws PropertyException, ParameterException, IOException {
+	private AbstractACModel loadACModel(String acFile) throws PropertyException, ParameterException, IOException {
 		ACModelProperties testProperties = new ACModelProperties();
 		try {
 			testProperties.load(acFile);
-
+			
+			String contextName = testProperties.getContextName();
+			if(contextName == null)
+				throw new PropertyException(ACModelProperty.CONTEXT_NAME, null, "Cannot extract context name from AC model properties");
+			if(!containsContext(contextName))
+				throw new PropertyException(ACModelProperty.CONTEXT_NAME, contextName, "Components do not contain context with this name.");
+			
 			// Check ACModel type
-			ACModel newModel = null;
+			AbstractACModel newModel = null;
 			if (testProperties.getType().equals(ACModelType.ACL)) {
 				ACLModelProperties aclProperties = new ACLModelProperties();
 				aclProperties.load(acFile);
-				newModel = new ACLModel(aclProperties);
+				newModel = new ACLModel(aclProperties, getContext(contextName));
 			} else {
 				RBACModelProperties rbacProperties = new RBACModelProperties();
 				rbacProperties.load(acFile);
-				newModel = new RBACModel(rbacProperties);
+				newModel = new RBACModel(rbacProperties, getContext(contextName));
 			}
 			try {
 				newModel.checkValidity();
@@ -386,7 +393,7 @@ public class SimulationComponents {
 		Set<String> attributes = properties.getAttributes();
 		if(attributes != null && !attributes.isEmpty())
 			result.addAttributes(attributes);
-		ACModel acModel = getACModel(properties.getACModelName());
+		AbstractACModel acModel = getACModel(properties.getACModelName());
 		if(acModel == null){
 			//The access control model which is referenced by the context could not be loaded
 			//-> Abort loading the context.
@@ -478,7 +485,7 @@ public class SimulationComponents {
 		customTransformerTypes.add(new TransformerType(transformerClass, transformerPanelClass));
 
 		// Dateiname = Kassenname
-		// Statische Methode gibt die Bezeichnung des Transformers zurŸck
+		// Statische Methode gibt die Bezeichnung des Transformers zurï¿½ck
 	}
 	
 	
@@ -567,7 +574,7 @@ public class SimulationComponents {
 	}
 	
 	public void updateFiles() throws ParameterException, IOException, PropertyException{
-		for(ACModel acModel: acModels.values()){
+		for(AbstractACModel acModel: acModels.values()){
 			storeACModel(acModel);
 		}
 		for(SynthesisContext context: contexts.values()){
@@ -657,7 +664,7 @@ public class SimulationComponents {
 	 * @return <code>true</code> if there is at least one such context;<br>
 	 * <code>fasle</code> otherwise.
 	 */
-	public boolean containsContextsWithACModel(ACModel acModel){
+	public boolean containsContextsWithACModel(AbstractACModel acModel){
 		for(SynthesisContext context: contexts.values()){
 			if(context.getACModel().equals(acModel))
 				return true;
@@ -665,7 +672,7 @@ public class SimulationComponents {
 		return false;
 	}
 	
-	public Set<String> getContextsWithACModel(ACModel acModel){
+	public Set<String> getContextsWithACModel(AbstractACModel acModel){
 		Set<String> result = new HashSet<String>();
 		for(SynthesisContext context: contexts.values()){
 			if(context.getACModel().equals(acModel))
@@ -726,7 +733,7 @@ public class SimulationComponents {
 	 * @throws PropertyException if the procedure of property extraction fails.
 	 * @throws IOException if the property-representation of the new model cannot be stored.
 	 */
-	public void addACModel(ACModel acModel) throws ParameterException, IOException, PropertyException{
+	public void addACModel(AbstractACModel acModel) throws ParameterException, IOException, PropertyException{
 		addACModel(acModel, true);
 	}
 	
@@ -739,7 +746,7 @@ public class SimulationComponents {
 	 * @throws PropertyException if the model cannot be stored due to an error during property extraction.
 	 * @throws IOException if the model cannot be stored due to an I/O Error.
 	 */
-	public void addACModel(ACModel acModel, boolean storeToFile) throws ParameterException, IOException, PropertyException{
+	public void addACModel(AbstractACModel acModel, boolean storeToFile) throws ParameterException, IOException, PropertyException{
 		Validate.notNull(acModel);
 		Validate.notNull(storeToFile);
 		acModels.put(acModel.getName(), acModel);
@@ -756,7 +763,7 @@ public class SimulationComponents {
 	 * @throws IOException if the model cannot be stored due to an I/O Error.
 	 * @throws PropertyException if the model cannot be stored due to an error during property extraction.
 	 */
-	public void storeACModel(ACModel acModel) throws ParameterException, IOException, PropertyException{
+	public void storeACModel(AbstractACModel acModel) throws ParameterException, IOException, PropertyException{
 		Validate.notNull(acModel);
 		acModel.getProperties().store(GeneralProperties.getInstance().getPathForACModels()+acModel.getName());
 	}
@@ -783,7 +790,7 @@ public class SimulationComponents {
 	 * Returns all access control models, i.e. models stored in the simulation directory.
 	 * @return A set containing all contexts.
 	 */
-	public Collection<ACModel> getACModels(){
+	public Collection<AbstractACModel> getACModels(){
 		return Collections.unmodifiableCollection(acModels.values());
 	}
 	
@@ -793,7 +800,7 @@ public class SimulationComponents {
 	 * @return The model with the given name, or <code>null</code> if there is no such model.
 	 * @throws ParameterException if the given name is <code>null</code>.
 	 */
-	public ACModel getACModel(String name) throws ParameterException{
+	public AbstractACModel getACModel(String name) throws ParameterException{
 		Validate.notNull(name);
 		return acModels.get(name);
 	}
