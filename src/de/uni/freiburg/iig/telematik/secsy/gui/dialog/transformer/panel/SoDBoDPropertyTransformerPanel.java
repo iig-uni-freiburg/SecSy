@@ -176,7 +176,7 @@ public abstract class SoDBoDPropertyTransformerPanel<T extends SoDBoDPropertyTra
 	@Override
 	public void initializeFields(T transformer) throws Exception {
 		txtViolation.setText(new Double(transformer.getViolationProbability()*100.0).toString());
-		bindingActivities.addAll(transformer.getActivityGroups().get(0));
+		bindingActivities.addAll((Set<String>) transformer.getActivityGroups().get(0));
 		updateBindingActivitiesList();
 	}
 

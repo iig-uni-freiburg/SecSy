@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.generator.time;
 
+import de.invation.code.toval.misc.NamedComponent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,15 +27,15 @@ import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceStartListener;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeProperties.CaseStartPrecision;
 
-//TODO: Startzeit von Event muss sich an der Endzeit der letzten AktivitŠt orientieren
+//TODO: Startzeit von Event muss sich an der Endzeit der letzten Aktivitaet orientieren
 //zu der ein kausaler Zusammenhang beteht.
-//-> Modell und die Endzeit aller Case-AktivitŠten werden benštigt um das festzustellen.
-// Gehe die AktivitŠten von hinten her durch.
-// Sobald zu einer aktivitŠt ein kausaler zusammenhang besteht (=> diese AktivitŠt im Netz ein VorgŠnger ist)
-//  -> Generiere Strtzeit anhand der Endzeit dieser AktivitŠt
+//-> Modell und die Endzeit aller Case-Aktivitaeten werden benï¿½tigt um das festzustellen.
+// Gehe die Aktivitaeten von hinten her durch.
+// Sobald zu einer aktivitaet ein kausaler zusammenhang besteht (=> diese Aktivitaet im Netz ein Vorgaenger ist)
+//  -> Generiere Strtzeit anhand der Endzeit dieser Aktivitaet
 
-//TODO: Anfragen fŸr AktivitŠten an die AktivitŠten im modlel knŸpfen.
-//-> ValiditŠt von AktivitŠts-Strings
+//TODO: Anfragen fuer Aktivitaeten an die Aktivitaeten im Modell knuepfen.
+//-> Validitaet von Aktivitaets-Strings
 // Verwenden von Namen, nicht IDs
 
 /**
@@ -57,7 +58,7 @@ import de.uni.freiburg.iig.telematik.secsy.logic.generator.time.properties.TimeP
  * @author Thomas Stocker
  *
  */
-public class CaseTimeGenerator implements TraceStartListener, TraceCompletionListener{
+public class CaseTimeGenerator implements TraceStartListener, TraceCompletionListener, NamedComponent{
 	
 	protected static final String toStringFormat = " Time generator name: %s\n\n" +
 												   "           StartDate: %s\n" +

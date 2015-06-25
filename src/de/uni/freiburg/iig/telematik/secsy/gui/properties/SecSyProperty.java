@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.properties;
 
-public enum GeneralProperty {
+public enum SecSyProperty {
 	
 	SIMULATION_DIRECTORY,
 	APPLICATION_DIRECTORY,

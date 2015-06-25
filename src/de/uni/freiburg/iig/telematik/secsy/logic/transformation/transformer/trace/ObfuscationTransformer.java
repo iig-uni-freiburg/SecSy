@@ -16,7 +16,6 @@ import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerEvent;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.ObfuscationTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractMultipleTraceTransformer;
@@ -25,7 +24,7 @@ import de.uni.freiburg.iig.telematik.sewol.log.LockingException;
 import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 
 
-public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  implements PropertyAwareTransformer{
+public class ObfuscationTransformer extends AbstractMultipleTraceTransformer<ObfuscationTransformerProperties, ObfuscationTransformer> {
 	
 	private static final long serialVersionUID = 7410869336999582929L;
 
@@ -186,6 +185,11 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 	public List<EntryField> requiredEntryFields() {
 		return new ArrayList<EntryField>();
 	}
+
+    @Override
+    protected ObfuscationTransformerProperties newProperties() {
+        return new ObfuscationTransformerProperties(); 
+    }
 	
 	protected class Obfuscation{
 		private EntryField field;
@@ -237,16 +241,9 @@ public class ObfuscationTransformer extends AbstractMultipleTraceTransformer  im
 	}
 
 	@Override
-	protected void fillProperties(AbstractTransformerProperties properties) throws PropertyException {
+	protected void fillProperties(ObfuscationTransformerProperties properties) throws PropertyException {
 		super.fillProperties(properties);
-		((ObfuscationTransformerProperties) properties).setExcludedFields(excludedFields);
-	}
-
-	@Override
-	public AbstractTransformerProperties getProperties() throws PropertyException {
-		ObfuscationTransformerProperties properties = new ObfuscationTransformerProperties();
-		fillProperties(properties);
-		return properties;
+		properties.setExcludedFields(excludedFields);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.context.SynthesisContext;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.invation.code.toval.constraint.AbstractConstraint;
+import de.invation.code.toval.misc.NamedComponent;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerator;
 import de.invation.code.toval.validate.CompatibilityException;
@@ -38,7 +40,7 @@ import de.uni.freiburg.iig.telematik.sewol.log.DataAttribute;
  * 
  * @author Thomas Stocker
  */
-public class CaseDataContainer implements TraceCompletionListener, GuardDataContainer{
+public class CaseDataContainer implements TraceCompletionListener, GuardDataContainer, NamedComponent{
 	
 	private static final String toStringFormat = "Data container name: %s\n\n" +
 												 "Default value: %s\n%s";

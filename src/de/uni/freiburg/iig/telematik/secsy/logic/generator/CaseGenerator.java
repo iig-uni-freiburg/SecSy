@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.context.SynthesisContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

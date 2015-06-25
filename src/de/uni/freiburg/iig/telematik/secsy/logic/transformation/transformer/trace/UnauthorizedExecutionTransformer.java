@@ -7,8 +7,6 @@ import java.util.List;
 import de.invation.code.toval.properties.PropertyException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.UnauthorizedExecutionTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractMultipleTraceTransformer;
 import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
@@ -21,7 +19,7 @@ import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
  * 
  * @author Thomas Stocker
  */
-public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTransformer implements PropertyAwareTransformer{
+public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTransformer<UnauthorizedExecutionTransformerProperties, UnauthorizedExecutionTransformer> {
 	
 	private static final long serialVersionUID = 4507754400951475987L;
 
@@ -133,13 +131,6 @@ public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTrans
 	}
 
 	@Override
-	public AbstractTransformerProperties getProperties() throws PropertyException {
-		UnauthorizedExecutionTransformerProperties properties = new UnauthorizedExecutionTransformerProperties();
-		fillProperties(properties);
-		return properties;
-	}
-
-	@Override
 	public String getHint() {
 		return hint;
 	}
@@ -153,5 +144,14 @@ public class UnauthorizedExecutionTransformer extends AbstractMultipleTraceTrans
 	public boolean requiresContext() {
 		return true;
 	}
+
+    @Override
+    protected UnauthorizedExecutionTransformerProperties newProperties() {
+        return new UnauthorizedExecutionTransformerProperties();
+    }
+
+
+        
+        
 	
 }

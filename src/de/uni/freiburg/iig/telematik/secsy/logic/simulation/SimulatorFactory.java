@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.AttributeValueGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.context.SynthesisContext;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceLogGenerator;

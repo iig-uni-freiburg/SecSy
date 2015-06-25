@@ -1,8 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.simulation;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import de.invation.code.toval.graphic.dialog.DialogObject;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.TraceCompletionListener;
@@ -16,13 +14,15 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.traversal.PNTraverser;
 import de.uni.freiburg.iig.telematik.sepia.traversal.RandomPNTraverser;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Simple class for simulation runs.
  * 
  * @author Thomas Stocker
  */
-public class SimulationRun implements TraceCompletionListener{
+public class SimulationRun implements TraceCompletionListener,DialogObject<SimulationRun>{
 	
 	private static final String toStringFormat = "%s: %s, %s passes%s";
 	private static final String transformerformat = "--- %s\n";
@@ -39,157 +39,92 @@ public class SimulationRun implements TraceCompletionListener{
 	
 	//------- Constructors ----------------------------------------------------------------------------------
 
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
-			   								   int passes,
-			   								   PNTraverser<T> traverser){
-		setPasses(passes);
-		setPetriNet(petriNet);
-		setPNTraverser(traverser);
+        public SimulationRun(){}
+        
+	public SimulationRun(SimulationRunGenerator generator){
+            Validate.notNull(generator.getPetriNet());
+            Validate.notNull(generator.getPasses());
+            if(generator.getPasses() != null)
+		setPasses(generator.getPasses());
+            if(generator.getEntryTransformerManager() != null)
+                setEntryTransformerManager(generator.getEntryTransformerManager());
+            if(generator.getTraceTransformerManager() != null)
+                setTraceTransformerManager(generator.getTraceTransformerManager());
+            if(generator.getPetriNet() != null)
+                setPetriNet(generator.getPetriNet());
+            if(generator.getPnTraverser() != null){
+                setPNTraverser(generator.getPnTraverser());
+            } else {
+                setPNTraverser(new RandomPNTraverser(getPetriNet()));
+            }
 	}
-	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
-														   int passes) {
-		this(petriNet, passes, new RandomPNTraverser<T>(petriNet));
-	}
-	
-
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
-														   int passes,
-														   PNTraverser<T> traverser,
-														   TraceTransformerManager traceTransformerManager){
-		this(petriNet, passes, traverser);
-		setTraceTransformerManager(traceTransformerManager);
-	}
-	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
-			   												int passes,
-			   												TraceTransformerManager traceTransformerManager){
-		this(petriNet, passes, new RandomPNTraverser<T>(petriNet), traceTransformerManager);
-	}
-
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
-			   												int passes,
-			   												PNTraverser<T> traverser,
-			   												EntryTransformerManager entryTransformerManager){
-		this(petriNet, passes, traverser);
-		setEntryTransformerManager(entryTransformerManager);
-	}
-
-	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
-														   int passes,
-														   EntryTransformerManager entryTransformerManager){
-		this(petriNet, passes, new RandomPNTraverser<T>(petriNet), entryTransformerManager);
-	}
-
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?, T, ?, ?, ?> petriNet,
-														   int passes,
-														   TraceTransformerManager traceTransformerManager,
-														   EntryTransformerManager entryTransformerManager){
-		this(petriNet, passes);
-		setEntryTransformerManager(entryTransformerManager);
-		setTraceTransformerManager(traceTransformerManager);
-	}
-
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
-														   PNTraverser<T> pnTraverser, 
-														   int passes){
-		this(petriNet, passes);
-		setPNTraverser(pnTraverser);
-	}
-	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
-														   PNTraverser<T> pnTraverser, 
-														   int passes, 
-														   TraceTransformerManager traceTransformerManager){
-		this(petriNet, passes, traceTransformerManager);
-		setPNTraverser(pnTraverser);
-	}
-	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
-														   PNTraverser<T> pnTraverser, 
-														   int passes, 
-														   EntryTransformerManager entryTransformerManager){
-		this(petriNet, passes, entryTransformerManager);
-		setPNTraverser(pnTraverser);
-	}
-	
-	public <T extends AbstractTransition<?,?>> SimulationRun(AbstractPetriNet<?,T,?,?,?> petriNet, 
-														   PNTraverser<T> pnTraverser, 
-														   int passes, 
-														   TraceTransformerManager traceTransformerManager, 
-														   EntryTransformerManager entryTransformerManager){
-		this(petriNet, passes, traceTransformerManager, entryTransformerManager);
-		setPNTraverser(pnTraverser);
-	}
-	
 	
 	//------- Getters and Setters ----------------------------------------------------------------------
 	
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public final void setName(String name) {
 		this.name = name;
 	}
 	
-	public AbstractPetriNet getPetriNet() {
+	public final AbstractPetriNet getPetriNet() {
 		return petriNet;
 	}
 	
-	public void setPetriNet(AbstractPetriNet petriNet){
+	public final void setPetriNet(AbstractPetriNet petriNet){
 		Validate.notNull(petriNet);
 		this.petriNet = petriNet;
 	}
 
-	public TraceTransformerManager getTraceTransformerManager() {
+	public final TraceTransformerManager getTraceTransformerManager() {
 		return traceTransformerManager;
 	}
 	
-	public void setTraceTransformerManager(TraceTransformerManager traceTransformerManager){
+	public final void setTraceTransformerManager(TraceTransformerManager traceTransformerManager){
 		Validate.notNull(traceTransformerManager);
 		this.traceTransformerManager = traceTransformerManager;
 	}
 	
-	public EntryTransformerManager getEntryTransformerManager() {
+	public final EntryTransformerManager getEntryTransformerManager() {
 		return entryTransformerManager;
 	}
 	
-	public void setEntryTransformerManager(EntryTransformerManager entryTransformerManager){
+	public final void setEntryTransformerManager(EntryTransformerManager entryTransformerManager){
 		Validate.notNull(entryTransformerManager);
 		this.entryTransformerManager = entryTransformerManager;
 	}
 	
-	public void setPNTraverser(PNTraverser pnTraverser){
+	public final void setPNTraverser(PNTraverser pnTraverser){
 		Validate.notNull(pnTraverser);
 		this.pnTraverser = pnTraverser;
 	}
 	
-	public PNTraverser getPNTraverser(){
+	public final PNTraverser getPNTraverser(){
 		return pnTraverser;
 	}
 	
-	public void setPasses(int passes){
+	public final void setPasses(int passes){
 		Validate.notNegative(passes, "Negative number of passes.");
 		this.passes = passes;
 	}
 	
-	public boolean isDone(){
+	public final boolean isDone(){
 		return generatedTraces >= passes;
 	}
 	
-	public Integer getPasses(){
+	public final Integer getPasses(){
 		return passes;
 	}
 	
-	public int getGeneratedTraces(){
+	public final int getGeneratedTraces(){
 		return generatedTraces;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Set<String> getActivities(){
-		Set<String> activities = new HashSet<String>();
+	public final Set<String> getActivities(){
+		Set<String> activities = new HashSet<>();
 		AbstractPetriNet ptNet = getPetriNet();
 		if(ptNet == null)
 			throw new ParameterException("Cannot extract activities: Petri net not set.");
@@ -200,11 +135,12 @@ public class SimulationRun implements TraceCompletionListener{
 	}
 
 	@Override
-	public void traceCompleted(int caseNumber) {
+	public final void traceCompleted(int caseNumber) {
 		generatedTraces++;
 	}
 
-	public void takeoverValues(SimulationRun other) throws Exception{
+        @Override
+	public final void takeoverValues(SimulationRun other) throws Exception{
 		setPasses(other.getPasses());
 		setPetriNet(other.getPetriNet());
 		setPNTraverser(other.getPNTraverser());
@@ -218,29 +154,33 @@ public class SimulationRun implements TraceCompletionListener{
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public SimulationRun clone(){
-		SimulationRun result = null;
-		
-		try {
-			EntryTransformerManager entryTransformerManager = new EntryTransformerManager();
-			for(AbstractEntryTransformer entryTransformer: getEntryTransformerManager().getEntryTransformers()){
-				entryTransformerManager.addTransformer(entryTransformer);
-			}
-			
-			TraceTransformerManager traceTransformerManager = new TraceTransformerManager();
-			for(AbstractTraceTransformer traceTransformer: getTraceTransformerManager().getTraceTransformers()){
-				traceTransformerManager.addTransformer(traceTransformer);
-			}
-			
-			result = new SimulationRun(getPetriNet(), getPNTraverser(), getPasses(), traceTransformerManager, entryTransformerManager);
-			result.setName(getName());
-		} catch(Exception e){
-			return result;
-		}
-		return result;
-	}
+    @Override
+    public SimulationRun clone() {
+        SimulationRun result = null;
+
+        try {
+            EntryTransformerManager newEntryTransformerManager = new EntryTransformerManager();
+            for (AbstractEntryTransformer entryTransformer : getEntryTransformerManager().getEntryTransformers()) {
+                newEntryTransformerManager.addTransformer(entryTransformer);
+            }
+
+            TraceTransformerManager newTraceTransformerManager = new TraceTransformerManager();
+            for (AbstractTraceTransformer traceTransformer : getTraceTransformerManager().getTraceTransformers()) {
+                newTraceTransformerManager.addTransformer(traceTransformer);
+            }
+            SimulationRunGenerator generator = new SimulationRunGenerator();
+            generator.setEntryTransformerManager(newEntryTransformerManager);
+            generator.setTraceTransformerManager(newTraceTransformerManager);
+            generator.setPasses(getPasses());
+            generator.setPetriNet(getPetriNet());
+            generator.setPnTraverser(getPNTraverser());
+            result = new SimulationRun(generator);
+            result.setName(getName());
+        } catch (Exception e) {
+            return null;
+        }
+        return result;
+    }
 	
 	public void reset(){
 		generatedTraces = 0;

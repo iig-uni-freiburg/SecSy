@@ -11,8 +11,6 @@ import de.invation.code.toval.properties.PropertyException;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntryUtils;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.AbstractTransformerResult;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.SoDTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.SoDBoDPropertyTransformer;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntryUtils;
@@ -29,7 +27,7 @@ import de.uni.freiburg.iig.telematik.sewol.log.LogEntryUtils;
  * 
  * @author Thomas Stocker
  */
-public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements PropertyAwareTransformer{
+public class SoDPropertyTransformer extends SoDBoDPropertyTransformer<SoDTransformerProperties, SoDPropertyTransformer> {
 
 	private static final long serialVersionUID = -7453618992847180261L;
 	
@@ -170,13 +168,6 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 	}
 
 	@Override
-	public AbstractTransformerProperties getProperties() throws PropertyException {
-		SoDTransformerProperties properties = new SoDTransformerProperties();
-		fillProperties(properties);
-		return properties;
-	}
-
-	@Override
 	public String getHint() {
 		return hint;
 	}
@@ -190,5 +181,10 @@ public class SoDPropertyTransformer extends SoDBoDPropertyTransformer implements
 	public boolean requiresContext() {
 		return false;
 	}
+
+    @Override
+    protected SoDTransformerProperties newProperties() {
+        return new SoDTransformerProperties();
+    }
 
 }

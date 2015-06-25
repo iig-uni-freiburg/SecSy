@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.simulation;
 
+import de.invation.code.toval.misc.NamedComponent;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -13,7 +14,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.SynthesisContext;
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.context.SynthesisContext;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.DetailedLogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogEntryGenerator;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.LogGenerator;
@@ -28,7 +29,7 @@ import de.uni.freiburg.iig.telematik.secsy.logic.simulation.properties.Simulatio
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 
 
-public class Simulation implements SimulationListener{
+public class Simulation implements SimulationListener, NamedComponent{
 
 	public static Calendar calendar = new GregorianCalendar(Calendar.getInstance().getTimeZone());
 	

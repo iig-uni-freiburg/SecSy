@@ -1,7 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -12,7 +11,6 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.log.SimulationLogEntry;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.TraceTransformerResult;
-import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.PropertyAwareTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.AbstractTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.IncompleteLoggingTransformerProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.properties.SkipActivitiesTransformerProperties;
@@ -21,7 +19,7 @@ import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
 import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 
 
-public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransformer implements PropertyAwareTransformer{
+public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransformer<IncompleteLoggingTransformerProperties, IncompleteLoggingTransformer> {
 
 	private static final long serialVersionUID = 2457776689250793415L;
 
@@ -113,16 +111,9 @@ public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransform
 	}
 	
 	@Override
-	protected void fillProperties(AbstractTransformerProperties properties) throws PropertyException {
+	protected void fillProperties(IncompleteLoggingTransformerProperties properties) throws PropertyException {
 		super.fillProperties(properties);
-		((IncompleteLoggingTransformerProperties) properties).setSkipActivities(skipActivities);
-	}
-
-	@Override
-	public AbstractTransformerProperties getProperties() throws PropertyException {
-		IncompleteLoggingTransformerProperties properties = new IncompleteLoggingTransformerProperties();
-		fillProperties(properties);
-		return properties;
+		properties.setSkipActivities(skipActivities);
 	}
 
 	@Override
@@ -139,6 +130,11 @@ public class IncompleteLoggingTransformer extends AbstractMultipleTraceTransform
 	public boolean requiresContext() {
 		return false;
 	}
+
+    @Override
+    protected IncompleteLoggingTransformerProperties newProperties() {
+        return new IncompleteLoggingTransformerProperties();
+    }
 	
 
 }

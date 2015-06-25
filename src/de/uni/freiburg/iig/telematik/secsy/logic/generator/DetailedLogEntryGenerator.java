@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.context.SynthesisContext;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerationException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;

@@ -301,7 +301,7 @@ public class ActivityDDAllDialog extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					List<String> activities = new ArrayList<String>(activityCandidates);
 					try {
-						if(dialogType.equals(DialogType.Duration)){
+						if(dialogType.equals(DialogType.DURATION_DIALOG)){
 							activities.removeAll(ActivityDDAllDialog.this.timeProperties.getActivitiesWithIndividualDuration());
 						} else {
 							activities.removeAll(ActivityDDAllDialog.this.timeProperties.getActivitiesWithIndividualDelay());
@@ -351,7 +351,7 @@ public class ActivityDDAllDialog extends JDialog {
 			btnOK.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(!rdbtnDefaultBoundedValue.isSelected()){
-						if(dialogType.equals(DialogType.Duration)){
+						if(dialogType.equals(DialogType.DURATION_DIALOG)){
 							timeProperties.removeDefaultActivityDurationBounds();
 						} else {
 							timeProperties.removeDefaultActivityDelayBounds();
@@ -390,7 +390,7 @@ public class ActivityDDAllDialog extends JDialog {
 					Double deviation = deviationPercentage / 100.0;
 					
 					try {
-						if(dialogType.equals(DialogType.Duration)){
+						if(dialogType.equals(DialogType.DURATION_DIALOG)){
 							if(deviation == 0.0){
 								ActivityDDAllDialog.this.timeProperties.setDefaultActivityDuration(defaultValue, defaultValueScale);
 							} else {
@@ -454,7 +454,7 @@ public class ActivityDDAllDialog extends JDialog {
 					}
 					
 					try {
-						if(dialogType.equals(DialogType.Duration)){
+						if(dialogType.equals(DialogType.DURATION_DIALOG)){
 							ActivityDDAllDialog.this.timeProperties.setDefaultActivityDurationBounds(minValue, minValueScale, maxValue, maxValueScale);
 						} else {
 							ActivityDDAllDialog.this.timeProperties.setDefaultActivityDelayBounds(minValue, minValueScale, maxValue, maxValueScale);
@@ -471,7 +471,7 @@ public class ActivityDDAllDialog extends JDialog {
 	}
 	
 	private String getValueString(String activity){
-		if(dialogType.equals(DialogType.Duration)){
+		if(dialogType.equals(DialogType.DURATION_DIALOG)){
 			try {
 				if(timeProperties.hasIndivivualDuration(activity)){
 					if(!timeProperties.hasIndividualDurationDeviation(activity)){
@@ -544,7 +544,7 @@ public class ActivityDDAllDialog extends JDialog {
 	
 	private void removeActivityValue(String activity){
 		try {
-			if(dialogType.equals(DialogType.Duration)){
+			if(dialogType.equals(DialogType.DURATION_DIALOG)){
 				ActivityDDAllDialog.this.timeProperties.removeIndividualActivityDuration(activity);
 			} else {
 				ActivityDDAllDialog.this.timeProperties.removeIndividualActivityDelay(activity);
@@ -595,7 +595,7 @@ public class ActivityDDAllDialog extends JDialog {
 		TimeValue defaultMaxValue = new TimeValue();
 		Double defaultDeviation = null;
 		try {
-			if(dialogType.equals(DialogType.Duration)){
+			if(dialogType.equals(DialogType.DURATION_DIALOG)){
 				defaultValue = timeProperties.getDefaultActivityDuration();
 				defaultDeviation = timeProperties.getDefaultActivityDurationDeviation();
 				if(timeProperties.existDefaultActivityDurationBounds()){

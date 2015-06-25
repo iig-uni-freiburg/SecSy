@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 
+import de.uni.freiburg.iig.telematik.secsy.logic.generator.context.SynthesisContext;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

@@ -160,7 +160,7 @@ public class ActivityDDDialog extends JDialog {
 					}
 					Double deviation = deviationPercentage / 100.0;
 					try {
-						if(dialogType.equals(DialogType.Duration)){
+						if(dialogType.equals(DialogType.DURATION_DIALOG)){
 							ActivityDDDialog.this.timeProperties.removeIndividualActivityDuration(comboActivity.getSelectedItem().toString());
 							if(deviation == 0.0){
 								ActivityDDDialog.this.timeProperties.setActivityDuration(comboActivity.getSelectedItem().toString(), value, scale);
@@ -194,7 +194,7 @@ public class ActivityDDDialog extends JDialog {
 		if(selectedActivity == null)
 			return;
 		try {
-			if(dialogType.equals(DialogType.Duration)){
+			if(dialogType.equals(DialogType.DURATION_DIALOG)){
 				if(timeProperties.hasIndivivualDuration(selectedActivity)){
 					TimeValue duration = timeProperties.getIndividualActivityDuration(selectedActivity);
 					txtValue.setText(duration.getValue().toString());
@@ -240,7 +240,7 @@ public class ActivityDDDialog extends JDialog {
 			activities.add("act1");
 			activities.add("act2");
 			activities.add("act3");
-			ActivityDDDialog.showActivityDDDialog(null, DialogType.Duration, activities, new TimeProperties());
+			ActivityDDDialog.showActivityDDDialog(null, DialogType.DURATION_DIALOG, activities, new TimeProperties());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
