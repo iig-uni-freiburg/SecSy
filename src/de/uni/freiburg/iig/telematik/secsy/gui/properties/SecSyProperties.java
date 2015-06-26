@@ -38,7 +38,9 @@ public class SecSyProperties extends AbstractWorkingDirectoryProperties<SecSyPro
     
     private static SecSyProperties instance = null;
 
-    public SecSyProperties() throws IOException {}
+    public SecSyProperties() throws IOException {
+        super();
+    }
 
     @Override
     public String getDefaultWorkingDirectoryName() {
