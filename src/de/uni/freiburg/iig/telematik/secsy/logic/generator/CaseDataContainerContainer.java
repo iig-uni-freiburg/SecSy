@@ -7,7 +7,6 @@ package de.uni.freiburg.iig.telematik.secsy.logic.generator;
 
 import de.invation.code.toval.debug.SimpleDebugger;
 import de.invation.code.toval.misc.wd.AbstractComponentContainer;
-import de.uni.freiburg.iig.telematik.secsy.gui.properties.SecSyProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.properties.CaseDataContainerProperties;
 import java.io.IOException;
 import java.util.Arrays;
@@ -52,11 +51,6 @@ public class CaseDataContainerContainer extends AbstractComponentContainer<CaseD
         CaseDataContainer result = new CaseDataContainer(valueGenerator);
         result.setName(properties.getName());
         return result;
-    }
-
-    @Override
-    public Set<String> getAcceptedFileEndings() {
-        return new HashSet<>(Arrays.asList(""));
     }
 
     @Override

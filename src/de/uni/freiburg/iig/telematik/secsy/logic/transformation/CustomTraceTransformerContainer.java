@@ -64,11 +64,6 @@ public class CustomTraceTransformerContainer extends AbstractComponentContainer<
     }
 
     @Override
-    public Set<String> getAcceptedFileEndings() {
-        return new HashSet<>(Arrays.asList(""));
-    }
-
-    @Override
     protected AbstractTraceTransformer loadComponentFromFile(String file) throws Exception {
         return TransformerFactory.loadCustomTransformer(file);
     }

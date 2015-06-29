@@ -35,11 +35,6 @@ public class CaseTimeGeneratorContainer extends AbstractComponentContainer<CaseT
     }
 
     @Override
-    public Set<String> getAcceptedFileEndings() {
-        return new HashSet<>(Arrays.asList(""));
-    }
-    
-    @Override
     protected CaseTimeGenerator loadComponentFromFile(String file) throws Exception {
         return TimeGeneratorFactory.createCaseTimeGenerator(new TimeProperties(file));
     }

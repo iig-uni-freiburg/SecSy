@@ -24,7 +24,6 @@ import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trac
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.SoDPropertyTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.UnauthorizedExecutionTransformer;
 import de.uni.freiburg.iig.telematik.secsy.logic.transformation.transformer.trace.abstr.AbstractTraceTransformer;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -61,12 +60,7 @@ public class TraceTransformerContainer extends AbstractComponentContainer<Abstra
     public String getComponentDescriptor() {
         return TRANSFORMER_DESCRIPTOR;
     }
-
-    @Override
-    public Set<String> getAcceptedFileEndings() {
-        return new HashSet<>(Arrays.asList(""));
-    }
-
+    
     public Set<TransformerType> getTransformerTypes() {
         return Collections.unmodifiableSet(transformerTypes);
     }

@@ -158,7 +158,6 @@ public class Simulator extends JFrame {
         });
 
         setVisible(true);
-        System.out.println("Gerd");
     }
 
     private JMenuBar getMenu() {

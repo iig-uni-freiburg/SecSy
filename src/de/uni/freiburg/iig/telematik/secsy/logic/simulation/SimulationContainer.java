@@ -35,7 +35,6 @@ import de.uni.freiburg.iig.telematik.sewol.format.LogFormatFactory;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -84,11 +83,6 @@ public class SimulationContainer extends AbstractComponentContainer<Simulation> 
     @Override
     public String getComponentDescriptor() {
         return SIMULATION_DESCRIPTOR;
-    }
-
-    @Override
-    public Set<String> getAcceptedFileEndings() {
-        return new HashSet<>(Arrays.asList(""));
     }
 
     @Override
