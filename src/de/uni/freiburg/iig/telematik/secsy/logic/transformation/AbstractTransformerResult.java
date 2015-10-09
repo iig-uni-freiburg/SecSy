@@ -9,14 +9,14 @@ public abstract class AbstractTransformerResult {
 	private boolean transformerSuccess = true;
 	private StringBuilder transformerMessages = new StringBuilder();
 	private final String MESSAGE_FORMAT = "[%s] - %s";
-	private int caseNumber;
+	private long caseNumber;
 	
 	public AbstractTransformerResult(boolean transformerApplied){
 		this.transformerApplied = transformerApplied;
 	}
 	
-	public void setCaseNumber(int caseNumber){
-		Validate.bigger(caseNumber, 0);
+	public void setCaseNumber(long caseNumber){
+		Validate.bigger(caseNumber, 0L);
 		this.caseNumber = caseNumber;
 	}
 	
@@ -32,7 +32,7 @@ public abstract class AbstractTransformerResult {
 		return transformerApplied;
 	}
 	
-	public int getCaseNumber(){
+	public long getCaseNumber(){
 		return caseNumber;
 	}
 	
