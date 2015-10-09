@@ -16,6 +16,7 @@ import de.uni.freiburg.iig.telematik.sewol.log.EntryField;
 import de.uni.freiburg.iig.telematik.sewol.log.LockingException;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 import de.uni.freiburg.iig.telematik.sewol.log.ModificationException;
+import java.util.Objects;
 
 public class SimulationLogEntry extends DULogEntry{
 
@@ -23,7 +24,7 @@ public class SimulationLogEntry extends DULogEntry{
 	 * The list of originator candidates.<br>
 	 * The originator of the log entry can only be chosen out of this candidate list.
 	 */
-	private HashList<String> originatorCandidates = new HashList<String>();
+	private HashList<String> originatorCandidates = new HashList<>();
 	
 	
 	// ------- Constructors ----------------------------------------------------------------------
@@ -48,7 +49,6 @@ public class SimulationLogEntry extends DULogEntry{
 	 * Generates a new log entry using the given activity and the set of originator candidates.
 	 * @param activity Activity of the log entry.
 	 * @param originatorCandidates List of originator candidates.
-	 * @throws Exception
 	 */
 	public SimulationLogEntry(String activity, List<String> originatorCandidates) {
 		this(activity);
@@ -69,7 +69,6 @@ public class SimulationLogEntry extends DULogEntry{
 	 * @param originator Originator to set.
 	 * @throws NullPointerException if the given value is <code>null</code>.
 	 * @throws LockingException if the originator field is locked <br>and the given value differs from the actual value of {@link #originator}.
-	 * @throws ModificationException if the given originator is not contained in {@link #originatorCandidates}.
 	 * @return <code>true</code> if {@link #originator} was modified;<br>
 	 * <code>false</code> otherwise.
 	 */
@@ -102,13 +101,13 @@ public class SimulationLogEntry extends DULogEntry{
 		Validate.notNull(index);
 		Validate.notNegative(index);
 		
-		String originator = null;
+		String origin = null;
 		try {
-			originator = originatorCandidates.get(index);
+			origin = originatorCandidates.get(index);
 		} catch(Exception e){
-			throw new ParameterException("Cannot extract candidate with index " + index);
+			throw new ParameterException("Cannot extract candidate with index " + index, e);
 		}
-		return setOriginator(originator);
+		return setOriginator(origin);
 	}
 	
 	
@@ -119,7 +118,7 @@ public class SimulationLogEntry extends DULogEntry{
 	 * @return all originator candidates
 	 */
 	public List<String> getOriginatorCandidates(){
-		return new ArrayList<String>(originatorCandidates);
+		return new ArrayList<>(originatorCandidates);
 	}
 	
 	/**
@@ -295,7 +294,7 @@ public class SimulationLogEntry extends DULogEntry{
 	protected void copyFieldValues(LogEntry clone) throws LockingException {
 		super.copyFieldValues(clone);
 		for(DataAttribute att: dataUsage.keySet()){
-			((SimulationLogEntry) clone).setDataUsageFor(att, new HashSet<DataUsage>(dataUsage.get(att)));
+			((SimulationLogEntry) clone).setDataUsageFor(att, new HashSet<>(dataUsage.get(att)));
 		}
 		((SimulationLogEntry) clone).setOriginatorCandidates(originatorCandidates);
 	}
@@ -320,7 +319,16 @@ public class SimulationLogEntry extends DULogEntry{
 		result = prime * result + ((originatorCandidates == null) ? 0 : originatorCandidates.hashCode());
 		return result;
 	}
-	
-	
-	
+
+        @Override
+        public boolean equals(Object obj) {
+                if (obj == null) {
+                        return false;
+                }
+                if (getClass() != obj.getClass()) {
+                        return false;
+                }
+                final SimulationLogEntry other = (SimulationLogEntry) obj;
+                return Objects.equals(this.originatorCandidates, other.originatorCandidates);
+        }
 }
