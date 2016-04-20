@@ -94,6 +94,7 @@ public class ExecutionDialog extends JDialog implements SimulationListener {
 		
 		JButton okButton = new JButton("Close");
 		okButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
@@ -101,6 +102,7 @@ public class ExecutionDialog extends JDialog implements SimulationListener {
 		
 		JButton btnRun = new JButton("Run");
 		btnRun.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				startSimulation();
 			}
@@ -124,7 +126,7 @@ public class ExecutionDialog extends JDialog implements SimulationListener {
 			}
 			fileWriter = new FileWriter(simulation.getLogGenerator().getLogPath(), simulation.getLogGenerator().getFileNameShort());
 			fileWriter.setFileExtension("log");
-		} catch (Exception e) {
+		} catch (IOException | ParameterException e) {
 			JOptionPane.showMessageDialog(ExecutionDialog.this,"Cannot set up log writer.\nReason: " + e.getMessage(), "Configuration Exception",JOptionPane.ERROR_MESSAGE);
 			return;
 		}
@@ -157,7 +159,6 @@ public class ExecutionDialog extends JDialog implements SimulationListener {
 		addMessage(exception.getMessage());
 		JOptionPane.showMessageDialog(ExecutionDialog.this,"Simulation procedure was cancelled.\nReason: " + exception.getMessage(), "Simulation Exception",JOptionPane.ERROR_MESSAGE);
 		exception.printStackTrace();
-		return;
 	}
 	
 	public void taskCompleted(){

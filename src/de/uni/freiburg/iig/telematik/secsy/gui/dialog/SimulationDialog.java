@@ -12,7 +12,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,7 +48,6 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.GUIProperties;
 import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
-import de.uni.freiburg.iig.telematik.secsy.gui.Simulator;
 import de.uni.freiburg.iig.telematik.secsy.gui.properties.SecSyProperties;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.CaseDataContainer;
 import de.uni.freiburg.iig.telematik.secsy.logic.generator.context.SynthesisContext;
@@ -69,6 +67,8 @@ import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.sewol.format.AbstractLogFormat;
 import de.uni.freiburg.iig.telematik.sewol.format.LogFormatFactory;
 import de.uni.freiburg.iig.telematik.sewol.format.LogFormatType;
+import de.uni.freiburg.iig.telematik.sewol.writer.PerspectiveException;
+import java.io.IOException;
 
 public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
 
@@ -368,8 +368,9 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
             btnAddContext = new JButton("Add");
             btnAddContext.setPreferredSize(DEFAULT_EDIT_BUTTON_DIMENSION);
             btnAddContext.addActionListener(new ActionListener() {
+		@Override
                 public void actionPerformed(ActionEvent e) {
-                    SynthesisContext newContext = null;
+                    SynthesisContext newContext;
                     try {
                         newContext = SynthesisContextDialog.showDialog(SimulationDialog.this);
                     } catch(Exception ex){
@@ -405,6 +406,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
             btnEditContext = new JButton("Edit");
             btnEditContext.setPreferredSize(DEFAULT_EDIT_BUTTON_DIMENSION);
             btnEditContext.addActionListener(new ActionListener() {
+		@Override
                 public void actionPerformed(ActionEvent e) {
                     if (comboContext.getSelectedItem() == null) {
                         JOptionPane.showMessageDialog(SimulationDialog.this, "No context chosen.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
@@ -412,7 +414,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
                     }
                     String chosenContext = comboContext.getSelectedItem().toString();
 
-                    SynthesisContext context = null;
+                    SynthesisContext context;
                     try {
                         context = SimulationComponents.getInstance().getContainerSynthesisContexts().getComponent(chosenContext);
                     } catch (Exception e2) {
@@ -465,12 +467,13 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
             btnAddDataContainer = new JButton("Add");
             btnAddDataContainer.setPreferredSize(DEFAULT_EDIT_BUTTON_DIMENSION);
             btnAddDataContainer.addActionListener(new ActionListener() {
+		@Override
                 public void actionPerformed(ActionEvent arg0) {
                     //Even, when the chosen context contains no attributes,
                     //the case data container dialog is launched.
                     //-> Default value can be set anyway
 
-                    CaseDataContainer newContainer = null;
+                    CaseDataContainer newContainer;
                     try {
                         newContainer = DataContainerDialog.showDialog(SimulationDialog.this, getContextAttributes());
                     } catch (ParameterException e) {
@@ -507,7 +510,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
     }
 
     private Set<String> getContextAttributes() {
-        Set<String> attributes = new HashSet<String>();
+        Set<String> attributes = new HashSet<>();
         //Check if context is set
         if (comboContext.getSelectedItem() == null) {
             JOptionPane.showMessageDialog(SimulationDialog.this, "Please choose a context first.", "Missing Requirement", JOptionPane.ERROR_MESSAGE);
@@ -529,6 +532,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
             btnEditDataContainer = new JButton("Edit");
             btnEditDataContainer.setPreferredSize(DEFAULT_EDIT_BUTTON_DIMENSION);
             btnEditDataContainer.addActionListener(new ActionListener() {
+		@Override
                 public void actionPerformed(ActionEvent e) {
                     if (comboDataContainer.getSelectedItem() == null) {
                         JOptionPane.showMessageDialog(SimulationDialog.this, "No data container chosen.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
@@ -589,6 +593,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
             btnAddSimulationRun = new JButton("Add");
             btnAddSimulationRun.setPreferredSize(DEFAULT_EDIT_BUTTON_DIMENSION);
             btnAddSimulationRun.addActionListener(new ActionListener() {
+		@Override
                 public void actionPerformed(ActionEvent arg0) {
                     SimulationRun newSimulationRun = null;
                     try {
@@ -634,7 +639,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
                         JOptionPane.showMessageDialog(SimulationDialog.this, "No simulation run chosen.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                    SimulationRun simulationRun = null;
+                    SimulationRun simulationRun;
 
                     try {
                         simulationRun = (SimulationRun) listSimulationRuns.getSelectedValue();
@@ -675,6 +680,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
         if (btnRemoveSimulationRun == null) {
             btnRemoveSimulationRun = new JButton("Remove");
             btnRemoveSimulationRun.addActionListener(new ActionListener() {
+		@Override
                 public void actionPerformed(ActionEvent arg0) {
                     removeSelectedSimulationRuns();
                 }
@@ -688,9 +694,10 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
             btnAddTimeGenerator = new JButton("Add");
             btnAddTimeGenerator.setPreferredSize(DEFAULT_EDIT_BUTTON_DIMENSION);
             btnAddTimeGenerator.addActionListener(new ActionListener() {
+		@Override
                 public void actionPerformed(ActionEvent e) {
 
-                    TimeProperties timeProperties = null;
+                    TimeProperties timeProperties;
                     try {
                         timeProperties = TimeGeneratorDialog.showTimeGeneratorDialog(SimulationDialog.this, getAllKnownProcessActivities());
                     } catch (ParameterException e2) {
@@ -699,7 +706,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
                     }
 
                     if (timeProperties != null) {
-                        CaseTimeGenerator newTimeGenerator = null;
+                        CaseTimeGenerator newTimeGenerator;
                         try {
                             newTimeGenerator = TimeGeneratorFactory.createCaseTimeGenerator(timeProperties);
                         } catch (Exception e1) {
@@ -736,6 +743,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
             btnEditTimeGenerator = new JButton("Edit");
             btnEditTimeGenerator.setPreferredSize(DEFAULT_EDIT_BUTTON_DIMENSION);
             btnEditTimeGenerator.addActionListener(new ActionListener() {
+		@Override
                 public void actionPerformed(ActionEvent e) {
                     if (comboTimeGenerator.getSelectedItem() == null) {
                         JOptionPane.showMessageDialog(SimulationDialog.this, "No time generator chosen.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
@@ -757,7 +765,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
                     }
 
                     String oldTimeGeneratorName = timeGenerator.getName();
-                    CaseTimeGenerator editedTimeGenerator = null;
+                    CaseTimeGenerator editedTimeGenerator;
                     try {
                         editedTimeGenerator = TimeGeneratorFactory.createCaseTimeGenerator(TimeGeneratorDialog.showTimeGeneratorDialog(SimulationDialog.this, getAllKnownProcessActivities(), timeGenerator.getProperties()));
                     } catch (ParameterException e3) {
@@ -783,7 +791,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
                         }
 
                         //Find all simulations with reference to edited time generator
-                        Set<Simulation> simulationsWithReferenceToEditedTimeGenerator = new HashSet<Simulation>();
+                        Set<Simulation> simulationsWithReferenceToEditedTimeGenerator = new HashSet<>();
                         try {
                             for (Simulation simulation : SimulationComponents.getInstance().getContainerSimulations().getComponents()) {
                                 if (simulation.getCaseTimeGenerator() == timeGenerator) {
@@ -794,7 +802,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
                             ExceptionDialog.showException(SimulationDialog.this, "Internal Exception", new Exception("Cannot extract simulations from simulation components", ex), true);
                         }
 
-                        Set<Simulation> simulationsWithNewTimeGeneratorReference = new HashSet<Simulation>();
+                        Set<Simulation> simulationsWithNewTimeGeneratorReference = new HashSet<>();
                         for (Simulation simulation : simulationsWithReferenceToEditedTimeGenerator) {
                             try {
                                 simulation.setCaseTimeGenerator(editedTimeGenerator);
@@ -952,17 +960,17 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
     @SuppressWarnings("unchecked")
     private Set<SimulationRun> getIncompatibleSimulationRuns() {
         String contextName = comboContext.getSelectedItem().toString();
-        SynthesisContext context = null;
+        SynthesisContext context;
         try {
             context = SimulationComponents.getInstance().getContainerSynthesisContexts().getComponent(contextName);
         } catch (Exception e1) {
             JOptionPane.showMessageDialog(SimulationDialog.this, "Exception during simulation consistency check: Cannot extract context.\n" + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
             return null;
         }
-        Set<SimulationRun> incompatibleSimulationRuns = new HashSet<SimulationRun>();
+        Set<SimulationRun> incompatibleSimulationRuns = new HashSet<>();
         Set<String> contextActivities = context.getActivities();
         for (SimulationRun simulationRun : simulationRuns.values()) {
-            Set<String> simulationRunActivities = null;
+            Set<String> simulationRunActivities;
             try {
                 simulationRunActivities = PNUtils.getLabelSetFromTransitions(simulationRun.getPetriNet().getTransitions(), false);
             } catch (ParameterException e1) {
@@ -985,7 +993,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
      */
     @SuppressWarnings("unchecked")
     private Set<String> getAllKnownProcessActivities() {
-        Set<String> allKnownProcessActivities = new HashSet<String>();
+        Set<String> allKnownProcessActivities = new HashSet<>();
         for (SimulationRun simulationRun : simulationRuns.values()) {
             try {
                 allKnownProcessActivities.addAll(PNUtils.getLabelSetFromTransitions(simulationRun.getPetriNet().getTransitions(), false));
@@ -1037,9 +1045,9 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
             throw new Exception("Simulation name empty");
         }
 
-        Set<String> simulationNames = null;
+        Set<String> simulationNames;
         try{
-            simulationNames = new HashSet<String>(SimulationComponents.getInstance().getContainerSimulations().getComponentNames());
+            simulationNames = new HashSet<>(SimulationComponents.getInstance().getContainerSimulations().getComponentNames());
         } catch(Exception ex){
             ExceptionDialog.showException(SimulationDialog.this, "Internal Exception", new Exception("Cannot extract simulation names from simulation components", ex), true);
             return false;
@@ -1057,10 +1065,10 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
         AbstractLogFormat logFormat = LogFormatFactory.getFormat(getLogFormatType());
 
         // Create log generator
-        TraceLogGenerator logGenerator = null;
+        TraceLogGenerator logGenerator;
         try {
             logGenerator = new TraceLogGenerator(logFormat, SecSyProperties.getInstance().getWorkingDirectory(), fileName);
-        } catch (Exception e1) {
+        } catch (IOException | PropertyException | PerspectiveException e1) {
             ExceptionDialog.showException(SimulationDialog.this, "Internal Exception", new Exception("Cannot create log generator", e1), true);
             return false;
         }
@@ -1166,7 +1174,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
             throw new ParameterException("No case time generator chosen");
         }
         String timeGeneratorName = comboTimeGenerator.getSelectedItem().toString();
-        CaseTimeGenerator timeGenerator = null;
+        CaseTimeGenerator timeGenerator;
         try {
             timeGenerator = SimulationComponents.getInstance().getContainerTimeGenerators().getComponent(timeGeneratorName);
         } catch (Exception e1) {
@@ -1224,7 +1232,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
         if (btnShowActivities == null) {
             btnShowActivities = new JButton("Show activities");
             btnShowActivities.addActionListener(new ActionListener() {
-                @SuppressWarnings("unchecked")
+		@Override
                 public void actionPerformed(ActionEvent e) {
                     try {
                         if (listSimulationRuns.getSelectedValue() == null) {
@@ -1233,7 +1241,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
                         SimulationRun run = (SimulationRun) listSimulationRuns.getSelectedValue();
                         StringBuilder builder = new StringBuilder();
                         try {
-                            List<String> activityList = new ArrayList<String>(PNUtils.getLabelSetFromTransitions(run.getPetriNet().getTransitions(), false));
+                            List<String> activityList = new ArrayList<>(PNUtils.getLabelSetFromTransitions(run.getPetriNet().getTransitions(), false));
                             Collections.sort(activityList);
                             for (String activity : activityList) {
                                 builder.append(activity);

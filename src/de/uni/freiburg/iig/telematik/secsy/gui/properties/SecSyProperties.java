@@ -6,6 +6,7 @@ import java.util.Properties;
 import java.util.Set;
 import de.invation.code.toval.misc.wd.AbstractProjectComponents;
 import de.invation.code.toval.misc.wd.AbstractWorkingDirectoryProperties;
+import de.invation.code.toval.os.OSUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 
@@ -13,7 +14,7 @@ public class SecSyProperties extends AbstractWorkingDirectoryProperties<SecSyPro
 
     public static final String SIMULATION_DIRECTORY_DESCRIPTOR = "Simulation Directory";
     public static final String DEFAULT_SIMULATION_DIRECTORY_NAME = "SimulationDirectory";
-    public static final String SECSY_PROPERTY_FILE_NAME = "SecSyProperties";
+    public static final String SECSY_PROPERTY_FILE_NAME = OSUtils.getUserHomeDirectory() + "/.SecSyProperties";
 
     protected static final String pathSimulations = "simulations/";
     protected static final String pathTimeGenerators = "time_generators/";

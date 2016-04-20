@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.secsy.gui;
 
 import de.invation.code.toval.graphic.dialog.MessageDialog;
+import de.invation.code.toval.validate.CompatibilityException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -51,6 +52,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.parser.graphic.PNParserDialog;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.sewol.writer.PerspectiveException;
 
 public class Simulator extends JFrame {
 
@@ -66,7 +68,7 @@ public class Simulator extends JFrame {
     private JButton btnEditSimulation;
     private JComboBox comboSimulation;
     private JTextArea areaSimulation;
-    private JPanel contentPanel = new JPanel(new BorderLayout());
+    private final JPanel contentPanel = new JPanel(new BorderLayout());
 
     public Simulator() {
 
@@ -168,32 +170,28 @@ public class Simulator extends JFrame {
 
         JMenuItem mntmSwitch = new JMenuItem("Switch Simulation Directory");
 
-        mntmSwitch.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String simulationDirectory = null;
-                try {
-                    simulationDirectory = SimulationDirectoryDialog.showDialog(Simulator.this);
-                } catch (Exception e2) {
-                    ExceptionDialog.showException(Simulator.this, "Internal Exception", new Exception("Cannot launch simulation directory dialog.", e2), true, true);
-                }
-                if (simulationDirectory == null) {
-                    return;
-                }
-                try {
-                    if (!SecSyProperties.getInstance().getWorkingDirectory().equals(simulationDirectory)) {
-                        SecSyProperties.getInstance().setWorkingDirectory(simulationDirectory, true);
-                    }
-                } catch (Exception e1) {
-                    ExceptionDialog.showException(Simulator.this, "Internal Exception", new Exception("Exception while switching working directory.", e1), true, true);
-                    return;
-                }
-
-                updateSimulationBox();
-                updateSimulationArea();
-            }
-        });
+        mntmSwitch.addActionListener((ActionEvent e) -> {
+		String simulationDirectory = null;
+		try {
+			simulationDirectory = SimulationDirectoryDialog.showDialog(Simulator.this);
+		} catch (Exception e2) {
+			ExceptionDialog.showException(Simulator.this, "Internal Exception", new Exception("Cannot launch simulation directory dialog.", e2), true, true);
+		}
+		if (simulationDirectory == null) {
+			return;
+		}
+		try {
+			if (!SecSyProperties.getInstance().getWorkingDirectory().equals(simulationDirectory)) {
+				SecSyProperties.getInstance().setWorkingDirectory(simulationDirectory, true);
+			}
+		} catch (Exception e1) {
+			ExceptionDialog.showException(Simulator.this, "Internal Exception", new Exception("Exception while switching working directory.", e1), true, true);
+			return;
+		}
+		
+		updateSimulationBox();
+		updateSimulationArea();
+	});
         mntmSwitch.setName("Switch Simulation Directory");
         mntmSwitch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0));
         mnFile.add(mntmSwitch);
@@ -208,49 +206,44 @@ public class Simulator extends JFrame {
 
         JMenuItem mntmPetriNetpnml = new JMenuItem("Petri net (PNML)...");
         mntmPetriNetpnml.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, 0));
-        mntmPetriNetpnml.addActionListener(new ActionListener() {
-
-            @SuppressWarnings({"rawtypes"})
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AbstractGraphicalPN importedNet = PNParserDialog.showPetriNetDialog(Simulator.this);
-                if (importedNet != null) {
-
-                    AbstractPetriNet loadedNet = importedNet.getPetriNet();
-                    if (!(loadedNet instanceof PTNet)) {
-                        ExceptionDialog.showException(Simulator.this, "Unexpected Petri net type", new Exception("Loaded Petri net is not a P/T-Net."), true, true);
-                        return;
-                    }
-                    PTNet petriNet = (PTNet) loadedNet;
-
-                    String netName = petriNet.getName();
-                    try {
-                        while (netName == null || SimulationComponents.getInstance().getContainerPTNets().containsComponent(netName)) {
-                            netName = JOptionPane.showInputDialog(Simulator.this, "Name for the Petri net:", "");
-                        }
-                    } catch (Exception e1) {
-                        ExceptionDialog.showException(Simulator.this, "Internal Exception", new Exception("Exception while checking if net name is already in use.", e1), true, true);
-                        return;
-                    }
-                    try {
-                        if (!petriNet.getName().equals(netName)) {
-                            petriNet.setName(netName);
-                        }
-                    } catch (ParameterException e2) {
-                        ExceptionDialog.showException(Simulator.this, "Internal Exception", new Exception("Cannot change Petri net name to\"" + netName + "\"", e2), true, true);
-                        return;
-                    }
-
-                    try {
-                        SimulationComponents.getInstance().getContainerPTNets().addComponent(new GraphicalPTNet(petriNet, null), true);
-                    } catch (Exception e1) {
-                        ExceptionDialog.showException(Simulator.this, "Internal Exception", new Exception("Cannot add imported net to simulation components.", e1), true, true);
-                    }
-                } else {
-                    // User aborted the dialog.
-                }
-            }
-        });
+        mntmPetriNetpnml.addActionListener((ActionEvent e) -> {
+		AbstractGraphicalPN importedNet = PNParserDialog.showPetriNetDialog(Simulator.this);
+		if (importedNet != null) {
+			
+			AbstractPetriNet loadedNet = importedNet.getPetriNet();
+			if (!(loadedNet instanceof PTNet)) {
+				ExceptionDialog.showException(Simulator.this, "Unexpected Petri net type", new Exception("Loaded Petri net is not a P/T-Net."), true, true);
+				return;
+			}
+			PTNet petriNet = (PTNet) loadedNet;
+			
+			String netName = petriNet.getName();
+			try {
+				while (netName == null || SimulationComponents.getInstance().getContainerPTNets().containsComponent(netName)) {
+					netName = JOptionPane.showInputDialog(Simulator.this, "Name for the Petri net:", "");
+				}
+			} catch (Exception e1) {
+				ExceptionDialog.showException(Simulator.this, "Internal Exception", new Exception("Exception while checking if net name is already in use.", e1), true, true);
+				return;
+			}
+			try {
+				if (!petriNet.getName().equals(netName)) {
+					petriNet.setName(netName);
+				}
+			} catch (ParameterException e2) {
+				ExceptionDialog.showException(Simulator.this, "Internal Exception", new Exception("Cannot change Petri net name to\"" + netName + "\"", e2), true, true);
+				return;
+			}
+			
+			try {
+				SimulationComponents.getInstance().getContainerPTNets().addComponent(new GraphicalPTNet(petriNet, null), true);
+			} catch (Exception e1) {
+				ExceptionDialog.showException(Simulator.this, "Internal Exception", new Exception("Cannot add imported net to simulation components.", e1), true, true);
+			}
+		} else {
+			// User aborted the dialog.
+		}
+	});
         mnImport.add(mntmPetriNetpnml);
         getContentPane().setLayout(null);
 
@@ -277,6 +270,7 @@ public class Simulator extends JFrame {
         if (btnEditSimulation == null) {
             btnEditSimulation = new JButton("Edit");
             btnEditSimulation.addActionListener(new ActionListener() {
+		@Override
                 public void actionPerformed(ActionEvent e) {
                     if (comboSimulation.getSelectedItem() == null) {
                         ExceptionDialog.showException(Simulator.this, "Internal Exception", new Exception("No simulation chosen."), true, true);
@@ -284,7 +278,7 @@ public class Simulator extends JFrame {
                     }
                     String chosenSimulation = comboSimulation.getSelectedItem().toString();
 
-                    Simulation simulation = null;
+                    Simulation simulation;
                     try {
                         simulation = SimulationComponents.getInstance().getContainerSimulations().getComponent(chosenSimulation);
                     } catch (Exception e2) {
@@ -298,7 +292,7 @@ public class Simulator extends JFrame {
                     }
 
                     String oldSimulationName = simulation.getName();
-                    Simulation editedSimulation = null;
+                    Simulation editedSimulation;
                     try {
                         editedSimulation = SimulationDialog.showDialog(Simulator.this, simulation);
                     } catch (Exception e2) {
@@ -332,9 +326,10 @@ public class Simulator extends JFrame {
         if (btnNewSimulation == null) {
             btnNewSimulation = new JButton("New");
             btnNewSimulation.addActionListener(new ActionListener() {
+		@Override
                 public void actionPerformed(ActionEvent e) {
 
-                    Simulation newSimulation = null;
+                    Simulation newSimulation;
                     try {
                         newSimulation = SimulationDialog.showDialog(Simulator.this);
                     } catch (Exception e1) {
@@ -362,6 +357,7 @@ public class Simulator extends JFrame {
         if (btnRun == null) {
             btnRun = new JButton("Run");
             btnRun.addActionListener(new ActionListener() {
+		@Override
                 public void actionPerformed(ActionEvent e) {
                     Simulation simulation = getSelectedSimulation();
                     if (simulation != null) {
@@ -373,7 +369,7 @@ public class Simulator extends JFrame {
                         if (logPath != null) {
                             try {
                                 simulation.getLogGenerator().setLogPath(logPath);
-                            } catch (Exception e1) {
+                            } catch (CompatibilityException | PerspectiveException | IOException e1) {
                                 ExceptionDialog.showException(Simulator.this, "Configuration Exception", new Exception("Cannot set log path.", e1), true, true);
                                 return;
                             }
@@ -444,7 +440,7 @@ public class Simulator extends JFrame {
     }
 
     private void updateSimulationBox() {
-        List<String> simulationNames = new ArrayList<String>();
+        List<String> simulationNames = new ArrayList<>();
         try {
             for (Simulation simulation : SimulationComponents.getInstance().getContainerSimulations().getComponents()) {
                 simulationNames.add(simulation.getName());
