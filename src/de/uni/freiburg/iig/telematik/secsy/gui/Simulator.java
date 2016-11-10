@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.secsy.gui;
 
+import de.invation.code.toval.graphic.dialog.ExceptionDialog;
 import de.invation.code.toval.graphic.dialog.MessageDialog;
 import de.invation.code.toval.validate.CompatibilityException;
 import java.awt.BorderLayout;
@@ -37,7 +38,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
-import de.invation.code.toval.validate.ExceptionDialog;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.ExecutionDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.dialog.SimulationDialog;

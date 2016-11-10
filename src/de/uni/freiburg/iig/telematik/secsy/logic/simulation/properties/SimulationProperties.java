@@ -78,13 +78,14 @@ public class SimulationProperties extends AbstractProperties {
 //			throw new PropertyException(SimulationProperty.LOG_PATH, propertyValue);
 //		return propertyValue;
 //	}
+    
 	//-- File name
-    public void setFileName(String fileName) {
+    public void setExportFileName(String fileName) {
         validateStringValue(fileName);
         setProperty(SimulationProperty.FILE_NAME, fileName);
     }
 
-    public String getFileName() throws PropertyException {
+    public String getExportFileName() throws PropertyException {
         String propertyValue = getProperty(SimulationProperty.FILE_NAME);
         if (propertyValue == null) {
             throw new PropertyException(SimulationProperty.FILE_NAME, propertyValue);

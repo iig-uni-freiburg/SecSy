@@ -34,9 +34,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 import de.invation.code.toval.graphic.dialog.AbstractEditCreateDialog;
+import de.invation.code.toval.graphic.dialog.ExceptionDialog;
 import de.invation.code.toval.graphic.dialog.ValueChooserDialog;
 import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
-import de.invation.code.toval.validate.ExceptionDialog;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import de.invation.code.toval.validate.Validate;

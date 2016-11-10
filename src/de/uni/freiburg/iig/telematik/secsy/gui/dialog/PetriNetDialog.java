@@ -1,6 +1,8 @@
 package de.uni.freiburg.iig.telematik.secsy.gui.dialog;
 
 import de.invation.code.toval.graphic.dialog.AbstractDialog;
+import de.invation.code.toval.graphic.dialog.ExceptionDialog;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Window;
@@ -14,7 +16,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
-import de.invation.code.toval.validate.ExceptionDialog;
 import de.uni.freiburg.iig.telematik.secsy.gui.SimulationComponents;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;

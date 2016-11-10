@@ -34,10 +34,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.invation.code.toval.graphic.dialog.ExceptionDialog;
 import de.invation.code.toval.misc.FormatUtils;
 import de.invation.code.toval.misc.valuegeneration.StochasticValueGenerator;
 import de.invation.code.toval.misc.valuegeneration.ValueGenerator;
-import de.invation.code.toval.validate.ExceptionDialog;
 import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;

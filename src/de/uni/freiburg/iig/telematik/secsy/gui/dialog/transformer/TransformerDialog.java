@@ -27,7 +27,7 @@ import javax.swing.SwingConstants;
 
 import de.invation.code.toval.graphic.component.BoxLayoutPanel;
 import de.invation.code.toval.graphic.dialog.AbstractEditCreateDialog;
-import de.invation.code.toval.validate.ExceptionDialog;
+import de.invation.code.toval.graphic.dialog.ExceptionDialog;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.secsy.gui.GUIProperties;

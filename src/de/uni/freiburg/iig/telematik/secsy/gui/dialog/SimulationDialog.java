@@ -39,11 +39,11 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import de.invation.code.toval.graphic.dialog.AbstractEditCreateDialog;
+import de.invation.code.toval.graphic.dialog.ExceptionDialog;
 import de.invation.code.toval.graphic.dialog.StringDialog;
 import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ExceptionDialog;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.secsy.gui.GUIProperties;
 import de.uni.freiburg.iig.telematik.secsy.gui.Hints;
@@ -849,7 +849,7 @@ public class SimulationDialog extends AbstractEditCreateDialog<Simulation> {
     }
 
     @Override
-    protected Simulation getDialogObject() {
+    public Simulation getDialogObject() {
         return (Simulation) super.getDialogObject();
     }
 
